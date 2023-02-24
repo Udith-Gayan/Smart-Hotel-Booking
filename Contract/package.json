@@ -1,10 +1,21 @@
 {
   "name": "contract",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
+    "build": "npx ncc build src/contract.js -o dist",
+    "start": "npm run build && hpdevkit deploy dist",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@vercel/ncc": "0.34.0",
+    "evernode-js-client": "^0.5.16",
+    "hotpocket-nodejs-contract": "0.5.7",
+    "ripple-address-codec": "^4.2.4",
+    "ripple-keypairs": "^1.1.4",
+    "sqlite-async": "1.2.0",
+    "sqlite3": "5.1.4",
+    "xrpl": "^2.7.0-beta.2",
+    "xrpl-binary-codec": "^1.4.2"
   },
   "author": "",
   "license": "ISC"
