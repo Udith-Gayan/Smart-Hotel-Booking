@@ -99,6 +99,7 @@ export class DbService {
                 Name TEXT,
                 Email Text,
                 ContactNumber TEXT,
+                WalletAddress TEXT NOT NULL,
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )`);
 
