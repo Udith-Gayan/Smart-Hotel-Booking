@@ -72,6 +72,13 @@ class SqliteDatabase {
         });
     }
 
+    /**
+     * 
+     * @param {*} tableName 
+     * @param {Object} filter An object with table column values as the keys
+     * @param {'=' | 'IN'} op  
+     * @returns A lit of rows of the table
+     */
     getValues(tableName, filter = null, op = '=') {
         if (!this.db)
             throw 'Database connection is not open.';
@@ -79,7 +86,6 @@ class SqliteDatabase {
         let values = [];
         let filterStr = '1 AND '
         if (filter) {
-            console.log(filter);
             const columnNames = Object.keys(filter);
 
             if (op === 'IN') {
@@ -127,8 +133,6 @@ class SqliteDatabase {
                     reject(err);
                     return;
                 }
-
-                console.log(rows)
                 resolve(rows);
             });
         });
@@ -138,6 +142,13 @@ class SqliteDatabase {
         return (await this.insertValues(tableName, [value]));
     }
 
+    /**
+     * 
+     * @param {string} tableName 
+     * @param {object} value New values as an object
+     * @param {object} filter Where values
+     * @returns 
+     */
     async updateValue(tableName, value, filter = null) {
         if (!this.db)
             throw 'Database connection is not open.';
@@ -173,7 +184,6 @@ class SqliteDatabase {
 
         if (values.length) {
             const columnNames = Object.keys(values[0]);
-            console.log(columnNames)
 
             let rowValueStr = '';
             let rowValues = [];
@@ -194,6 +204,12 @@ class SqliteDatabase {
         }
     }
 
+    /**
+     * 
+     * @param {string} tableName 
+     * @param {object} filter | An object with column names as keys
+     * @returns 
+     */
     async deleteValues(tableName, filter = null) {
         if (!this.db)
             throw 'Database connection is not open.';
@@ -225,6 +241,46 @@ class SqliteDatabase {
             });
         });
     }
+
+    /**
+     * This is db.all() query 
+     * @param {string} query 
+     * @param {*} params 
+     * @returns A promise of a list of rows.
+     */
+    runNativeGetAllQuery(query, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.all(query, params, (err, rows) => {
+                if(err) {
+                    reject(err);
+                    return;
+                }
+
+                resolve(rows); 
+            })
+        });
+    }
+
+    /**
+     * 
+     * @param {string} query 
+     * @param {[]} params | An array of values to be replaced in ? places in thr]e query
+     * @returns A promise of an object of a single row. Otherwise undefined.
+     */
+    runNativeGetFirstQuery(query, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.get(query, params, (err, row) => {
+                if(err) {
+                    reject(err);
+                    return;
+                }
+
+                resolve(row);
+            })
+        });
+    }
+
+
 }
 
 module.exports = {

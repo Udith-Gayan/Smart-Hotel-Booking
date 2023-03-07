@@ -94423,6 +94423,7 @@ const { SqliteDatabase } = __nccwpck_require__(6257)
 // const { TransactionService } = require('./transaction-service');
 const { HotelService } = __nccwpck_require__(7605);
 const settings = (__nccwpck_require__(9419)/* .settings */ .X);
+const constants = __nccwpck_require__(9420)
 
 class ApiService {
 
@@ -94437,14 +94438,12 @@ class ApiService {
 
         // TODO: Request Authentication and Authorization must be handled here before proceeding
         
-        
-        
-        this.db.open();
+    
         // this.#transactionService = new TransactionService(message);
 
         let result = {};
-    
-        if (message.type == RequestTypes.HOTEL_REGISTRATION) {                                     //------------------- Register Hotel (hotelRegRequest, hotelRegConfirm) ------------------------------------
+        
+        if (message.type == constants.RequestTypes.HOTEL) {                                     //------------------- Register Hotel (hotelRegRequest, hotelRegConfirm) ------------------------------------
             result = await new HotelService(message).handleRequest();
         }
         // else if (message.type == 'getHotels') {                                             //---------------------Get hotels(with filters)-----------------------
@@ -94473,10 +94472,8 @@ class ApiService {
         if(isReadOnly){
             await this.sendOutput(user, result);
         } else {
-            await this.sendOutput(user, {promiseId: message.promiseId, ...result});
+            await this.sendOutput(user, message.promiseId ? {promiseId: message.promiseId, ...result} : result);
         }
-
-        this.db.close();
     }
 
     sendOutput = async (user, response) => {
@@ -94547,7 +94544,7 @@ class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS HFacilities (
                 Id INTEGER,
                 Name TEXT,
-                Descriptioon TEXT,
+                Description TEXT,
                 Status TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )`);
@@ -94620,6 +94617,8 @@ class DbService {
                 )`)
 
             // await this.#insertData();
+
+            console.log("Database initialized.");
             this.#db.close();
         }
     }
@@ -94755,6 +94754,13 @@ class SqliteDatabase {
         });
     }
 
+    /**
+     * 
+     * @param {*} tableName 
+     * @param {Object} filter An object with table column values as the keys
+     * @param {'=' | 'IN'} op  
+     * @returns A lit of rows of the table
+     */
     getValues(tableName, filter = null, op = '=') {
         if (!this.db)
             throw 'Database connection is not open.';
@@ -94762,7 +94768,6 @@ class SqliteDatabase {
         let values = [];
         let filterStr = '1 AND '
         if (filter) {
-            console.log(filter);
             const columnNames = Object.keys(filter);
 
             if (op === 'IN') {
@@ -94810,8 +94815,6 @@ class SqliteDatabase {
                     reject(err);
                     return;
                 }
-
-                console.log(rows)
                 resolve(rows);
             });
         });
@@ -94856,7 +94859,6 @@ class SqliteDatabase {
 
         if (values.length) {
             const columnNames = Object.keys(values[0]);
-            console.log(columnNames)
 
             let rowValueStr = '';
             let rowValues = [];
@@ -94877,6 +94879,12 @@ class SqliteDatabase {
         }
     }
 
+    /**
+     * 
+     * @param {string} tableName 
+     * @param {object} filter | An object with column names as keys
+     * @returns 
+     */
     async deleteValues(tableName, filter = null) {
         if (!this.db)
             throw 'Database connection is not open.';
@@ -94908,6 +94916,46 @@ class SqliteDatabase {
             });
         });
     }
+
+    /**
+     * This is db.all() query 
+     * @param {string} query 
+     * @param {*} params 
+     * @returns A promise of a list of rows.
+     */
+    runNativeGetAllQuery(query, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.all(query, params, (err, rows) => {
+                if(err) {
+                    reject(err);
+                    return;
+                }
+
+                resolve(rows); 
+            })
+        });
+    }
+
+    /**
+     * 
+     * @param {string} query 
+     * @param {[]} params | An array of values to be replaced in ? places in thr]e query
+     * @returns A promise of an object of a single row. Otherwise undefined.
+     */
+    runNativeGetFirstQuery(query, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.get(query, params, (err, row) => {
+                if(err) {
+                    reject(err);
+                    return;
+                }
+
+                resolve(row);
+            })
+        });
+    }
+
+
 }
 
 module.exports = {
@@ -94920,9 +94968,11 @@ module.exports = {
 /***/ 7605:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-// import evernode from 'evernode-js-client';
 const evernode = __nccwpck_require__(6238)
 const settings = (__nccwpck_require__(9419)/* .settings */ .X);
+const constants = __nccwpck_require__(9420)
+const { SqliteDatabase } = __nccwpck_require__(6257)
+// import { RequestSubTypes } from 'constants';
 
 class HotelService {
 
@@ -94951,12 +95001,14 @@ class HotelService {
             await this.#xrplApi.connect();
 
             switch (this.#message.subType) {
-                case RequestSubTypes.REQUEST_TOKEN_OFFER:
+                case constants.RequestSubTypes.REQUEST_TOKEN_OFFER:
                     return await this.#registerHotel();
-                    break;
-                case RequestSubTypes.REGISTRATION_CONFIRMATION:
-                    return this.#confirmHotelRegistration();
-                    break;
+                case constants.RequestSubTypes.REGISTRATION_CONFIRMATION:
+                    return await this.#confirmHotelRegistration();
+                case constants.RequestSubTypes.GET_HOTELS:
+                    return await this.#getHotels();
+                case constants.RequestSubTypes.DEREG_HOTEL:
+                    return await this.#deregisterHotel();
                 default:
                     throw ("Invalid Request");
             }
@@ -94990,8 +95042,6 @@ class HotelService {
 
         //Serch for a free offer
         const availableOffer = await this.#getAnAvailableOffer();
-        console.log('Avaialble offer: ');
-        console.log(availableOffer);
         if (availableOffer != null) {
             hotelEntity.HotelNftId = availableOffer.NFTokenID;
 
@@ -95003,10 +95053,9 @@ class HotelService {
         let insertedId;
         if (await this.#db.isTableExists('Hotels')) {
             try {
-                insertedId = (await this.#db.insertValue('Hotels', data)).lastId;
+                insertedId = (await this.#db.insertValue('Hotels', hotelEntity)).lastId;
 
             } catch (e) {
-                console.log(`Error occured in hotel registration: ${e}`);
                 throw (`Error occured in hotel registration: ${e}`)
             }
         } else {
@@ -95020,7 +95069,7 @@ class HotelService {
                     HotelId: insertedId,
                     Url: url
                 }
-    
+
                 if (await this.#db.isTableExists('Images')) {
                     try {
                         await this.#db.insertValue('Images', imageEntity);
@@ -95033,19 +95082,66 @@ class HotelService {
             }
         }
 
+        // Saving to the HFacilities table
+        if (data.Facilities && data.Facilities.length > 0) {
+            for (const facility of data.Facilities) {
+                let facilityId = 0;
+                const facilityEntity = {
+                    Name: facility.Name,
+                    Description: facility.Description,
+                    Status: constants.FacilityStatuses.AVAILABLE
+                }
+
+                if (await this.#db.isTableExists('HFacilities')) {
+                    try {
+                        facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
+                    } catch (error) {
+                        throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
+                    }
+                } else {
+                    throw ('HFacility table not found.');
+                }
+
+                // Saving to M2M table Hotel-Facilities table
+                const hotelHfacilityEntity = {
+                    HotelId: insertedId,
+                    HFacilityId: facilityId
+                }
+
+                if (await this.#db.isTableExists('HotelHFacilities')) {
+                    try {
+                        await this.#db.insertValue('HotelHFacilities', hotelHfacilityEntity);
+                    } catch (error) {
+                        throw (`Error occured in saving creating M2M table Hotel and Facilities : ${e}`);
+                    }
+                } else {
+                    throw ('HotelHFacility table not found.');
+                }
+
+            }
+
+        }
+
         response.success = { rowId: insertedId, offerId: availableOffer.index }
+        return response;
     }
 
     async #getAnAvailableOffer() {
         try {
             const createdOffers = await this.#contractAcc.getNftOffers();
-            console.log(createdOffers);
-
+            
             let rows = await this.#db.getValues("Hotels", null);
-            let takenNfts = rows.map(r => r.HotelNftId);
+            if (rows.length > 0 && createdOffers && createdOffers.length > 0) {
+                let takenNfts = rows.map(r => r.HotelNftId);
 
-            const availableOffers = createdOffers.filter(co => !takenNfts.includes(co.NFTokenID));
-            return availableOffers.length == 0 ? null : availableOffers[0];
+                const availableOffers = createdOffers.filter(co => !takenNfts.includes(co.NFTokenID));
+                return availableOffers.length == 0 ? null : availableOffers[0];
+            }
+            else if (createdOffers && createdOffers.length > 0) {
+                return createdOffers[0];
+            }
+
+            return null;
 
         } catch (error) {
             throw error;
@@ -95058,29 +95154,79 @@ class HotelService {
 
         let response = {};
 
-        const rows = await this.#db.getValues("Hotels", { id: rowId });
+        const rows = await this.#db.getValues("Hotels", { Id: rowId });
         if (rows.length != 0) {
             const regNftId = rows[0].HotelNftId;
 
             // Check for reg nft existence in the account(If nft acceptance is successful)
-            if (!this.#isNftExists(walletAddress, regNftId))
+            if (!(await this.#isNftExists(walletAddress, regNftId)))
                 throw ('Registration Nft is absent.');
 
-            await this.#db.updateValue("Hotels", { isRegistered: 1, hotelWalletAddress: walletAddress }, { id: rowId });
-
+            await this.#db.updateValue("Hotels", { IsRegistered: 1, HotelWalletAddress: walletAddress }, { Id: rowId });
         } else {
             throw ("Error in confirming registration. Re-register please.");
         }
+
         response.success = 'Hotel Registration Successful.'
-
-
         return response;
     }
 
     async #isNftExists(walletAddress, nftId) {
-        const acc = new evernode.XrplAccount(walletAddress);
-        const nfts = await acc.getNfts();
-        return nfts.find(t => t.NFTokenID == nftId);
+        const acc = new evernode.XrplAccount(walletAddress, null, { xrplApi: this.#xrplApi });
+        try {
+            const nfts = await acc.getNfts();
+            return nfts.find(t => t.NFTokenID == nftId);
+        } catch (error) {
+            throw (error);
+        }
+        finally {
+        }
+
+    }
+
+    async #getHotels() {
+        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1, Hotels.ContactNumber2,
+                              Images.Id, Images.Url
+                       FROM Hotels
+                       LEFT OUTER JOIN Images
+                       ON Hotels.Id = Images.HotelId 
+                       WHERE Hotels.IsRegistered = 1 `
+
+
+
+        let filters = null;
+        if (this.#message.filters) {
+            filters = this.#message.filters;
+        }
+
+        let response = {};
+
+        const hotels = await this.#db.runNativeGetAllQuery(query);
+
+
+        response.success = { hotelList: hotels };
+        return response;
+    }
+
+    async #deregisterHotel() {
+        let response = {};
+
+        if (! this.#message.data.HotelNftId)
+            throw("HotelNftId is absent in the request");
+        
+        const query = `SELECT HotelNftId FROM Hotels WHERE HotelNftId = "${this.#message.data.HotelNftId}"`;
+        const row = await this.#db.runNativeGetFirstQuery(query);
+        if(!row)
+            throw("The relevant Hotel token Id not found.");
+        
+        // burn the record
+        await this.#contractAcc.burnNft(row.HotelNftId, row.HotelWalletAddress);
+
+        // Delete the record
+        await this.#db.deleteValues('Hotels', {HotelNftId: row.HotelNftId});
+
+        response.success = `Hotel ${row.Name} deregistered successfully.`;
+        return response;
     }
 
 
@@ -95090,6 +95236,38 @@ class HotelService {
 
 module.exports = {
     HotelService
+}
+
+/***/ }),
+
+/***/ 9420:
+/***/ ((module) => {
+
+const RequestTypes = {
+    HOTEL: "Hotel",
+    ROOM: "Room"
+}
+
+const RequestSubTypes = {
+    REQUEST_TOKEN_OFFER: "RequestTokenOffer",
+    REGISTRATION_CONFIRMATION: "RegistrationConfirmation",
+    GET_HOTELS: "GetHotels",
+    DEREG_HOTEL: "DeregHotel",
+    GET_ROOMS: "GetRooms",
+    CREATE_ROOM: "CreateRoom",
+    DELETE_ROOM: "DeleteRoom"
+
+}
+
+const FacilityStatuses = {
+    AVAILABLE: "Available",
+    UNAVAILABLE: "UnAvaialble",
+}
+
+module.exports = {
+    RequestTypes,
+    RequestSubTypes,
+    FacilityStatuses
 }
 
 /***/ }),
@@ -95401,7 +95579,7 @@ module.exports = JSON.parse('{"TYPES":{"Validation":10003,"Done":-1,"Hash128":4,
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rGVfAGdDF9fzsmfePkyHK2HnD25BKMKNbr","contractWalletSecret":"sswXtv8odxCnUcBwaySJAV6k4ibTk"}}');
+module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rNbB3AE3Tnti7YqnyHxdBRXGqswgevFBHK","contractWalletSecret":"snfBYDBFd7EwKXTtWaBDcuwoXvzJW"}}');
 
 /***/ })
 
@@ -95498,13 +95676,11 @@ const booking_contract = async (ctx) => {
     const apiService = new ApiService();
     await DbService.initializeDatabase();
 
-    console.log(process.env.MY_TEST_VAR);
 
     for (const user of ctx.users.list()) {
 
         // Loop through inputs sent by each user.
         for (const input of user.inputs) {
-
             // Read the data buffer sent by user (this can be any kind of data like string, json or binary data).
             const buf = await ctx.users.read(input);
 

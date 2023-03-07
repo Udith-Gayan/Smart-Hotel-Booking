@@ -46,7 +46,7 @@ export class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS HFacilities (
                 Id INTEGER,
                 Name TEXT,
-                Descriptioon TEXT,
+                Description TEXT,
                 Status TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )`);
@@ -66,7 +66,6 @@ export class DbService {
                         Name TEXT NOT NULL,
                         Description TEXT,
                         MaxRoomCount Integer,
-                        BookedRoomCount Integer,
                         CostPerNight DOUBLE,
                         NoOfBeds Integer,
                         HotelId INTEGER,
@@ -85,7 +84,7 @@ export class DbService {
 
 
             // Room-Facilities Table
-            await this.#runQuery(`CREATE TABLE IF NOT EXISTS RFacilities (
+            await this.#runQuery(`CREATE TABLE IF NOT EXISTS RoomFacilities (
                 RoomId INTEGER,
                 RFacilityId INTEGER,
                 Quantity INTEGER,
@@ -98,7 +97,6 @@ export class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS Customers (
                 Id INTEGER,
                 Name TEXT,
-                Nic TEXT,
                 Email Text,
                 ContactNumber TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
@@ -108,7 +106,7 @@ export class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS Reservations (
                 Id INTEGER,
                 RoomId INTEGER,
-                NoOfRooms INTEGER,
+                RoomCount INTEGER,
                 CustomerId INTEGER,
                 FromDate DATE,
                 ToDate DATE,
@@ -119,6 +117,8 @@ export class DbService {
                 )`)
 
             // await this.#insertData();
+
+            console.log("Database initialized.");
             this.#db.close();
         }
     }

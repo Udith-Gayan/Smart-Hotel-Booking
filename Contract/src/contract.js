@@ -10,13 +10,11 @@ const booking_contract = async (ctx) => {
     const apiService = new ApiService();
     await DbService.initializeDatabase();
 
-    console.log(process.env.MY_TEST_VAR);
 
     for (const user of ctx.users.list()) {
 
         // Loop through inputs sent by each user.
         for (const input of user.inputs) {
-
             // Read the data buffer sent by user (this can be any kind of data like string, json or binary data).
             const buf = await ctx.users.read(input);
 

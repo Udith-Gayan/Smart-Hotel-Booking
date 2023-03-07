@@ -1,7 +1,11 @@
+import { RoomService } from "./services.domain/RoomService";
+import { CustomerService } from "./services.domain/CustomerService";
+
 const { SqliteDatabase } = require("./services.base/sqlite-handler")
 // const { TransactionService } = require('./transaction-service');
 const { HotelService } = require('./services.domain/HotelService');
 const settings = require('./settings.json').settings;
+const constants = require("./services.domain/constants")
 
 export class ApiService {
 
@@ -16,22 +20,20 @@ export class ApiService {
 
         // TODO: Request Authentication and Authorization must be handled here before proceeding
         
-        
-        
-        this.db.open();
+    
         // this.#transactionService = new TransactionService(message);
 
         let result = {};
-    
-        if (message.type == RequestTypes.HOTEL_REGISTRATION) {                                     //------------------- Register Hotel (hotelRegRequest, hotelRegConfirm) ------------------------------------
+        
+        if (message.type == constants.RequestTypes.HOTEL) {                                     //------------------- Hotel Related Api ------------------------------------
             result = await new HotelService(message).handleRequest();
         }
-        // else if (message.type == 'getHotels') {                                             //---------------------Get hotels(with filters)-----------------------
-        //     result = await this.#transactionService.getHotels();
-        // }
-        // else if (message.type == 'createRoom') {                                            //------------------- Create Room --------------------------------------
-        //     result = await this.#transactionService.createRoom();
-        // }
+        else if (message.type == constants.RequestTypes.ROOM) {                                             //--------------------- Room related Api -----------------------
+            result = await new RoomService(message).handleRequest();
+        }
+        else if (message.type == constants.RequestTypes.CUSTOMER) {                                            //------------------- Create Room --------------------------------------
+            result = await new CustomerService(message).handleRequest();
+        }
         // else if (message.type == 'getRoomsByHotel') {                                        //-------------------- Get rooms of a hotel-------------------------
         //     const hotelId = message.data.hotelId;
         //     result = await this.#transactionService.getRoomsByHotel(hotelId);
@@ -52,10 +54,8 @@ export class ApiService {
         if(isReadOnly){
             await this.sendOutput(user, result);
         } else {
-            await this.sendOutput(user, {promiseId: message.promiseId, ...result});
+            await this.sendOutput(user, message.promiseId ? {promiseId: message.promiseId, ...result} : result);
         }
-
-        this.db.close();
     }
 
     sendOutput = async (user, response) => {
