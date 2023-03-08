@@ -39,6 +39,8 @@ class HotelService {
                     return await this.#getHotels();
                 case constants.RequestSubTypes.DEREG_HOTEL:
                     return await this.#deregisterHotel();
+                case constants.RequestSubTypes.RATE_HOTEL:
+                    return await this.#rateHotel();
                 default:
                     throw ("Invalid Request");
             }
@@ -159,7 +161,7 @@ class HotelService {
     async #getAnAvailableOffer() {
         try {
             const createdOffers = await this.#contractAcc.getNftOffers();
-            
+
             let rows = await this.#db.getValues("Hotels", null);
             if (rows.length > 0 && createdOffers && createdOffers.length > 0) {
                 let takenNfts = rows.map(r => r.HotelNftId);
@@ -241,21 +243,46 @@ class HotelService {
     async #deregisterHotel() {
         let response = {};
 
-        if (! this.#message.data.HotelNftId)
-            throw("HotelNftId is absent in the request");
-        
+        if (!this.#message.data.HotelNftId)
+            throw ("HotelNftId is absent in the request");
+
         const query = `SELECT HotelNftId FROM Hotels WHERE HotelNftId = "${this.#message.data.HotelNftId}"`;
         const row = await this.#db.runNativeGetFirstQuery(query);
-        if(!row)
-            throw("The relevant Hotel token Id not found.");
-        
+        if (!row)
+            throw ("The relevant Hotel token Id not found.");
+
         // burn the record
         await this.#contractAcc.burnNft(row.HotelNftId, row.HotelWalletAddress);
 
         // Delete the record
-        await this.#db.deleteValues('Hotels', {HotelNftId: row.HotelNftId});
+        await this.#db.deleteValues('Hotels', { HotelNftId: row.HotelNftId });
 
         response.success = `Hotel ${row.Name} deregistered successfully.`;
+        return response;
+    }
+
+    async #rateHotel() {
+        let response = {};
+        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.CustomerId))
+            throw ("Invalid Request.");
+        const data = this.#message.data;
+
+        // Thnking the hotelId and CustomerId records exists
+        const rateEntity = {
+            RatingScore: data.RatingScore,
+            CustomerId: data.CustomerId,
+            HotelId: data.HotelId,
+            RatingDate: data.RatingDate
+        }
+
+        let rateId;
+        if (await this.#db.isTableExists('Ratings')) {
+            rateId = (await this.#db.insertValue('Ratings', rateEntity)).lastId;
+        } else {
+            throw ("Ratings table not found.")
+        }
+
+        response.success = { rateId: rateId };
         return response;
     }
 

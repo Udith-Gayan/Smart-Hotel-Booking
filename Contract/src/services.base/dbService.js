@@ -117,6 +117,18 @@ export class DbService {
                 FOREIGN KEY (RoomId) REFERENCES Rooms (Id)
                 )`)
 
+            // Rating table
+            await this.#runQuery(`CREATE TABLE IF NOT EXISTS Ratings (
+                Id INTEGER,
+                RatingScore INTEGER,
+                RatingDate DATE,
+                CustomerId INTEGER,
+                HotelId INTEGER,
+                PRIMARY KEY("Id" AUTOINCREMENT),
+                FOREIGN KEY (CustomerId) REFERENCES Customers (Id),
+                FOREIGN KEY (HotelId) REFERENCES Hotels (Id)
+            )`);
+
             // await this.#insertData();
 
             console.log("Database initialized.");

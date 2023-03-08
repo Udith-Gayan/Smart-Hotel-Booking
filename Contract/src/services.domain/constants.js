@@ -9,6 +9,7 @@ const RequestSubTypes = {
     REGISTRATION_CONFIRMATION: "RegistrationConfirmation",
     GET_HOTELS: "GetHotels",
     DEREG_HOTEL: "DeregHotel",
+    RATE_HOTEL: "RateHotel",
 
     GET_ROOMS: "GetRooms",
     CREATE_ROOM: "CreateRoom",
