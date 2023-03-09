@@ -13449,7 +13449,7 @@ function setup(env) {
 	createDebug.disable = disable;
 	createDebug.enable = enable;
 	createDebug.enabled = enabled;
-	createDebug.humanize = __nccwpck_require__(9992);
+	createDebug.humanize = __nccwpck_require__(900);
 	createDebug.destroy = destroy;
 
 	Object.keys(env).forEach(key => {
@@ -21289,7 +21289,7 @@ JPoint.prototype.isInfinity = function isInfinity() {
 
 var curves = exports;
 
-var hash = __nccwpck_require__(7800);
+var hash = __nccwpck_require__(5591);
 var curve = __nccwpck_require__(9356);
 var utils = __nccwpck_require__(9274);
 
@@ -22055,7 +22055,7 @@ Signature.prototype.toDER = function toDER(enc) {
 "use strict";
 
 
-var hash = __nccwpck_require__(7800);
+var hash = __nccwpck_require__(5591);
 var curves = __nccwpck_require__(8315);
 var utils = __nccwpck_require__(9274);
 var assert = utils.assert;
@@ -46737,7 +46737,7 @@ exports.isValidClassicAddress = isValidClassicAddress;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 /* eslint-disable no-bitwise --
  * lots of bitwise operators necessary for this */
-const hashjs = __nccwpck_require__(7800);
+const hashjs = __nccwpck_require__(5591);
 const BigNum = __nccwpck_require__(6641);
 class Sha512 {
     constructor() {
@@ -46777,7 +46777,7 @@ exports["default"] = Sha512;
 
 const assert = __nccwpck_require__(9491);
 const brorand = __nccwpck_require__(9266);
-const hashjs = __nccwpck_require__(7800);
+const hashjs = __nccwpck_require__(5591);
 const elliptic = __nccwpck_require__(9485);
 const addressCodec = __nccwpck_require__(7676);
 const secp256k1_1 = __nccwpck_require__(243);
@@ -46973,7 +46973,7 @@ exports.accountPublicFromPublicGenerator = accountPublicFromPublicGenerator;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.computePublicKeyHash = exports.hexToBytes = exports.bytesToHex = void 0;
 const assert = __nccwpck_require__(9491);
-const hashjs = __nccwpck_require__(7800);
+const hashjs = __nccwpck_require__(5591);
 const BN = __nccwpck_require__(6641);
 function bytesToHex(a) {
     return a
@@ -51983,7 +51983,7 @@ exports.isValidClassicAddress = isValidClassicAddress;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 /* eslint-disable no-bitwise --
  * lots of bitwise operators necessary for this */
-const hashjs = __nccwpck_require__(7800);
+const hashjs = __nccwpck_require__(5591);
 const BigNum = __nccwpck_require__(6641);
 class Sha512 {
     constructor() {
@@ -52023,7 +52023,7 @@ exports["default"] = Sha512;
 
 const assert = __nccwpck_require__(9491);
 const brorand = __nccwpck_require__(9266);
-const hashjs = __nccwpck_require__(7800);
+const hashjs = __nccwpck_require__(5591);
 const elliptic = __nccwpck_require__(9485);
 const addressCodec = __nccwpck_require__(280);
 const secp256k1_1 = __nccwpck_require__(8549);
@@ -52219,7 +52219,7 @@ exports.accountPublicFromPublicGenerator = accountPublicFromPublicGenerator;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.computePublicKeyHash = exports.hexToBytes = exports.bytesToHex = void 0;
 const assert = __nccwpck_require__(9491);
-const hashjs = __nccwpck_require__(7800);
+const hashjs = __nccwpck_require__(5591);
 const BN = __nccwpck_require__(6641);
 function bytesToHex(a) {
     return Array.from(a, (byteValue) => {
@@ -53543,7 +53543,7 @@ themes.setDefault({platform: 'linux', hasUnicode: true, hasColor: true}, 'colorB
 "use strict";
 
 var stringWidth = __nccwpck_require__(2577)
-var stripAnsi = __nccwpck_require__(5591)
+var stripAnsi = __nccwpck_require__(1388)
 
 module.exports = wideTruncate
 
@@ -55129,7 +55129,7 @@ var hasUnicode = module.exports = function () {
 
 /***/ }),
 
-/***/ 7800:
+/***/ 5591:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 var hash = exports;
@@ -56438,7 +56438,7 @@ exports.shr64_lo = shr64_lo;
 "use strict";
 
 
-var hash = __nccwpck_require__(7800);
+var hash = __nccwpck_require__(5591);
 var utils = __nccwpck_require__(8165);
 var assert = __nccwpck_require__(910);
 
@@ -57165,7 +57165,7 @@ module.exports = __nccwpck_require__(6224);
 
 /***/ }),
 
-/***/ 3734:
+/***/ 5098:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -57357,7 +57357,7 @@ function omit(obj, ...keys) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const agent_1 = __importDefault(__nccwpck_require__(3734));
+const agent_1 = __importDefault(__nccwpck_require__(5098));
 function createHttpsProxyAgent(opts) {
     return new agent_1.default(opts);
 }
@@ -76301,7 +76301,7 @@ function regExpEscape (s) {
 
 /***/ }),
 
-/***/ 9992:
+/***/ 900:
 /***/ ((module) => {
 
 /**
@@ -81633,7 +81633,7 @@ module.exports = Comparator
 
 const parseOptions = __nccwpck_require__(785)
 const { re, t } = __nccwpck_require__(9523)
-const cmp = __nccwpck_require__(5098)
+const cmp = __nccwpck_require__(4359)
 const debug = __nccwpck_require__(427)
 const SemVer = __nccwpck_require__(8088)
 const Range = __nccwpck_require__(9828)
@@ -82477,7 +82477,7 @@ module.exports = clean
 
 /***/ }),
 
-/***/ 5098:
+/***/ 4359:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const eq = __nccwpck_require__(1898)
@@ -82691,7 +82691,7 @@ module.exports = gte
 
 /***/ }),
 
-/***/ 900:
+/***/ 929:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const SemVer = __nccwpck_require__(8088)
@@ -82900,7 +82900,7 @@ const identifiers = __nccwpck_require__(2463)
 const parse = __nccwpck_require__(5925)
 const valid = __nccwpck_require__(9601)
 const clean = __nccwpck_require__(8848)
-const inc = __nccwpck_require__(900)
+const inc = __nccwpck_require__(929)
 const diff = __nccwpck_require__(4297)
 const major = __nccwpck_require__(6688)
 const minor = __nccwpck_require__(8447)
@@ -82918,7 +82918,7 @@ const eq = __nccwpck_require__(1898)
 const neq = __nccwpck_require__(6017)
 const gte = __nccwpck_require__(5522)
 const lte = __nccwpck_require__(7520)
-const cmp = __nccwpck_require__(5098)
+const cmp = __nccwpck_require__(4359)
 const coerce = __nccwpck_require__(3466)
 const Comparator = __nccwpck_require__(1532)
 const Range = __nccwpck_require__(9828)
@@ -84412,7 +84412,7 @@ function filter(error) {
 
 "use strict";
 
-const stripAnsi = __nccwpck_require__(5591);
+const stripAnsi = __nccwpck_require__(1388);
 const isFullwidthCodePoint = __nccwpck_require__(4882);
 const emojiRegex = __nccwpck_require__(8212);
 
@@ -84765,7 +84765,7 @@ function simpleEnd(buf) {
 
 /***/ }),
 
-/***/ 5591:
+/***/ 1388:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -94419,6 +94419,13 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   "ApiService": () => (/* binding */ ApiService)
 /* harmony export */ });
+/* harmony import */ var _services_domain_RoomService__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7547);
+/* harmony import */ var _services_domain_RoomService__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_services_domain_RoomService__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services_domain_CustomerService__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(8817);
+/* harmony import */ var _services_domain_CustomerService__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_services_domain_CustomerService__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
 const { SqliteDatabase } = __nccwpck_require__(6257)
 // const { TransactionService } = require('./transaction-service');
 const { HotelService } = __nccwpck_require__(7605);
@@ -94443,19 +94450,18 @@ class ApiService {
 
         let result = {};
         
-        if (message.type == constants.RequestTypes.HOTEL) {                                     //------------------- Register Hotel (hotelRegRequest, hotelRegConfirm) ------------------------------------
+        if (message.type == constants.RequestTypes.HOTEL) {                                     //------------------- Hotel Related Api ------------------------------------
             result = await new HotelService(message).handleRequest();
         }
-        // else if (message.type == 'getHotels') {                                             //---------------------Get hotels(with filters)-----------------------
-        //     result = await this.#transactionService.getHotels();
-        // }
-        // else if (message.type == 'createRoom') {                                            //------------------- Create Room --------------------------------------
-        //     result = await this.#transactionService.createRoom();
-        // }
-        // else if (message.type == 'getRoomsByHotel') {                                        //-------------------- Get rooms of a hotel-------------------------
-        //     const hotelId = message.data.hotelId;
-        //     result = await this.#transactionService.getRoomsByHotel(hotelId);
-        // }
+        else if (message.type == constants.RequestTypes.ROOM) {                                             //--------------------- Room related Api -----------------------
+            result = await new _services_domain_RoomService__WEBPACK_IMPORTED_MODULE_0__.RoomService(message).handleRequest();
+        }
+        else if (message.type == constants.RequestTypes.CUSTOMER) {                                            //------------------- Customer related Api --------------------------------------
+            result = await new _services_domain_CustomerService__WEBPACK_IMPORTED_MODULE_1__.CustomerService(message).handleRequest();
+        }
+        else if (message.type == constants.RequestTypes.RESERVATION) {                                        //-------------------- Reservation related Api-------------------------
+            result = await new ReservationService(message).handleRequest();
+        }
         // else if (message.type == 'makeBooking') {                                        //--------------------Make a booking-----------------------------
         //     result = await this.#transactionService.makeReservation(user.publicKey);
         // }
@@ -94564,7 +94570,6 @@ class DbService {
                         Name TEXT NOT NULL,
                         Description TEXT,
                         MaxRoomCount Integer,
-                        BookedRoomCount Integer,
                         CostPerNight DOUBLE,
                         NoOfBeds Integer,
                         HotelId INTEGER,
@@ -94583,7 +94588,7 @@ class DbService {
 
 
             // Room-Facilities Table
-            await this.#runQuery(`CREATE TABLE IF NOT EXISTS RFacilities (
+            await this.#runQuery(`CREATE TABLE IF NOT EXISTS RoomFacilities (
                 RoomId INTEGER,
                 RFacilityId INTEGER,
                 Quantity INTEGER,
@@ -94596,9 +94601,9 @@ class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS Customers (
                 Id INTEGER,
                 Name TEXT,
-                Nic TEXT,
                 Email Text,
                 ContactNumber TEXT,
+                WalletAddress TEXT NOT NULL,
                 PRIMARY KEY("Id" AUTOINCREMENT)
             )`);
 
@@ -94606,15 +94611,28 @@ class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS Reservations (
                 Id INTEGER,
                 RoomId INTEGER,
-                NoOfRooms INTEGER,
+                RoomCount INTEGER,
                 CustomerId INTEGER,
                 FromDate DATE,
                 ToDate DATE,
                 Cost DOUBLE,
+                TransactionId TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT),
                 FOREIGN KEY (CustomerId) REFERENCES Customers (Id),
                 FOREIGN KEY (RoomId) REFERENCES Rooms (Id)
                 )`)
+
+            // Rating table
+            await this.#runQuery(`CREATE TABLE IF NOT EXISTS Ratings (
+                Id INTEGER,
+                RatingScore INTEGER,
+                RatingDate DATE,
+                CustomerId INTEGER,
+                HotelId INTEGER,
+                PRIMARY KEY("Id" AUTOINCREMENT),
+                FOREIGN KEY (CustomerId) REFERENCES Customers (Id),
+                FOREIGN KEY (HotelId) REFERENCES Hotels (Id)
+            )`);
 
             // await this.#insertData();
 
@@ -94824,6 +94842,13 @@ class SqliteDatabase {
         return (await this.insertValues(tableName, [value]));
     }
 
+    /**
+     * 
+     * @param {string} tableName 
+     * @param {object} value New values as an object
+     * @param {object} filter Where values
+     * @returns 
+     */
     async updateValue(tableName, value, filter = null) {
         if (!this.db)
             throw 'Database connection is not open.';
@@ -94965,6 +94990,154 @@ module.exports = {
 
 /***/ }),
 
+/***/ 8817:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const evernode = __nccwpck_require__(6238)
+const settings = (__nccwpck_require__(9419)/* .settings */ .X);
+const businessConfigurations = (__nccwpck_require__(9419)/* .businessConfigurations */ .s);
+const constants = __nccwpck_require__(9420)
+const { SqliteDatabase } = __nccwpck_require__(6257)
+
+
+class CustomerService {
+
+    #message = null;
+    #contractAcc = null;
+    #xrplApi = null;
+    #db = null;
+    #dbPath = settings.dbPath;
+
+    constructor(message) {
+        this.#message = message;
+        this.#xrplApi = new evernode.XrplApi('wss://hooks-testnet-v2.xrpl-labs.com');
+        evernode.Defaults.set({
+            xrplApi: this.#xrplApi,
+        });
+        this.#contractAcc = new evernode.XrplAccount(settings.contractWalletAddress, settings.contractWalletSecret, { xrplApi: this.#xrplApi });
+        this.#db = new SqliteDatabase(this.#dbPath);
+    }
+
+    async handleRequest() {
+        try {
+            this.#db.open();
+            await this.#xrplApi.connect();
+
+            switch (this.#message.subType) {
+                case constants.RequestSubTypes.CREATE_CUSTOMER:
+                    return await this.#createCustomer();
+                    break;
+                case constants.RequestSubTypes.EDIT_CUSTOMER:
+                    return this.#editCustomer();
+                    break;
+                case constants.RequestSubTypes.DELETE_CUSTOMER:
+                    return await this.#deleteCustomer();
+                    break;
+                case constants.RequestSubTypes.GET_CUSTOMERS:
+                    return await this.#getCustomers();  // not yet implemented
+                    break;
+                default:
+                    throw ("Invalid Request");
+            }
+
+        } catch (error) {
+            return { error: error }
+        } finally {
+            await this.#xrplApi.disconnect();
+            this.#db.close();
+        }
+    }
+
+    // Create a Room
+    async #createCustomer() {
+        let response = {};
+        if (!(this.#message.data && this.#message.data.Name && this.#message.data.ContactNumber && this.#message.data.Email && this.#message.data.WalletAddress))
+            throw ("Invalid Request.");
+
+        const data = this.#message.data;
+        const customerEntity = {
+            Name: data.Name,
+            Email: data.Email,
+            ContactNumber: data.ContactNumber,
+            WalletAddress: data.WalletAddress
+        }
+
+        let customerId;
+        if (await this.#db.isTableExists('Customers')) {
+            try {
+                customerId = (await this.#db.insertValue('Customers', customerEntity)).lastId;
+            } catch (error) {
+                throw (`Error in saving the customer ${customerEntity.Name}`);
+            }
+        }
+        else {
+            throw ('Customer table not found.');
+        }
+
+        response.success = { customerId: customerId };
+        return response;
+
+    }
+
+    async #editCustomer() {
+        let response = {};
+
+        if (!(this.#message.data && this.#message.data.CustomerId && this.#message.data.NewData))
+            throw ("Invalid Request.");
+
+        const data = this.#message.data;
+        let query = `SELECT * FROM Customers WHERE Id=${data.CustomerId}`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw (`Customer not found.`);
+
+        try {
+            await this.#db.updateValue('Customers', data.NewData, { Id: res.Id })
+        } catch (error) {
+            console.log(error);
+            throw (`Error occured in updating customer ${res.Id}`);
+        }
+
+        response.success = { customerId: res.Id };
+        return response;
+
+    }
+
+    async #deleteCustomer() {
+        let response = {};
+        if (!(this.#message.data && this.#message.data.CustomerId))
+            throw ("Invalid Request.");
+        
+        const data = this.#message.data;
+        let query = `SELECT * FROM Customers WHERE Id=${data.CustomerId}`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw (`Customer not found.`);
+            
+        try {
+            await this.#db.deleteValues('Customers', data.CustomerId)
+        } catch (error) {
+          console.log(error);
+          throw("Error in deleting customer");
+        }
+
+        response.success = "Customer removed successfully.";
+        return response;
+    }
+
+    async #getCustomers() {
+
+    }
+
+}
+
+
+module.exports = {
+    CustomerService
+}
+
+/***/ }),
+
 /***/ 7605:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -95009,6 +95182,8 @@ class HotelService {
                     return await this.#getHotels();
                 case constants.RequestSubTypes.DEREG_HOTEL:
                     return await this.#deregisterHotel();
+                case constants.RequestSubTypes.RATE_HOTEL:
+                    return await this.#rateHotel();
                 default:
                     throw ("Invalid Request");
             }
@@ -95129,7 +95304,7 @@ class HotelService {
     async #getAnAvailableOffer() {
         try {
             const createdOffers = await this.#contractAcc.getNftOffers();
-            
+
             let rows = await this.#db.getValues("Hotels", null);
             if (rows.length > 0 && createdOffers && createdOffers.length > 0) {
                 let takenNfts = rows.map(r => r.HotelNftId);
@@ -95211,21 +95386,46 @@ class HotelService {
     async #deregisterHotel() {
         let response = {};
 
-        if (! this.#message.data.HotelNftId)
-            throw("HotelNftId is absent in the request");
-        
+        if (!this.#message.data.HotelNftId)
+            throw ("HotelNftId is absent in the request");
+
         const query = `SELECT HotelNftId FROM Hotels WHERE HotelNftId = "${this.#message.data.HotelNftId}"`;
         const row = await this.#db.runNativeGetFirstQuery(query);
-        if(!row)
-            throw("The relevant Hotel token Id not found.");
-        
+        if (!row)
+            throw ("The relevant Hotel token Id not found.");
+
         // burn the record
         await this.#contractAcc.burnNft(row.HotelNftId, row.HotelWalletAddress);
 
         // Delete the record
-        await this.#db.deleteValues('Hotels', {HotelNftId: row.HotelNftId});
+        await this.#db.deleteValues('Hotels', { HotelNftId: row.HotelNftId });
 
         response.success = `Hotel ${row.Name} deregistered successfully.`;
+        return response;
+    }
+
+    async #rateHotel() {
+        let response = {};
+        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.CustomerId))
+            throw ("Invalid Request.");
+        const data = this.#message.data;
+
+        // Thnking the hotelId and CustomerId records exists
+        const rateEntity = {
+            RatingScore: data.RatingScore,
+            CustomerId: data.CustomerId,
+            HotelId: data.HotelId,
+            RatingDate: data.RatingDate
+        }
+
+        let rateId;
+        if (await this.#db.isTableExists('Ratings')) {
+            rateId = (await this.#db.insertValue('Ratings', rateEntity)).lastId;
+        } else {
+            throw ("Ratings table not found.")
+        }
+
+        response.success = { rateId: rateId };
         return response;
     }
 
@@ -95240,12 +95440,235 @@ module.exports = {
 
 /***/ }),
 
+/***/ 7547:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const evernode = __nccwpck_require__(6238)
+const settings = (__nccwpck_require__(9419)/* .settings */ .X);
+const businessConfigurations = (__nccwpck_require__(9419)/* .businessConfigurations */ .s);
+const constants = __nccwpck_require__(9420)
+const { SqliteDatabase } = __nccwpck_require__(6257)
+
+
+class RoomService {
+
+    #message = null;
+    #contractAcc = null;
+    #xrplApi = null;
+    #db = null;
+    #dbPath = settings.dbPath;
+
+    constructor(message) {
+        this.#message = message;
+        this.#xrplApi = new evernode.XrplApi('wss://hooks-testnet-v2.xrpl-labs.com');
+        evernode.Defaults.set({
+            xrplApi: this.#xrplApi,
+        });
+        this.#contractAcc = new evernode.XrplAccount(settings.contractWalletAddress, settings.contractWalletSecret, { xrplApi: this.#xrplApi });
+        this.#db = new SqliteDatabase(this.#dbPath);
+    }
+
+    async handleRequest() {
+        try {
+            this.#db.open();
+            await this.#xrplApi.connect();
+
+            switch (this.#message.subType) {
+                case constants.RequestSubTypes.CREATE_ROOM:
+                    return await this.#createRoom();
+                    break;
+                case constants.RequestSubTypes.EDIT_ROOM:
+                    return this.#editRoom();
+                    break;
+                case constants.RequestSubTypes.DELETE_ROOM:
+                    return await this.#deleteRoom();
+                    break;
+                case constants.RequestSubTypes.GET_ROOMS:
+                    return await this.#getRooms();  // not yet implemented
+                    break;
+                default:
+                    throw ("Invalid Request");
+            }
+
+        } catch (error) {
+            return { error: error }
+        } finally {
+            await this.#xrplApi.disconnect();
+            this.#db.close();
+        }
+    }
+
+    // Create a Room
+    async #createRoom() {
+        let response = {};
+        // Frontend makes a transaction with the amount to the contract wallet. Then , sends the transaction id to the backend.  The contract here checks the transaction Amount to be validated and create a room.
+        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.TransactionId))
+            throw ("The required data missing for room creation.");
+
+        const data = this.#message.data;
+
+        // check if Hotelid exists
+        let query = `SELECT * from Hotels WHERE Id = ${data.HotelId}`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw ("Hotel not found.");
+        if (res.IsRegistered == 0)
+            throw ("Hotel is not registered.");
+
+
+        // Trasaction Validity
+        const txList = (await this.#xrplApi.getAccountTrx(res.HotelWalletAddress)).filter(t => t.TransactionType == "Payment");
+        const paidTx = txList.find(tx => tx.hash == data.TransactionId);
+        if (!paidTx)
+            throw ("Invalid transaction hash.");
+
+        if (Number(paidTx.Amount) < businessConfigurations.ROOM_CREATION_COST)
+            throw ("Insuffcient amount paid for room creation.");
+
+
+
+        // Save the Room Entity
+        const roomEntity = {
+            Name: data.Name,
+            Description: data.Description,
+            MaxRoomCount: data.MaxRoomCount,
+            CostPerNight: data.CostPerNight,
+            NoOfBeds: data.NoOfBeds,
+            HotelId: data.HotelId
+        }
+        let roomId;
+        if (await this.#db.isTableExists('Rooms')) {
+            try {
+                roomId = (await this.#db.insertValue('Rooms', roomEntity)).lastId;
+            } catch (error) {
+                throw (`Error occured in saving the room ${roomEntity.Name}`);
+            }
+        } else {
+            throw ("Rooms table not found.");
+        }
+
+        // If RFacilityId is present, in each array object, get that and save to m2m tble
+        // Otherwise, create a facility record and add it to the m2m table.
+        if (data.Facilities && data.Facilities.length > 0) {
+            for(const facility of data.Facilities) {
+                let rFacilityId = 0;
+                if(facility.RFacilityId && facility.RFacilityId > 0) {
+                    rFacilityId = facility.RFacilityId;
+                } 
+                else {
+                    // Save RFacility Entity
+                    const rFacilityEntity = {
+                        Name: facility.Name,
+                        Description: facility.Description,
+                        Status: constants.FacilityStatuses.AVAILABLE
+                    }
+
+                    if(await this.#db.isTableExists('RFacilities')) {
+                        try {
+                            rFacilityId = (await this.#db.insertValue('RFacilities', rFacilityEntity)).lastId;
+                        } catch (error) {
+                            throw(`Error occured in saving room Facility ${rFacilityEntity.Name} `);
+                        }
+                    } else {
+                        throw(`Room Facility table not found.`);
+                    }
+                }
+
+                
+                // Save in the m2m table
+                const roomFacilityEntity = {
+                    RoomId: roomId,
+                    RFacilityId: rFacilityId,
+                    Quantity: facility.Quantity ?? 1
+                }
+
+                if(await this.#db.isTableExists('RoomFacilities')) {
+                    try {
+                        await this.#db.insertValue('RoomFacilities', roomFacilityEntity);
+                    } catch (error) {
+                        throw(`Error occured in saving Room-Facility ${roomFacilityEntity.RFacilityId} `);
+                    }
+                } else {
+                    throw(`Room-Facility table not found.`);
+                }
+            }
+        }
+
+        response.success = { roomId: roomId }
+        return response;
+    }
+
+    async #editRoom() {
+        let response = {};
+
+        if (!(this.#message.data && this.#message.data.RoomId && this.#message.data.NewData))
+            throw ("Invalid Request.");
+
+        const data = this.#message.data;
+
+        // check if RoomId exists
+        let query = `SELECT * from Rooms WHERE Id = ${data.RoomId}`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw ("Room not found.");
+        
+        try {
+            await this.#db.updateValue('Rooms', data.NewData, { Id: data.RoomId }); 
+        } catch (error) {
+            console.log(error);
+            throw("Error occured in updating the room table.");
+        }
+
+        response.success = { roomId: res.Id };
+        return response;
+    }
+
+    async #deleteRoom() {
+        let response = {};
+
+        if(!(this.#message.data && this.#message.data.RoomId ))
+            throw("Invalid Request.");
+        
+        const data = this.#message.data;
+        // check if RoomId exists
+        let query = `SELECT * from Rooms WHERE Id = ${data.RoomId}`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw ("Room not found.");
+    
+        try {
+            await this.#db.deleteValues('RoomFacilities', {RoomId: data.RoomId});
+            await this.#db.deleteValues('Rooms', {Id: data.RoomId});
+        } catch (error) {
+            console.log(error);
+            throw("Error in deleting the room.")
+        }
+
+        response.success = "Room successfullt removed."
+        return response;
+    }
+
+    async #getRooms() {
+
+    }
+
+}
+
+
+module.exports = {
+    RoomService
+}
+
+/***/ }),
+
 /***/ 9420:
 /***/ ((module) => {
 
 const RequestTypes = {
     HOTEL: "Hotel",
-    ROOM: "Room"
+    ROOM: "Room",
+    CUSTOMER: "Customer",
+    RESERVATION: "Reservation"
 }
 
 const RequestSubTypes = {
@@ -95253,9 +95676,21 @@ const RequestSubTypes = {
     REGISTRATION_CONFIRMATION: "RegistrationConfirmation",
     GET_HOTELS: "GetHotels",
     DEREG_HOTEL: "DeregHotel",
+    RATE_HOTEL: "RateHotel",
+
     GET_ROOMS: "GetRooms",
     CREATE_ROOM: "CreateRoom",
-    DELETE_ROOM: "DeleteRoom"
+    EDIT_ROOM: "EditRoom",
+    DELETE_ROOM: "DeleteRoom",
+
+    CREATE_CUSTOMER: "CreateCustomer",
+    EDIT_CUSTOMER: "EditCustomer",
+    DELETE_CUSTOMER: "DeleteCustomer",
+    GET_CUSTOMERS: "GetCustomers",
+
+    CREATE_RESERVATION: "CreateReservation",
+    GET_RESERVATIONS: "GetReservations",
+    DELETE_RESERVATION: "DeleteReservation"
 
 }
 
@@ -95579,7 +96014,7 @@ module.exports = JSON.parse('{"TYPES":{"Validation":10003,"Done":-1,"Hash128":4,
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rNbB3AE3Tnti7YqnyHxdBRXGqswgevFBHK","contractWalletSecret":"snfBYDBFd7EwKXTtWaBDcuwoXvzJW"}}');
+module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rNbB3AE3Tnti7YqnyHxdBRXGqswgevFBHK","contractWalletSecret":"snfBYDBFd7EwKXTtWaBDcuwoXvzJW"},"s":{"ROOM_CREATION_COST":2000000,"ROOM_COMMISSION_PERCENTAGE":5}}');
 
 /***/ })
 
@@ -95619,6 +96054,18 @@ module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAd
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports

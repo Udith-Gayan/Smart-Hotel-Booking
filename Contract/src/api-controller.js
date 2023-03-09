@@ -31,13 +31,12 @@ export class ApiService {
         else if (message.type == constants.RequestTypes.ROOM) {                                             //--------------------- Room related Api -----------------------
             result = await new RoomService(message).handleRequest();
         }
-        else if (message.type == constants.RequestTypes.CUSTOMER) {                                            //------------------- Create Room --------------------------------------
+        else if (message.type == constants.RequestTypes.CUSTOMER) {                                            //------------------- Customer related Api --------------------------------------
             result = await new CustomerService(message).handleRequest();
         }
-        // else if (message.type == 'getRoomsByHotel') {                                        //-------------------- Get rooms of a hotel-------------------------
-        //     const hotelId = message.data.hotelId;
-        //     result = await this.#transactionService.getRoomsByHotel(hotelId);
-        // }
+        else if (message.type == constants.RequestTypes.RESERVATION) {                                        //-------------------- Reservation related Api-------------------------
+            result = await new ReservationService(message).handleRequest();
+        }
         // else if (message.type == 'makeBooking') {                                        //--------------------Make a booking-----------------------------
         //     result = await this.#transactionService.makeReservation(user.publicKey);
         // }

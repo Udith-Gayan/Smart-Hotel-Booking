@@ -138,5 +138,5 @@ class CustomerService {
 
 
 module.exports = {
-    RoomService
+    CustomerService
 }

@@ -112,6 +112,7 @@ export class DbService {
                 FromDate DATE,
                 ToDate DATE,
                 Cost DOUBLE,
+                TransactionId TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT),
                 FOREIGN KEY (CustomerId) REFERENCES Customers (Id),
                 FOREIGN KEY (RoomId) REFERENCES Rooms (Id)

@@ -1,7 +1,8 @@
 const RequestTypes = {
     HOTEL: "Hotel",
     ROOM: "Room",
-    CUSTOMER: "Customer"
+    CUSTOMER: "Customer",
+    RESERVATION: "Reservation"
 }
 
 const RequestSubTypes = {
@@ -19,7 +20,11 @@ const RequestSubTypes = {
     CREATE_CUSTOMER: "CreateCustomer",
     EDIT_CUSTOMER: "EditCustomer",
     DELETE_CUSTOMER: "DeleteCustomer",
-    GET_CUSTOMERS: "GetCustomers"
+    GET_CUSTOMERS: "GetCustomers",
+
+    CREATE_RESERVATION: "CreateReservation",
+    GET_RESERVATIONS: "GetReservations",
+    DELETE_RESERVATION: "DeleteReservation"
 
 }
 
