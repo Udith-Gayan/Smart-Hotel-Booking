@@ -63,8 +63,10 @@ class HotelService {
             HotelNftId: "",
             OwnerName: data.OwnerName,
             Name: data.Name,
+            Description: data.Description,
             AddressLine1: data.AddressLine1,
             AddressLine2: data.AddressLine2,
+            City: data.City,
             DistanceFromCenter: data.DistanceFromCenter,
             Email: data.Email,
             ContactNumber1: data.ContactNumber1,
@@ -157,6 +159,20 @@ class HotelService {
         response.success = { rowId: insertedId, offerId: availableOffer.index }
         return response;
     }
+    
+    async #checkIfHotelExists(walletAddress) {
+        const query = `SELECT * FROM HOTELS WHERE HotelWalletAddress = ?`;
+        try {
+            const res = await this.#db.runNativeGetFirstQuery(query, [walletAddress]);
+            if(res && res.length > 0)
+                return res;
+            else
+                return null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
     async #getAnAvailableOffer() {
         try {
@@ -217,8 +233,8 @@ class HotelService {
     }
 
     async #getHotels() {
-        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1, Hotels.ContactNumber2,
-                              Images.Id, Images.Url
+        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.Description, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.City, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1, Hotels.ContactNumber2,
+                              Images.Id AS ImageId, Images.Url
                        FROM Hotels
                        LEFT OUTER JOIN Images
                        ON Hotels.Id = Images.HotelId 
