@@ -264,7 +264,7 @@ class SqliteDatabase {
     /**
      * 
      * @param {string} query 
-     * @param {[]} params | An array of values to be replaced in ? places in thr]e query
+     * @param {[]} params | An array of values to be replaced in ? places in the query
      * @returns A promise of an object of a single row. Otherwise undefined.
      */
     runNativeGetFirstQuery(query, params = []) {

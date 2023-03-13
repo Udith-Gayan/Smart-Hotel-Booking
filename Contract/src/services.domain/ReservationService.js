@@ -59,9 +59,9 @@ class ReservationService {
         const data = this.#message.data;
         const noOfDays = this.countDaysInBetween(data.FromDate, data.ToDate);
 
-        const query = `SELECT * FROM Rooms WHERE Id=${data.RoomId}`;
+        let query = `SELECT * FROM Rooms WHERE Id=${data.RoomId}`;
         const room = await this.#db.runNativeGetFirstQuery(query);
-        const expectedCost = noOfDays * room.CostPerNight * data.RoomCount;
+        const expectedCost = noOfDays * room.CostPerNight * data.RoomCount; //
 
         //Get transaction amount
         const txList = (await this.#xrplApi.getAccountTrx(settings.contractWalletAddress)).filter(t => t.TransactionType == "Payment");
@@ -70,8 +70,19 @@ class ReservationService {
         if (!paidTx)
             throw ("Invalid transaction hash.");
 
-        if (Number(Number(paidTx.Amount)) < expectedCost)
+        if (Number(paidTx.Amount) < expectedCost)
             throw ("Insuffcient amount paid for room reservation.");
+
+        // Pay the rest keeping the commision,  to the hotel address
+        query = `SELECT HotelWalletAddress FROM Hotels WHERE Id=${room.HotelId}`;
+        const hotelWalletAddress = await this.#db.runNativeGetFirstQuery(query);
+        if (hotelWalletAddress) {
+            const amountToSend = (Number(paidTx.Amount) / 1000000 ) * (100 - businessConfigurations.ROOM_COMMISSION_PERCENTAGE) / 100;
+            const res = await this.#contractAcc.makePayment(hotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null);
+            if(res.code !== "tesSUCCESS")
+                throw("Error in sending fee to the Hotel's wallet.")
+
+        }
         
         const reservationEntity = {
             RoomId: data.RoomId,

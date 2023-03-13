@@ -37,18 +37,7 @@ export class ApiService {
         else if (message.type == constants.RequestTypes.RESERVATION) {                                        //-------------------- Reservation related Api-------------------------
             result = await new ReservationService(message).handleRequest();
         }
-        // else if (message.type == 'makeBooking') {                                        //--------------------Make a booking-----------------------------
-        //     result = await this.#transactionService.makeReservation(user.publicKey);
-        // }
-        // else if (message.type == 'getAllBookings') {                                     //------------------ Get all bookings (with filters)----------------------------------
-        //     result = await this.#transactionService.getAllBookings();
-        // }
-        // else if (message.type == 'getAllBookingsByUser') {                                     //------------------ Get all bookings of a User----------------------------------
-        //     result = await this.#transactionService.getAllBookings(user.publicKey);
-        // }
-        // else if (message.type == 'transactions') {                                      //---------------------- Transaction Handler----------------------------
-        //      result = await this.#transactionService.handleTransaction();
-        // }
+
 
         if(isReadOnly){
             await this.sendOutput(user, result);
