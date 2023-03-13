@@ -12,6 +12,7 @@
     "browserify-zlib": "^0.2.0",
     "bufferutil": "^4.0.6",
     "elliptic": "^6.5.4",
+    "firebase": "^9.17.2",
     "fs": "0.0.2",
     "hotpocket-js-client": "0.5.3",
     "net": "^1.0.2",
