@@ -1,12 +1,12 @@
-import ImageUploader from "./components/ImageUploader";
 import RegisterHotel from "./pages/RegisterHotel";
 import './App.scss'
+import {Route, Routes} from "react-router-dom";
 
 function App() {
     return (
-        <div>
-            <RegisterHotel/>
-        </div>
+        <Routes>
+            <Route path="/register" element={<RegisterHotel />}/>
+        </Routes>
     );
 }
 

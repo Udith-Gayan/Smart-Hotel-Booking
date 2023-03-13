@@ -42,6 +42,9 @@ function RegisterHotel() {
                             <DropdownItem className="dropdown_items">5 Star</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
+
+                    <div className="title_3 mt-3">Description</div>
+                    <textarea className={"text_area"} name="postContent" rows={5}/>
                 </Card1>
             </section>
 
@@ -88,7 +91,8 @@ function RegisterHotel() {
             </section>
 
             <div className={"row center_div pt-3"}>
-                <button className={"complete_registration_button"} style={{width: "650px"}}>Complete registration</button>
+                <button className={"complete_registration_button"} style={{width: "650px"}}>Complete registration
+                </button>
             </div>
         </MainContainer>
     );
