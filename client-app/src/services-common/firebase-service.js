@@ -15,8 +15,9 @@ export class FirebaseService {
         const unique_id = uuid();
         let re = /(?:\.([^.]+))?$/;
         let file_type = re.exec("file.name.with.dots.txt")[1];
-        let new_file_name = hotel_id + "_" + unique_id + "." + file_type;
-        console.log(new_file_name)
+        const splited = file.name.split(".");
+        const ft = splited[splited.length - 1];
+        let new_file_name = hotel_id + "_" + unique_id + "." + ft;
         return new Promise((resolve, reject) => {
             if (!file) {
                 reject("Empty file")
