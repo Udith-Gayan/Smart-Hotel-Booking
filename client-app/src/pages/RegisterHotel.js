@@ -7,13 +7,14 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input,
 import Facilities from "../components/register_hotel_components/Facilities";
 import ContactDetails from "../components/register_hotel_components/ContactDetails";
 import PropertyPhotos from "../components/register_hotel_components/PropertyPhotos";
-import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
 import Footer from "../components/Footer/Footer";
 import { Link, useNavigate } from "react-router-dom";
 
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
 import { Navigate } from "react-router-dom";
+import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
+import {FirebaseService} from "../services-common/firebase-service";
 
 function RegisterHotel() {
 
@@ -41,6 +42,7 @@ function RegisterHotel() {
 
     const [isCondition1Checked, setIsCondition1Checked] = useState(false);
     const [isCondition2Checked, setIsCondition2Checked] = useState(false);
+
 
 
 
@@ -102,13 +104,7 @@ function RegisterHotel() {
             alert("Error occurred in Registration.!")
         }
 
-
-
-
     }, [Name, StarRate, Description, OwnerName, Email, AddressLine1, AddressLine2, City, ContactNumber1, ContactNumber2, DistanceFromCenter, HotelFacilities, uploadedImages]);
-
-
-
 
 
     return (

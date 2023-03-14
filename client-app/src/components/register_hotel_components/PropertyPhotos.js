@@ -5,12 +5,7 @@ import {useState} from "react";
 import ImagePreviewSection from "./ImagePreviewSection";
 
 function PropertyPhotos(props) {
-    const [uploadedImages, setUploadedImages] = useState([]);
 
-    const onChangeUploadImages = (event) => {
-        props.onChangeUploadImages(event.target.files);
-        // setUploadedImages((prevState) => [...prevState, ...images]);
-    }
     return (
         <section>
             <div className="title_2">Property Photos</div>
@@ -20,9 +15,10 @@ function PropertyPhotos(props) {
             </div>
             <Card1>
                 <div className={"title_3"}>Upload Photos</div>
-                <FileUploader onChangeUploadImages={onChangeUploadImages}/>
+                <FileUploader onChangeUploadImages={props.onChangeUploadImages}/>
 
                 <div className={"title_3 pt-2 pb-2"}>Files</div>
+
 
             </Card1>
 
