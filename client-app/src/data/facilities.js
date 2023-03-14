@@ -1,43 +1,61 @@
 const facilitiesData = [
     {
-        id: 1,
-        text: "Free WiFi"
+        Id: 1,
+        Name: "Free WiFi",
+        Description: "Description"
     },
     {
-        id: 2,
-        text: "Swimming Pool"
+        Id: 2,
+        Name: "Swimming Pool",
+        Description: "Description"
+
     },
     {
-        id: 3,
-        text: "Fitness Center"
+        Id: 3,
+        Name: "Fitness Center",
+        Description: "Description"
+
     },
     {
-        id: 4,
-        text: "Room Service"
+        Id: 4,
+        Name: "Room Service",
+        Description: "Description"
+
     },
     {
-        id: 5,
-        text: "Spa & Wellness"
+        Id: 5,
+        Name: "Spa & Wellness",
+        Description: "Description"
+
     },
     {
-        id: 6,
-        text: "Family Room"
+        Id: 6,
+        Name: "Family Room",
+        Description: "Description"
+
     },
     {
-        id: 7,
-        text: "Pet friendly"
+        Id: 7,
+        Name: "Pet friendly",
+        Description: "Description"
+
     },
     {
-        id: 8,
-        text: "Disabled access"
+        Id: 8,
+        Name: "Disabled access",
+        Description: "Description"
+
     },
     {
-        id: 9,
-        text: "Restaurant"
+        Id: 9,
+        Name: "Restaurant",
+        Description: "Description"
+
     },
     {
-        id: 10,
-        text: "Parking"
+        Id: 10,
+        Name: "Parking",
+        Description: "Description"
     }
 ]
 

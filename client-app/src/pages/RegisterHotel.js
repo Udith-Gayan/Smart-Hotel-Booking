@@ -7,13 +7,30 @@ import Facilities from "../components/register_hotel_components/Facilities";
 import ContactDetails from "../components/register_hotel_components/ContactDetails";
 import PropertyPhotos from "../components/register_hotel_components/PropertyPhotos";
 import '../styles/layout_styles.scss';
+import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
+import {FirebaseService} from "../services-common/firebase-service";
 
 function RegisterHotel() {
     let user = "User";
     const [dropDownOpen, setDropDownOpen] = useState(false);
+    const [uploadedImages, setUploadedImages] = useState([]);
+
 
     const toggleDropDown = () => {
         setDropDownOpen(prevState => !prevState)
+    }
+
+    const onChangeUploadImages = (images) => {
+        setUploadedImages((prevState) => [...prevState, ...images]);
+    }
+
+    const submitCompleteRegistration = () => {
+        FirebaseService.uploadFiles("1", uploadedImages).then((urls) => {
+            console.log(urls);
+        }).catch(err => {
+            console.log(err);
+        })
+
     }
 
     return (
@@ -52,7 +69,9 @@ function RegisterHotel() {
 
             <Facilities/>
 
-            <PropertyPhotos/>
+            <PropertyPhotos onChangeUploadImages={onChangeUploadImages}/>
+            {uploadedImages.length !== 0 && <ImagePreviewSection images={uploadedImages}/>}
+
 
             <section>
                 <div className={"title_3"} style={{lineHeight: "25px"}}>
@@ -91,7 +110,8 @@ function RegisterHotel() {
             </section>
 
             <div className={"row center_div pt-3"}>
-                <button className={"complete_registration_button"} style={{width: "650px"}}>Complete registration
+                <button className={"complete_registration_button"} style={{width: "650px"}}
+                        onClick={submitCompleteRegistration}>Complete registration
                 </button>
             </div>
         </MainContainer>

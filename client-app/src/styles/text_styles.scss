@@ -20,6 +20,14 @@
 
 }
 
+.title_3_sub {
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 34px;
+
+}
+
 .title_4 {
   font-family: 'Inter', serif;
   font-weight: 500;
@@ -91,4 +99,25 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 30px;
+}
+
+.dropdown_room{
+  height: 50px;
+  border-radius: 5px;
+  width: 100%;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.dropdown_bed_type{
+  height: 50px;
+  border-radius: 5px;
+  width: 50%;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.multiline {
+  word-wrap: break-word;
+  white-space: pre-line;
 }
