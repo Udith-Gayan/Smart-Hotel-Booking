@@ -119,27 +119,27 @@ class HotelService {
         // Saving to the HFacilities table
         if (data.Facilities && data.Facilities.length > 0) {
             for (const facility of data.Facilities) {
-                let facilityId = 0;
-                const facilityEntity = {
-                    Name: facility.Name,
-                    Description: facility.Description,
-                    Status: constants.FacilityStatuses.AVAILABLE
-                }
+                // let facilityId = 0;
+                // const facilityEntity = {
+                //     Name: facility.Name,
+                //     Description: facility.Description,
+                //     Status: constants.FacilityStatuses.AVAILABLE
+                // }
 
-                if (await this.#db.isTableExists('HFacilities')) {
-                    try {
-                        facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
-                    } catch (error) {
-                        throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
-                    }
-                } else {
-                    throw ('HFacility table not found.');
-                }
+                // if (await this.#db.isTableExists('HFacilities')) {
+                //     try {
+                //         facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
+                //     } catch (error) {
+                //         throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
+                //     }
+                // } else {
+                //     throw ('HFacility table not found.');
+                // }
 
                 // Saving to M2M table Hotel-Facilities table
                 const hotelHfacilityEntity = {
                     HotelId: insertedId,
-                    HFacilityId: facilityId
+                    HFacilityId: facility.Id
                 }
 
                 if (await this.#db.isTableExists('HotelHFacilities')) {

@@ -8,7 +8,7 @@ const constants = require('./../constants');
 export default class HotelService {
   static instance = HotelService.instance || new HotelService();
 
-  #registrationURI = "URIRegistration";
+  #registrationURI = "SMBOOKING";
 
   contractService = ContractService.instance;
   #xrplService = XrplService.xrplInstance;

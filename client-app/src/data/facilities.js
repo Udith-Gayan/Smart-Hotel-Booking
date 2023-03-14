@@ -1,43 +1,54 @@
 const facilitiesData = [
     {
-        id: 1,
-        text: "Free WiFi"
+        Id: 1,
+        Name: "Free WiFi",
+        Description: "This is test description of this facility."
     },
     {
-        id: 2,
-        text: "Swimming Pool"
+        Id: 2,
+        Name: "Swimming Pool",
+        Description: "This is test description of this facility."
     },
     {
-        id: 3,
-        text: "Fitness Center"
+        Id: 3,
+        Name: "Fitness Center",
+        Description: "This is test description of this facility."
     },
     {
-        id: 4,
-        text: "Room Service"
+        Id: 4,
+        Name: "Room Service",
+        Description: "This is test description of this facility."
     },
     {
-        id: 5,
-        text: "Spa & Wellness"
+        Id: 5,
+        Name: "Spa & Wellness",
+        Description: "This is test description of this facility."
     },
     {
-        id: 6,
-        text: "Family Room"
+        Id: 6,
+        Name: "Family Room",
+        Description: "This is test description of this facility."
     },
     {
-        id: 7,
-        text: "Pet friendly"
+        Id: 7,
+        Name: "Pet friendly",
+        Description: "This is test description of this facility."
     },
     {
-        id: 8,
-        text: "Disabled access"
+        Id: 8,
+        Name: "Disabled access",
+        Description: "This is test description of this facility."
     },
     {
-        id: 9,
-        text: "Restaurant"
+        Id: 9,
+        Name: "Restaurant",
+        Description: "This is test description of this facility."
     },
     {
-        id: 10,
-        text: "Parking"
+        Id: 10,
+        Name: "Parking",
+        Description: "This is test description of this facility."
+
     }
 ]
 

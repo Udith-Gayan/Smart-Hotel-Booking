@@ -2,9 +2,6 @@ import ECDSA from 'xrpl/dist/npm/ECDSA';
 
 const xrpl = window.xrpl;
 
-
-const fundWalletAddress = process.env.REACT_APP_HOTEL_FUNDING_SEED_ACCOUNT_ADDRESS;
-const fundWalletSecret = process.env.REACT_APP_HOTEL_FUNDING_SEED_ACCOUNT_SECRET;
 const contractWalletAddress = process.env.REACT_APP_CONTRACT_WALLET_ADDRESS;
 const xrplServerURL = process.env.REACT_APP_RIPPLED_SERVER || "wss://hooks-testnet-v2.xrpl-labs.com";
 
