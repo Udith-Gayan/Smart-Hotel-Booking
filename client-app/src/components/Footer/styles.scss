@@ -2,20 +2,30 @@
     padding-top: 2rem;
     background-color: #2C2C76;
     padding-bottom: 1rem;
+
     .row {
         color: white;
+
+        .image-container {
+            width: 150px;
+            height: 40px;
+
+            margin-left: -15px;
+            .logo {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+            }
+        }
 
         .customer_support {
             margin-top: 1.5rem;
         }
+
         h4 {
-            margin-bottom: 0px!important;
+            margin-bottom: 0px !important;
         }
 
     }
-    
+
 }
-
-
-
-

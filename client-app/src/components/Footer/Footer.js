@@ -8,7 +8,9 @@ function Footer(props) {
                 <Row>
                     <Col>
                         <h4>About Us</h4>
-                        <p>VoyageLank</p>
+                        <div className="image-container">
+                            <img src="/Assets/Images/logo.png" alt="voyageLanka" className="logo" />
+                        </div>
                     </Col>
                     <Col>
                         <h4>Property Categories</h4>
