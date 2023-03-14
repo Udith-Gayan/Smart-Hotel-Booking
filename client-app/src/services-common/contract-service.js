@@ -17,13 +17,13 @@ export default class ContractService {
 
     async init() {
 
-        console.log("Initialized")
         if (this.userKeyPair == null) {
             this.userKeyPair = await HotPocket.generateKeys();
         }
         if (this.client == null) {
             this.client = await HotPocket.createClient([this.server], this.userKeyPair);
         }
+        console.log("Initialized")
 
         // This will get fired if HP server disconnects unexpectedly.
         this.client.on(HotPocket.events.disconnect, () => {

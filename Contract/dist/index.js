@@ -94462,18 +94462,7 @@ class ApiService {
         else if (message.type == constants.RequestTypes.RESERVATION) {                                        //-------------------- Reservation related Api-------------------------
             result = await new ReservationService(message).handleRequest();
         }
-        // else if (message.type == 'makeBooking') {                                        //--------------------Make a booking-----------------------------
-        //     result = await this.#transactionService.makeReservation(user.publicKey);
-        // }
-        // else if (message.type == 'getAllBookings') {                                     //------------------ Get all bookings (with filters)----------------------------------
-        //     result = await this.#transactionService.getAllBookings();
-        // }
-        // else if (message.type == 'getAllBookingsByUser') {                                     //------------------ Get all bookings of a User----------------------------------
-        //     result = await this.#transactionService.getAllBookings(user.publicKey);
-        // }
-        // else if (message.type == 'transactions') {                                      //---------------------- Transaction Handler----------------------------
-        //      result = await this.#transactionService.handleTransaction();
-        // }
+
 
         if(isReadOnly){
             await this.sendOutput(user, result);
@@ -94636,7 +94625,7 @@ class DbService {
                 FOREIGN KEY (HotelId) REFERENCES Hotels (Id)
             )`);
 
-            // await this.#insertData();
+            await this.#insertData();
 
             console.log("Database initialized.");
             this.#db.close();
@@ -94645,38 +94634,52 @@ class DbService {
 
     static async #insertData() {
 
-        // Inserting hotels
-        let hotels = `INSERT INTO Hotels(Id, HotelWalletAddress, HotelNftId, Name, Address, Email, IsRegistered) VALUES 
-                        (1, "rpnzMDvKfN1ewJs4ddSRXFFZQF6Ubmhkqx", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Hotel Mandara Rosen", "Kataragama", "test1@gmail.com", 1),
-                        (2, "rfKk9cRbspDzo62rbWniTMQX93FfCt8w5o", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D66", "Hotel Hilton", "Colombo 1", "hilton.lk@gmail.com", 1),
-                        (3, "rLkLngcLBKfiYRL32Ygk4WYofBudgii3zk", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D67", "Hotel Galadari", "Colombo 1", "galadari@gmail.com", 1)`;
 
-        await this.#runQuery(hotels);
+        let hFacilities = `INSERT INTO "HFacilities" ("Id","Name","Description","Status") VALUES (1,'Free WiFi','This is test description of this facility.','Available'),
+        (6,'Family Room','This is test description of this facility.','Available'),
+        (3,'Fitness Center','This is test description of this facility.','Available'),
+        (2,'Swimming Pool','This is test description of this facility.','Available'),
+        (7,'Pet friendly','This is test description of this facility.','Available'),
+        (4,'Room Service','This is test description of this facility.','Available'),
+        (8,'Disabled access','This is test description of this facility.','Available'),
+        (10,'Parking','This is test description of this facility.','Available'),
+        (9,'Restaurant','This is test description of this facility.','Available'),
+        (5,'Spa & Wellness','This is test description of this facility.','Available')`;
+        await this.#runQuery(hFacilities);
 
-        // Inserting Rooms
-        let rooms = `INSERT INTO Rooms(Id, HotelId, RoomNftId, Name) VALUES
-                        (1, 1, "000B013A95F14B0044F78A264E41713C64B5F8924254055E208C3098E00000D65", "Sea-View Room"),
-                        (2, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D33", "Coconut-Grove Room"),
-                        (3, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EEDD08C3098E00000D65", "Presidential Room"),
-                        (4, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE20866098E00000D65", "Presidential Room"),
-                        (5, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CFEWF98E00000D65", "Beach-View Room"),
-                        (6, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208VDFV98E00000D65", "Ever-Green Room"),
-                        (7, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CVD098E00000D65", "Double Bed Room"),
-                        (14, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540VDFDFDFF098E00000D65", "Tripple Bed Room"),
-                        (8, 1, "000B013A95F14B0044F78A264E41713C64B5F892425SDDSFDFDC3098E00000D65", "Single Bed Room"),
-                        (9, 1, "000B013A95F14B0044F78A264E41713C64B5F89242SDCVDSSDVC3098E00000D65", "Single Bed Green View Room"),
-                        (10, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Non-AC Room"),
-                        (11, 3, "000B013A95F14B0044F78A264E41713C64B5F89242540EEFVDV3098E00000D65", "Presidential Room"),
-                        (12, 3, "000B013A95F14B0044F78A264E41713C64B5F892425VDFVFVDF3098E00000D65", "Single Bed Room"),
-                        (13, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208D3098E00000D65", "Sea-View Blue Room")`;
-        await this.#runQuery(rooms);
 
-        // Inserting Bookings
-        let bookings = `INSERT INTO Bookings(Id, RoomId, PersonName, UserPubkey, FromDate, ToDate) VALUES
-                            (1, 1, "Andrew", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208", "2022-8-10", "2022-8-15"),
-                            (2, 1, "Ravi", "000B013A95F14B0044F78A264E41713C64B5F89242540EE210", "2022-9-3", "2022-9-10"),
-                            (3, 5, "Perera", "000B013A95F14B0044F78A264E41713C64B5F89242540EE209",  "2022-8-31", "2022-9-2")`;
-        await this.#runQuery(bookings);
+        // // Inserting hotels
+        // let hotels = `INSERT INTO Hotels(Id, HotelWalletAddress, HotelNftId, Name, Address, Email, IsRegistered) VALUES 
+        //                 (1, "rpnzMDvKfN1ewJs4ddSRXFFZQF6Ubmhkqx", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Hotel Mandara Rosen", "Kataragama", "test1@gmail.com", 1),
+        //                 (2, "rfKk9cRbspDzo62rbWniTMQX93FfCt8w5o", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D66", "Hotel Hilton", "Colombo 1", "hilton.lk@gmail.com", 1),
+        //                 (3, "rLkLngcLBKfiYRL32Ygk4WYofBudgii3zk", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D67", "Hotel Galadari", "Colombo 1", "galadari@gmail.com", 1)`;
+
+        // await this.#runQuery(hotels);
+
+        // // Inserting Rooms
+        // let rooms = `INSERT INTO Rooms(Id, HotelId, RoomNftId, Name) VALUES
+        //                 (1, 1, "000B013A95F14B0044F78A264E41713C64B5F8924254055E208C3098E00000D65", "Sea-View Room"),
+        //                 (2, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D33", "Coconut-Grove Room"),
+        //                 (3, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EEDD08C3098E00000D65", "Presidential Room"),
+        //                 (4, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE20866098E00000D65", "Presidential Room"),
+        //                 (5, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CFEWF98E00000D65", "Beach-View Room"),
+        //                 (6, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208VDFV98E00000D65", "Ever-Green Room"),
+        //                 (7, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CVD098E00000D65", "Double Bed Room"),
+        //                 (14, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540VDFDFDFF098E00000D65", "Tripple Bed Room"),
+        //                 (8, 1, "000B013A95F14B0044F78A264E41713C64B5F892425SDDSFDFDC3098E00000D65", "Single Bed Room"),
+        //                 (9, 1, "000B013A95F14B0044F78A264E41713C64B5F89242SDCVDSSDVC3098E00000D65", "Single Bed Green View Room"),
+        //                 (10, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Non-AC Room"),
+        //                 (11, 3, "000B013A95F14B0044F78A264E41713C64B5F89242540EEFVDV3098E00000D65", "Presidential Room"),
+        //                 (12, 3, "000B013A95F14B0044F78A264E41713C64B5F892425VDFVFVDF3098E00000D65", "Single Bed Room"),
+        //                 (13, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208D3098E00000D65", "Sea-View Blue Room")`;
+        // await this.#runQuery(rooms);
+
+        // // Inserting Bookings
+        // let bookings = `INSERT INTO Bookings(Id, RoomId, PersonName, UserPubkey, FromDate, ToDate) VALUES
+        //                     (1, 1, "Andrew", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208", "2022-8-10", "2022-8-15"),
+        //                     (2, 1, "Ravi", "000B013A95F14B0044F78A264E41713C64B5F89242540EE210", "2022-9-3", "2022-9-10"),
+        //                     (3, 5, "Perera", "000B013A95F14B0044F78A264E41713C64B5F89242540EE209",  "2022-8-31", "2022-9-2")`;
+        // await this.#runQuery(bookings);
     }
 
     static #runQuery(query, params = null) {
@@ -95264,27 +95267,27 @@ class HotelService {
         // Saving to the HFacilities table
         if (data.Facilities && data.Facilities.length > 0) {
             for (const facility of data.Facilities) {
-                let facilityId = 0;
-                const facilityEntity = {
-                    Name: facility.Name,
-                    Description: facility.Description,
-                    Status: constants.FacilityStatuses.AVAILABLE
-                }
+                // let facilityId = 0;
+                // const facilityEntity = {
+                //     Name: facility.Name,
+                //     Description: facility.Description,
+                //     Status: constants.FacilityStatuses.AVAILABLE
+                // }
 
-                if (await this.#db.isTableExists('HFacilities')) {
-                    try {
-                        facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
-                    } catch (error) {
-                        throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
-                    }
-                } else {
-                    throw ('HFacility table not found.');
-                }
+                // if (await this.#db.isTableExists('HFacilities')) {
+                //     try {
+                //         facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
+                //     } catch (error) {
+                //         throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
+                //     }
+                // } else {
+                //     throw ('HFacility table not found.');
+                // }
 
                 // Saving to M2M table Hotel-Facilities table
                 const hotelHfacilityEntity = {
                     HotelId: insertedId,
-                    HFacilityId: facilityId
+                    HFacilityId: facility.Id
                 }
 
                 if (await this.#db.isTableExists('HotelHFacilities')) {
@@ -96032,7 +96035,7 @@ module.exports = JSON.parse('{"TYPES":{"Validation":10003,"Done":-1,"Hash128":4,
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rNbB3AE3Tnti7YqnyHxdBRXGqswgevFBHK","contractWalletSecret":"snfBYDBFd7EwKXTtWaBDcuwoXvzJW"},"s":{"ROOM_CREATION_COST":2000000,"ROOM_COMMISSION_PERCENTAGE":5}}');
+module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rE4ziTqKHUdSTFridczfEsRpKscESF1Lr3","contractWalletSecret":"snpbbYW5WVM2fqgyNbL7Y4WTUY7F4"},"s":{"ROOM_CREATION_COST":2000000,"ROOM_COMMISSION_PERCENTAGE":5}}');
 
 /***/ })
 
