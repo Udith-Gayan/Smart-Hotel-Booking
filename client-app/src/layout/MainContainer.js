@@ -1,6 +1,6 @@
 function MainContainer(props) {
     return (
-        <div className={"container mainContainer"}>
+        <div className={"container main_Container"}>
             {props.children}
         </div>
     );
