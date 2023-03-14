@@ -49,6 +49,9 @@ function Footer(props) {
                     </Col>
                 </Row>
                 <Row>
+                    <hr />
+                </Row>
+                <Row>
                     <Col className="text-center">
                         Copyright 2023.  All rights reserved.
                     </Col>
