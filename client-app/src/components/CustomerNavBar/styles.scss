@@ -1,0 +1,38 @@
+.cus_navbar {
+    background-color: #2C2C76;
+    height: 100px;
+    padding-left: 50px!important;
+    padding-right: 50px!important;
+    
+    .list_button {
+        color: #ffff!important;
+        border-color: #fff;
+        margin-right: 10px;
+        width: 160px; 
+    }
+
+    .signin_button {
+        color: #000!important;
+        background-color: #F9F7F7;
+        margin-right: 80px;
+        width: 80px;  
+
+    }
+
+    .community_txt {
+        margin-right: 80px;
+        margin-left: 20px;
+    }
+
+    .vacation_txt {
+        margin-left: 20px
+    }
+
+    .explore_txt {
+        margin-left: auto
+    }
+}
+
+.white-text {
+    color: #fff!important;
+}
