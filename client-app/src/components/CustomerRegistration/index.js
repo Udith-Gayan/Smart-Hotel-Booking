@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Form, Row, FormGroup, Label, Button, Input } from "reactstrap";
 import Card1 from "../../layout/Card";
 import MainContainer from "../../layout/MainContainer";
@@ -15,7 +15,19 @@ const CustomerRegistration = () => {
   const accountGeneratorVisibility = useSelector(
     (state) => state.registerCustomer.accountGeneratorVisibility
   );
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [secret, setSecret] = useState("");
   const dispatch = useDispatch();
+
+  const registerCustomer = (e) => {
+    e.preventDefault();
+    const body = { fullName, email, phoneNo, walletAddress, secret };
+    console.log(body);
+  };
   return (
     <div>
       <MainContainer>
@@ -23,18 +35,30 @@ const CustomerRegistration = () => {
           <div className="title_1">Welcome {}!</div>
           <div className="title_2">Customer details</div>
           <Card1>
-            <Form>
+            <Form onSubmit={registerCustomer}>
               <Row>
                 <Col md={6}>
                   <FormGroup>
                     <Label for="fullName">Full Name</Label>
-                    <Input id="fullName" name="fullName" type="text" />
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
                   </FormGroup>
                 </Col>
                 <Col md={6}>
                   <FormGroup>
                     <Label for="email">E-Mail</Label>
-                    <Input id="email" name="email" type="email" />
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </FormGroup>
                 </Col>
               </Row>
@@ -42,7 +66,13 @@ const CustomerRegistration = () => {
                 <Col md={6}>
                   <FormGroup>
                     <Label for="exampleAddress">Phone Number</Label>
-                    <Input id="phoneNo" name="phoneNo" type="tel" />
+                    <Input
+                      id="phoneNo"
+                      name="phoneNo"
+                      type="tel"
+                      value={phoneNo}
+                      onChange={(e) => setPhoneNo(e.target.value)}
+                    />
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -52,6 +82,8 @@ const CustomerRegistration = () => {
                       id="walletAddress"
                       name="walletAddress"
                       type="text"
+                      value={walletAddress}
+                      onChange={(e) => setWalletAddress(e.target.value)}
                     />
                   </FormGroup>
                 </Col>
@@ -90,6 +122,8 @@ const CustomerRegistration = () => {
                       id="secret"
                       name="secret"
                       type="text"
+                      value={secret}
+                      onChange={(e) => setSecret(e.target.value)}
                       disabled={registerCustomerVisibility ? false : true}
                     />
                   </FormGroup>
