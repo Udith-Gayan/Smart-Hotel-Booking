@@ -3,6 +3,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import './App.scss'
 import {Route, Routes} from "react-router-dom";
 import ContractService from "./services-common/contract-service";
+import HotelHomePage from "./pages/HotelHomePage";
 
 function App() {
     ContractService.instance.init();
@@ -11,6 +12,7 @@ function App() {
         <Routes>
             <Route path="/" element={<CustomerDashboard />} />
             <Route path="/register" element={<RegisterHotel />}/>
+            <Route path="/hotel/:id" element={<HotelHomePage />}/>
         </Routes>
     );
 }

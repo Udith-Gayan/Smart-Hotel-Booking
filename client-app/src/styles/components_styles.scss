@@ -1,0 +1,102 @@
+.star_button {
+  background-color: transparent;
+  //display: inline;
+  cursor: pointer;
+}
+.star_button_on {
+  color: #000;
+}
+.star_button_off {
+  color: #ccc;
+}
+
+.navigation_button {
+  background: #F9F7F7;
+  padding: 5px 40px;
+  border-radius: 3px;
+  color: #000000;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 16px;
+  align-items: center;
+  margin: 5px 20px;
+
+  border: 1px solid #A9A6A6;
+  //box-sizing: border-box;
+}
+
+.navigation_button_active{
+  background: #D9D9D9;
+}
+
+.upload_button {
+  background: #2C2C76;
+  padding: 10px 40px;
+  border-radius: 5px;
+  color: #D9D9D9;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 16px;
+  align-items: center;
+
+}
+
+.upload_button:hover {
+  background-color: #0c0c79; /* Change the background color */
+}
+
+.upload_button:active {
+  background-color: #060642; /* Change the background color */
+}
+
+.complete_registration_button {
+  background: #2C2C76;
+  padding: 10px 40px;
+  border-radius: 5px;
+  color: #D9D9D9;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 16px;
+  align-items: center;
+}
+
+.complete_registration_button:hover {
+  background-color: #070759; /* Change the background color */
+}
+
+.complete_registration_button:active {
+  background-color: #060642; /* Change the background color */
+}
+
+.create_room_button {
+  background: #2C2C76;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #D9D9D9;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 16px;
+  align-items:flex-start;
+}
+
+.create_room_button:hover {
+  background-color: #070759; /* Change the background color */
+}
+
+.create_room_button:active {
+  background-color: #060642; /* Change the background color */
+}
+
+.delete_button{
+  border: none;
+  background-color: transparent;
+  color: #fd1313;
+}
+
+.delete_button:hover{
+  color: #bb0404;
+}
+
+.delete_button:active{
+  color: #720202;
+}

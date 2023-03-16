@@ -18,21 +18,13 @@ function Facilities(props) {
         if (checked) {
             setCheckedFacilities(prevState => {
                 return [...prevState, facility];
-            });
-            props.setHotelFacilities(prevState => {
-                return [...prevState, facility];
-            });
+            })
         } else {
             setCheckedFacilities(prevState => {
                 return prevState.filter(cur_facility => {
                     return cur_facility.Id !== facility.Id;
                 })
-            });
-            props.setHotelFacilities(prevState => {
-                return prevState.filter(cur_facility => {
-                    return cur_facility.Id !== facility.Id;
-                })
-            });
+            })
         }
     }
 

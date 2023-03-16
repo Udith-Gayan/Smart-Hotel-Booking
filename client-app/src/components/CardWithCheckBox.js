@@ -19,7 +19,7 @@ function CardWithCheckBox(props) {
                        disabled={props.readOnly}
                        onChange={onChange}/>
                 &nbsp;&nbsp;&nbsp;
-                <Label check>
+                <Label check style={{width: "150px", lineHeight: "15px"}}>
                     {props.facility.Name}
                 </Label>
             </FormGroup>

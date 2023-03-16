@@ -68,8 +68,9 @@ export class DbService {
                         Name TEXT NOT NULL,
                         Description TEXT,
                         MaxRoomCount Integer,
-                        CostPerNight DOUBLE,
+                        BedType TEXT,
                         NoOfBeds Integer,
+                        CostPerNight DOUBLE,
                         HotelId INTEGER,
                         PRIMARY KEY("Id" AUTOINCREMENT),
                         FOREIGN KEY (HotelId) REFERENCES Hotels (Id)
@@ -89,7 +90,7 @@ export class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS RoomFacilities (
                 RoomId INTEGER,
                 RFacilityId INTEGER,
-                Quantity INTEGER,
+                Quantity INTEGER,  
                 PRIMARY KEY("RoomId", "RFacilityId"),
                 FOREIGN KEY (RoomId) REFERENCES Rooms (Id),
                 FOREIGN KEY (RFacilityId) REFERENCES RFacilities (Id)

@@ -13,7 +13,7 @@ function ImagePreview(props) {
     }
     return (
         <div className={"row"} style={{display: "flex", alignItems: "center"}}>
-            <div className={"col-2"}>
+            <div className={"col-2"} style={{width: "200px"}}>
                 <img
                     src={window.URL.createObjectURL(props.image)}
                     width={"168px"}
