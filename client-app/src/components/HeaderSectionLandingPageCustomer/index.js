@@ -13,12 +13,12 @@ const HeaderSectionLandingPageCustomer = () => {
 
     const noSecret = () => {
         dispatch(hide());
-        navigate("/register");
+        navigate("/register-customer");
     };
 
     const submit = () => {
         dispatch(hide());
-        navigate("/register");
+        navigate("/register-customer");
     };
     return (
         <div className={styles.heroImage}>
