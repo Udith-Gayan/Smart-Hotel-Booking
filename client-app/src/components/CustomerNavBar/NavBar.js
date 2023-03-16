@@ -5,7 +5,7 @@ import "./styles.scss"
 function NavBar(props) {
     return (
         <Navbar className="cus_navbar" dark>
-            <NavbarBrand href="/">
+            <NavbarBrand href="/" style={{marginLeft: "40px"}}>
                 <img
                     alt="logo"
                     src="/Assets/Images/logo.png"
