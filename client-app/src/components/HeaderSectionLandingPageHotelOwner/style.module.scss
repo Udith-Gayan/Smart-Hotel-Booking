@@ -1,0 +1,57 @@
+@import "../../index.scss";
+
+.wrapper {
+  width: 100%;
+  height: 300px;
+  background: $light-purple-color;
+  position: relative;
+}
+.backgroundShape {
+  background: $purple-color;
+  width: 90%;
+  height: 300px;
+  -ms-transform: skewY(-20deg);
+  -webkit-transform: skewY(-20deg);
+  transform: skewY(-20deg);
+  border-radius: 30px;
+  position: absolute;
+  top: 0px;
+  left: -30px;
+}
+.content {
+  position: absolute;
+  top: 200px;
+  left: 20%;
+  right: 20%;
+  z-index: 10;
+  background-color: rgba(57, 0, 116, 0.8);
+  border-radius: 25px;
+  padding: 20px;
+  color: white;
+}
+
+.heading {
+  font-size: 80px;
+}
+
+.description {
+  font-size: 20px;
+}
+
+.heroImage {
+  background-image: url("/Assets/Images/hotel-landing-page-banner.jpg"); /* The image used */
+  background-color: #cccccc; /* Used if the image is unavailable */
+  height: 100vh; /* You must set a specified height */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+
+.secretWrapper {
+  margin-top: 25px;
+  width: 50%;
+}
+
+.buttonOverride {
+  margin-right: 10px;
+}

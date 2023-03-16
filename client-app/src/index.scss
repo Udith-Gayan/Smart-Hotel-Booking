@@ -1,14 +1,58 @@
+$purple-color: #390074;
+$light-purple-color: #e8e2f9;
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
+.primaryButton {
+  background-color: $light-purple-color !important;
+  color: $purple-color !important;
+  border: none !important;
+}
+
+.primaryButton:hover {
+  background-color: $purple-color !important;
+  color: $light-purple-color !important;
+  border: none !important;
+}
+
+.secondaryButton {
+  background-color: $purple-color !important;
+  color: $light-purple-color !important;
+  border: none !important;
+}
+
+.secondaryButton:hover {
+  background-color: $light-purple-color !important;
+  color: $purple-color !important;
+  border: none !important;
+}
+
+.smallMargin {
+  margin: 10px;
+}
+
+.smallMarginLeftRight {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.smallMarginTopBottom {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.noMargin {
+  margin: 0;
+}
