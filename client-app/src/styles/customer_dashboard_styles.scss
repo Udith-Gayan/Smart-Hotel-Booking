@@ -1,0 +1,90 @@
+.main-image-div {
+    background: url("./../../public/Assets/Images/dashboard/beach.jpg");
+    height: 575px;
+    background-size: cover;
+
+    .main-txt {
+        padding-top: 100px;
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 100%;
+
+        h3 {
+            font-size: 4rem;
+        }
+
+        p {
+            font-size: 2rem;
+        }
+    }
+}
+
+.search_section {
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: -80px;
+    z-index: 2;
+
+    .search-area {
+        background-color: #ECECF2;
+        height: 140px;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+
+        .row {
+            align-items: flex-end;
+            justify-content: space-between;
+            width: 95%;
+
+            .people_count_inputgroup{
+                width: 140px;
+            }
+
+            input {
+                border: 2px solid rgb(102, 102, 102);
+                background-color: #ececf200;
+            }
+        }
+        
+        .range-picker-input {
+            display: inline-flex;
+            width: 100%;
+            border: none;
+
+            .picker-input__text {
+                padding-left: 10px;
+                height: 39px;
+                border-radius: 8px!important;
+                border:2px solid rgb(102, 102, 102)!important;
+                width: 100%!important;
+            }
+        }
+        
+        .calendar__head {
+            background: #2C2C76;
+        }
+    
+        .search-button {
+            width: 150px;
+            background-color: #2C2C76;
+            align-self: center;
+            margin-left: 10%;
+        }
+    }
+
+}
+
+div.best_offers {
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: aliceblue;
+
+    .offer_items_flexbox {
+        display: flex;
+        justify-content: space-between;
+    }
+}

@@ -8,12 +8,14 @@ import Facilities from "../components/register_hotel_components/Facilities";
 import ContactDetails from "../components/register_hotel_components/ContactDetails";
 import PropertyPhotos from "../components/register_hotel_components/PropertyPhotos";
 import Footer from "../components/Footer/Footer";
+import NavBar from "../components/RegistrationNavBar/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
 import { Navigate } from "react-router-dom";
 import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
+
 
 function RegisterHotel() {
 
@@ -108,6 +110,7 @@ function RegisterHotel() {
 
     return (
         <>
+            <NavBar />
             <MainContainer>
                 <section>
                     <div className="title_1">Welcome {user}!</div>

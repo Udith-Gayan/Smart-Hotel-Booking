@@ -6,4 +6,6 @@ export default class SharedStateService {
     // Shared states,
     currentHotelId = 0;
     hotelWallet = null;
+
+    
 }
