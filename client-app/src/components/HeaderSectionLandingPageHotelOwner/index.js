@@ -63,7 +63,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
                 className="secondaryButton smallMarginTopBottom"
                 onClick={() => submit()}
               >
-                Submit
+                Let's Go
               </Button>
             </div>
           ) : null}

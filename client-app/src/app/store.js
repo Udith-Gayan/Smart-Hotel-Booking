@@ -1,6 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
-import visibleReducer from '../features/visibility/visibleSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import visibleReducer from "../features/visibility/visibleSlice";
+import registerCustomerReducer from "../features/registerCustomer/registerCustomerSlice";
 
 export const store = configureStore({
-    reducer: { visibility: visibleReducer },
-})
+  reducer: {
+    visibility: visibleReducer,
+    registerCustomer: registerCustomerReducer,
+  },
+});
