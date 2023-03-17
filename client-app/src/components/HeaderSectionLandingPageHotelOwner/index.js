@@ -1,24 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input, Button } from "reactstrap";
 import styles from "./style.module.scss";
 import "../../index.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { show, hide } from "../../features/visibility/visibleSlice";
 import { useNavigate } from "react-router-dom";
+import XrplService from "../../services-common/xrpl-service";
+import HotelService from "../../services-domain/hotel-service copy";
 
 const HeaderSectionLandingPageHotelOwner = () => {
   const navigate = useNavigate();
   const visibility = useSelector((state) => state.visibility.value);
   const dispatch = useDispatch();
+  const xrplService = XrplService.xrplInstance;
+  const hotelService = HotelService.instance;
+
+  const [secret, setSecret] = useState('');
+  const [ errorMessage, setErrorMessage ] = useState(null);
+  const [disableSubmitBtn, setDisableSubmitBtn] = useState(false);
 
   const noSecret = () => {
     dispatch(hide());
     navigate("/register");
   };
 
-  const submit = () => {
+  const submit = async () => {
+    setDisableSubmitBtn(true);
+    if(! xrplService.isValidSecret(secret)) {
+      setErrorMessage("Invalid secret.");
+      setDisableSubmitBtn(false);
+      return;
+    }
+
+    // Check if registered hotel
+    const res = await hotelService.generateHotelWallet(secret);
+    if(!res) {
+      setErrorMessage("This is not a registered hotel's secret.");
+      setDisableSubmitBtn(false);
+      return;
+    }
+
     dispatch(hide());
-    navigate("/register");
+    navigate(`/hotel/${res.Id}`);
   };
   return (
     <div className={styles.heroImage}>
@@ -58,10 +81,13 @@ const HeaderSectionLandingPageHotelOwner = () => {
                 name="secret"
                 id="secret"
                 placeholder="Secret"
+                onChange={e => setSecret(e.target.value)}
               />{" "}
+              <p style={{color: 'red'}}>{errorMessage}</p>
               <Button
                 className="secondaryButton smallMarginTopBottom"
                 onClick={() => submit()}
+                disabled={disableSubmitBtn}
               >
                 Let's Go
               </Button>

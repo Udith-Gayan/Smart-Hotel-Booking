@@ -14,7 +14,7 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<CustomerDashboard />} />
-            <Route path="/landing-page-for-hotel-owner" element={<LandingPageForHotelOwner />} />
+            <Route path="/listProperty" element={<LandingPageForHotelOwner />} />
             <Route path="/landing-page-for-customer" element={<LandingPageForCustomer />} />
             <Route path="/register" element={<RegisterHotel />} />
             <Route path="/register-customer" element={<RegisterCustomer />} />

@@ -5,12 +5,32 @@ import {FaMapMarkerAlt} from "react-icons/fa";
 import {FaPlusCircle} from "react-icons/fa";
 import HotelImages from "../components/HotelHomePage/HotelImages";
 import FacilitiesReadOnly from "../components/HotelHomePage/FacilitiesReadOnly";
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect } from "react";
+import {useParams} from "react-router-dom";
 import CreateRoomModal from "../components/HotelHomePage/CreateRoomModal";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap"
 import RoomDetails from "../components/HotelHomePage/RoomDetails";
+import HotelService from "../services-domain/hotel-service copy";
 
 function HotelHomePage() {
+
+    const { id } = useParams();  // hotel id
+
+    // Load room details
+    async function getRooms() {
+        if (id && id > 0) {
+            const res = await HotelService.instance.getMyHotelRoomList(id);
+            if(res.roomList && res.roomList.length > 0) {
+                setRooms(res.roomList)
+            }
+        }
+
+    }
+
+    useEffect(() => {
+        getRooms();
+    });
+
     const address = "Box 11, Heritance Kandalama, Sigiriya"
     const images = ["https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
         "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
@@ -58,19 +78,35 @@ function HotelHomePage() {
         setCreatingRoom(true);
     }
 
-    const onSubmitRoom = (room_data) => {
-        setRooms(prevState => {
-            return [...prevState, room_data]
-        })
+
+    const onSubmitRoom = async (room_data) => {
+
+        // If there is a roomdata,  send a request to submit the room for creation.
+        // on successfull return id, call the fetch room query method   
+        const res = await HotelService.instance.createRoom(id, room_data);
+        if(res.roomId && res.roomId > 0) {
+            await getRooms();
+            // setRooms(prevState => {
+            //     return [...prevState, room_data]
+            // })
+
+        }
+
         setCreatingRoom(false);
     }
 
-    const onDeleteRoom = () => {
-        setRooms(prevState => {
-            return prevState.filter(cur_room => {
-                return cur_room.Id !== deleteRoomDetails.Id;
-            })
-        })
+    const onDeleteRoom = async () => {
+
+        // delete the room and call to get rooms again
+        const res = await HotelService.instance.deleteMyRoom(deleteRoomDetails.Id);
+        console.log(res);
+
+        await getRooms();
+        // setRooms(prevState => {
+        //     return prevState.filter(cur_room => {
+        //         return cur_room.Id !== deleteRoomDetails.Id;
+        //     })
+        // })
 
         setDeleteRoomDetails(null);
         setDeletingRoom(false);
@@ -85,9 +121,6 @@ function HotelHomePage() {
         setDeletingRoom(true);
         setDeleteRoomDetails(delete_room_details);
     }
-
-    console.log(rooms);
-
 
     return (
 

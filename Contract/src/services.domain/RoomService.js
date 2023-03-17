@@ -41,6 +41,9 @@ class RoomService {
                 case constants.RequestSubTypes.GET_ROOMS:
                     return await this.#getRooms();  // not yet implemented
                     break;
+                case constants.RequestSubTypes.GET_ROOMS_BY_HOTELID:
+                    return await this.#getRoomsByHotelId();
+                    break;
                 default:
                     throw ("Invalid Request");
             }
@@ -56,29 +59,39 @@ class RoomService {
     // Create a Room
     async #createRoom() {
         let response = {};
+        console.log(this.#message)
         // Frontend makes a transaction with the amount to the contract wallet. Then , sends the transaction id to the backend.  The contract here checks the transaction Amount to be validated and create a room.
-        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.TransactionId))
+        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.TransactionId)) {
+            console.log("The required data missing for room creation.")
             throw ("The required data missing for room creation.");
+        }
 
         const data = this.#message.data;
 
         // check if Hotelid exists
         let query = `SELECT * from Hotels WHERE Id = ${data.HotelId}`;
         const res = await this.#db.runNativeGetFirstQuery(query);
-        if (!res)
+        if (!res){
+            console.log("Hotel not found.")
             throw ("Hotel not found.");
+        }
         if (res.IsRegistered == 0)
             throw ("Hotel is not registered.");
 
 
         // Trasaction Validity
         const txList = (await this.#xrplApi.getAccountTrx(res.HotelWalletAddress)).filter(t => t.TransactionType == "Payment");
+        console.log(txList);
         const paidTx = txList.find(tx => tx.hash == data.TransactionId);
-        if (!paidTx)
+        if (!paidTx) {
+            console.log("Invalid transaction hash.");
             throw ("Invalid transaction hash.");
+        }
 
-        if (Number(paidTx.Amount) < businessConfigurations.ROOM_CREATION_COST)
+        if (Number(paidTx.Amount) < businessConfigurations.ROOM_CREATION_COST){
+            console.log("Insuffcient amount paid for room creation.")
             throw ("Insuffcient amount paid for room creation.");
+        }
 
 
 
@@ -89,7 +102,8 @@ class RoomService {
             MaxRoomCount: data.MaxRoomCount,
             CostPerNight: data.CostPerNight,
             NoOfBeds: data.NoOfBeds,
-            HotelId: data.HotelId
+            HotelId: data.HotelId,
+            BedType: BedType
         }
         let roomId;
         if (await this.#db.isTableExists('Rooms')) {
@@ -115,7 +129,6 @@ class RoomService {
                     const rFacilityEntity = {
                         Name: facility.Name,
                         Description: facility.Description,
-                        Status: constants.FacilityStatuses.AVAILABLE
                     }
 
                     if(await this.#db.isTableExists('RFacilities')) {
@@ -199,11 +212,34 @@ class RoomService {
             throw("Error in deleting the room.")
         }
 
-        response.success = "Room successfullt removed."
+        response.success = "Room successfully removed."
         return response;
     }
 
     async #getRooms() {
+
+    }
+
+    async #getRoomsByHotelId() {
+        let response = {};
+        if(!(this.#message.filters && this.#message.filters.HotelId && this.#message.filters.HotelId > 0))
+            throw("Invalid Request.");
+        
+        const hotelId = this.#message.filters.HotelId;
+        let query = `SELECT * FROM Hotels WHERE Id = ${hotelId}`
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw ("Hotel not found.");
+
+        const roomList = await this.#db.getValues('Rooms', {HotelId: hotelId});
+
+        if(roomList && roomList.length > 0)
+            response.success = { roomList: roomList};
+        else {
+            response.success = [];
+        }
+
+        return response;
 
     }
 

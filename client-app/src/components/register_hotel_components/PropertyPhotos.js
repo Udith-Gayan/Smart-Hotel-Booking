@@ -1,8 +1,5 @@
 import Card1 from "../../layout/Card";
 import FileUploader from "./FileUploader";
-import ImagePreview from "./ImagePreview";
-import {useState} from "react";
-import ImagePreviewSection from "./ImagePreviewSection";
 
 function PropertyPhotos(props) {
 

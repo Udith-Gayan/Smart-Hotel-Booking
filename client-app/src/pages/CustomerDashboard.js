@@ -7,10 +7,12 @@ import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from '@y0c/react-datepicker';
 import '@y0c/react-datepicker/assets/styles/calendar.scss';
 import OfferCard from "../components/OfferCard/OfferCard";
+import { useNavigate } from "react-router";
 // import 'moment/locale/ko';
 
 
 function CustomerDashboard() {
+    const navigate = useNavigate();
 
     const [dates, setDates] = useState(null);
     const [open, setOpen] = useState(false);
@@ -19,14 +21,19 @@ function CustomerDashboard() {
 
 
     const onDateChange = e => {
+        setDates(e);
         console.log(e);
+    }
+
+    const goToListProperty = () => {
+        navigate("/listProperty");
     }
 
 
 
     return (
         <>
-            <NavBar style={{ position: "fixed" }} />
+            <NavBar style={{ position: "fixed" }} goToListProperty={goToListProperty} />
             <div className="main-image-div">
                 <Container className="main-txt">
                     <h3>Enjoy your next stay in Sri Lanka</h3>
@@ -45,7 +52,7 @@ function CustomerDashboard() {
                         </Col>
                         <Col style={{ flex: "3 0" }}>
                             <Label>Check in - Check out</Label><br />
-                            <RangeDatePicker onChange={e => onDateChange(e)} startPlaceholder="From date" endPlaceholder="To date" dateFormat="YYYY/MM/DD" />
+                            <RangeDatePicker onChange={e => onDateChange(e)} value={dates} startPlaceholder="From date" endPlaceholder="To date" dateFormat="YYYY/MM/DD" />
                         </Col>
                         <Col >
                             <Label>No. of people</Label>

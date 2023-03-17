@@ -2,8 +2,10 @@ import ContractService from "../services-common/contract-service";
 import XrplService from "../services-common/xrpl-service";
 import SharedStateService from "./sharedState-service";
 
-const constants = require('./../constants');
 
+const constants = require('./../constants');
+const contractWalletAddress = process.env.REACT_APP_CONTRACT_WALLET_ADDRESS;
+const roomCreationCost = process.env.REACT_APP_ROOM_CREATION_COST;
 
 export default class HotelService {
   static instance = HotelService.instance || new HotelService();
@@ -15,18 +17,42 @@ export default class HotelService {
 
 
 
-
   async createNewHotelWallet() {
     const newHotelWallet = await this.#xrplService.createNewFundedUserWallet();
     SharedStateService.instance.hotelWallet = newHotelWallet;
     return newHotelWallet;
   }
 
+
+  /**
+   * 
+   * @param {string} seed 
+   * @returns | hotelWallet object || null
+   */
   async generateHotelWallet(seed) {
     const hotelWallet = this.#xrplService.generateWalletFromSeed(seed);
-    SharedStateService.instance.hotelWallet = hotelWallet;
-    return hotelWallet;
+    // Validate if a registered hotel
+    const resObj = {
+      type: constants.RequestTypes.HOTEL,
+      subType: constants.RequestSubTypes.IS_REGISTERED_HOTEL,
+      data: {
+        HotelWalletAddress: hotelWallet.address
+      }
+    }
+    const res = await this.contractService.submitReadRequest(resObj);
+
+    if (res && res.Id && res.Id > 0) {
+      SharedStateService.instance.currentHotelId = res.Id;
+      SharedStateService.instance.hotelWallet = hotelWallet;
+      return res;
+    }
+    else {
+      // if the hotel is not registered
+      return null;
+    }
   }
+
+  
 
   /**
    * 
@@ -61,7 +87,7 @@ export default class HotelService {
   /**
    * 
    * @param {object} resObject | {rowId, offerId}
-   * @returns true | false
+   * @returns {hotelId: 1} | false
    */
   async #acceptHotelRegistrationOffer(resObject) {
     let result;
@@ -84,8 +110,8 @@ export default class HotelService {
       throw (error);
     }
 
-    if (result === "Hotel Registration Successful.")
-      return true;
+    if (result.hotelId && result.hotelId  > 0)
+      return result;
     else
       return false;
 
@@ -105,7 +131,7 @@ export default class HotelService {
     }
     try {
       const res = await this.contractService.submitReadRequest(submitObject);
-      if(res.hotelList && res.hotelList.length > 0){
+      if (res.hotelList && res.hotelList.length > 0) {
         return res.hotelList[0];
       } else {
         console.log("No hotel found.");
@@ -114,7 +140,90 @@ export default class HotelService {
     }
     catch (error) {
       console.log(error);
-      throw(error);
+      throw (error);
+    }
+  }
+
+  /**
+   * 
+   * @param {number} hotelId | Hotel Id
+   * @returns | An array of rooms || []
+   */
+  async getMyHotelRoomList(hotelId) {
+    const submitObject = {
+      type: constants.RequestTypes.ROOM,
+      subType: constants.RequestSubTypes.GET_ROOMS_BY_HOTELID,
+      filters: { HotelId: hotelId }
+    };
+
+    let result;
+    try {
+      result = await this.contractService.submitReadRequest(submitObject);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+    return result;
+  }
+
+  /**
+   * 
+   * @param {number} roomId |  roomId
+   * @returns | A meessage string "Room deleted successfully."
+   */
+  async deleteMyRoom(roomId) {
+    const submitObject = {
+      type: constants.RequestTypes.ROOM,
+      subType: constants.RequestSubTypes.DELETE_ROOM,
+      data: { RoomId: roomId }
+    };
+
+    let result;
+    try {
+      result = await this.contractService.submitInputToContract(submitObject);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+    return result;
+  }
+
+  /**
+   * 
+   * @param {number} hotelId 
+   * @param {object} data |
+   * @returns A object { roomId: 2}
+   */
+  async createRoom(hotelId, data) {
+    const submitObject = {
+      type: constants.RequestTypes.ROOM,
+      subType: constants.RequestSubTypes.CREATE_ROOM,
+      data: {
+        HotelId: hotelId,
+        ...data
+
+      }
+    }
+    
+
+    // make the transaction and set the transaction id to the object before sending
+    const res = await this.#xrplService.makePayment(SharedStateService.instance.hotelWallet.seed, roomCreationCost, contractWalletAddress);
+
+    if (res.meta.TransactionResult === "tesSUCCESS") {
+      submitObject.data.TransactionId = res.hash;
+      let result;
+      try {
+        result = await this.contractService.submitInputToContract(submitObject);
+        console.log(result)
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+      console.log(result)
+      return result;
+
+    } else {
+      
     }
   }
 

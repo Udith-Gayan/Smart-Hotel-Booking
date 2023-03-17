@@ -70,14 +70,13 @@ function CreateRoomModal(props) {
 
     const onSubmitRoom = () => {
         props.onSubmitRoom({
-            "Id": uuid().slice(0,8),
             "Name": roomName,
             "Description": description,
-            "NumOfRooms": numOfRooms,
+            "MaxRoomCount": numOfRooms,
             "BedType": bedType,
-            "NumOfBeds": numOfBeds,
-            "PricePerNight": pricePerNight,
-            "Facilities": checkedFacilities
+            "NoOfBeds": numOfBeds,
+            "CostPerNight": pricePerNight,
+            "Facilities": checkedFacilities.map(fc => ({RFacilityId: fc.Id, ...fc}))
         });
     }
 

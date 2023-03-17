@@ -13,7 +13,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
-import { Navigate } from "react-router-dom";
 import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
 
 
@@ -93,9 +92,9 @@ function RegisterHotel() {
             // 4 - Submit for registration
             const res = await hotelService.registerHotel(submissionData);
 
-            if (res) {
+            if (res.hotelId > 0) {
                 alert("Successful");
-                // navigate("/");
+                navigate(`/hotel/${res.hotelId}`);
             } else {
                 alert("Registration failed!");
             }
