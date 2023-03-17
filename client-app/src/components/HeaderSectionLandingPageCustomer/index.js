@@ -22,7 +22,7 @@ const HeaderSectionLandingPageCustomer = () => {
     };
     return (
         <div className={styles.heroImage}>
-            <div className={styles.wrapper}>
+            <div>
                 <div className={styles.content}>
                     <span className={styles.heading}>Enjoy your</span> <br />
                     <hr className="noMargin" />

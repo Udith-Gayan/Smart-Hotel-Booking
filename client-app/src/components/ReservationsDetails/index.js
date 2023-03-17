@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table } from "reactstrap";
 import MainContainer from "../../layout/MainContainer";
 import customerReservationData from "../../data/customerReservations";
+import styles from "./index.module.scss";
+import Pagination from '../Pagination/index'
 
 const ReservationsForCustomer = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(10);
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = customerReservationData.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages = Math.ceil(customerReservationData.length / recordsPerPage)
+
   return (
-    <div>
-      <MainContainer>
+    <div className={styles.containerOverride}>
+      <MainContainer >
         <Table striped>
           <thead>
             <tr>
@@ -19,7 +29,7 @@ const ReservationsForCustomer = () => {
             </tr>
           </thead>
           <tbody>
-            {customerReservationData.map((customerReservation) => {
+            {currentRecords.map((customerReservation) => {
               return (
                 <tr key={customerReservation.RoomId}>
                   <th scope="row">{customerReservation.RoomId}</th>
@@ -33,6 +43,11 @@ const ReservationsForCustomer = () => {
             })}
           </tbody>
         </Table>
+        <Pagination
+          nPages={nPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </MainContainer>
     </div>
   );
