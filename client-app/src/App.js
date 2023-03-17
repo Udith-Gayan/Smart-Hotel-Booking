@@ -7,6 +7,7 @@ import HotelHomePage from "./pages/HotelHomePage";
 import LandingPageForHotelOwner from "./pages/LandingPageForHotelOwner";
 import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
+import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/register-customer" element={<RegisterCustomer />} exact />
             <Route path="/hotel/:id" element={<HotelHomePage />} exact />
             <Route path="/reservations" element={<Reservations />} exact />
+            <Route path="/search-hotel" element={<HotelSearchPage />} />
         </Routes>
     );
 }

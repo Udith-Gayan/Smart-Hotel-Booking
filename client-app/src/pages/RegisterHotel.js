@@ -12,12 +12,13 @@ import {
   Input,
   Label,
 } from "reactstrap";
-import Facilities from "../components/register_hotel_components/Facilities";
-import ContactDetails from "../components/register_hotel_components/ContactDetails";
-import PropertyPhotos from "../components/register_hotel_components/PropertyPhotos";
+import Facilities from "../components/RegisterHotelComponents/Facilities";
+import ContactDetails from "../components/RegisterHotelComponents/ContactDetails";
+import PropertyPhotos from "../components/RegisterHotelComponents/PropertyPhotos";
 import Footer from "../components/Footer/Footer";
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
+import { Navigate } from "react-router-dom";
 import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
 
 function RegisterHotel() {

@@ -5,9 +5,7 @@ import {useState} from "react";
 
 function Facilities(props) {
     const rowsData = [];
-    const [checkedFacilities, setCheckedFacilities] = useState([]);
-
-    console.log(checkedFacilities);
+    // const [checkedFacilities, setCheckedFacilities] = useState([]);
 
     for (let i = 0; i < facilitiesData.length; i += 3) {
         const rowItems = facilitiesData.slice(i, i + 3);
@@ -16,11 +14,11 @@ function Facilities(props) {
 
     const onChangeFacility = (checked, facility) => {
         if (checked) {
-            setCheckedFacilities(prevState => {
+            props.setHotelFacilities(prevState => {
                 return [...prevState, facility];
             })
         } else {
-            setCheckedFacilities(prevState => {
+            props.setHotelFacilities(prevState => {
                 return prevState.filter(cur_facility => {
                     return cur_facility.Id !== facility.Id;
                 })

@@ -90,3 +90,24 @@ section {
   z-index: 100;
   overflow: hidden;
 }
+
+.row_justify{
+  display: flex;
+  justify-content: space-between;
+}
+
+.row_fit{
+  display: flex;
+  justify-content:flex-start;
+  //width: 400px;
+  flex-wrap: wrap;
+
+}
+
+.row_right{
+  display: flex;
+  justify-content:flex-end;
+  //width: 400px;
+  flex-wrap: wrap;
+}
+

@@ -2,7 +2,8 @@ import Card1 from "../../layout/Card";
 import React, {useState} from "react";
 import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import RoomFacilities from "./RoomFacilities";
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
+import {bed_types} from "../../constants/constants";
 
 function CreateRoomModal(props) {
     const [roomName, setRoomName] = useState("");
@@ -23,14 +24,14 @@ function CreateRoomModal(props) {
     }
 
     const onChangeNumOfRooms = (event) => {
-        if(event.target.value < 0){
+        if (event.target.value < 0) {
             return;
         }
         setNumOfRooms(event.target.value);
     }
 
     const onChangeNumOfBeds = (event) => {
-        if(event.target.value < 0){
+        if (event.target.value < 0) {
             return;
         }
         setNumOfBeds(event.target.value);
@@ -39,15 +40,9 @@ function CreateRoomModal(props) {
     const onChangePricePerNight = (event) => {
         let regexp = /^[+]?\d*\.?\d*$/;
 
-        if(! regexp.test(event.target.value)){
+        if (!regexp.test(event.target.value)) {
             return;
         }
-        // if( isNaN(number) || number < 0);
-        // return
-        // let regexPattern = "/^[+]?\\d*\\.?\\d+$/";
-        // if(regexPattern.test(event.target.value)){
-        //     return;
-        // }
         setPricePerNight(event.target.value);
     }
 
@@ -70,7 +65,7 @@ function CreateRoomModal(props) {
 
     const onSubmitRoom = () => {
         props.onSubmitRoom({
-            "Id": uuid().slice(0,8),
+            "Id": uuid().slice(0, 8),
             "Name": roomName,
             "Description": description,
             "NumOfRooms": numOfRooms,
@@ -121,38 +116,36 @@ function CreateRoomModal(props) {
                 <div className={"row left_div"}>
                     <div className={"col"} style={{width: "100%"}}>
                         <div className="title_3_sub mt-3">Bed Type</div>
-                        <Dropdown isOpen={bedTypeDropDownOpen} toggle={toggleBedTypeDropDown}>
+                        <Dropdown isOpen={bedTypeDropDownOpen} toggle={toggleBedTypeDropDown}
+                                  className={"dropdown_bed_container"} style={{height: "50px"}}>
                             <DropdownToggle caret
+                                            className={"dropdown_bed_type"} color={"black"}
                                             style={{
-                                                textAlign: "right",
-                                                backgroundColor: '#ffffff',
-                                                borderColor: "#908F8F",
-                                                width: "100%",
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center"
                                             }}
-                                            className={"dropdown_bed_type"} color={"black"}>
-                                <span className={"title_3"} style={{textAlign: "left"}}>{bedType}</span>
+                            >
+                                <span style={{textAlign: "left"}} className={"title_3_sub"}>{bedType}</span>
 
                             </DropdownToggle>
                             <DropdownMenu style={{width: "100%"}}>
-                                <DropdownItem className="dropdown_items">
-                                    <div onClick={changeBedType.bind(this, "Single")}>Single</div>
-                                </DropdownItem>
-                                <DropdownItem className="dropdown_items">
-                                    <div onClick={changeBedType.bind(this, "Double")}>Double</div>
-                                </DropdownItem>
-                                <DropdownItem className="dropdown_items">
-                                    <div onClick={changeBedType.bind(this, "Queen")}>Queen</div>
-                                </DropdownItem>
-                                <DropdownItem className="dropdown_items">
-                                    <div onClick={changeBedType.bind(this, "King")}>King</div>
-                                </DropdownItem>
+
+                                {bed_types.map(bed_type => {
+                                    return (
+                                        <DropdownItem className="dropdown_items">
+                                            <div onClick={changeBedType.bind(this, bed_type)}>{bed_type}</div>
+                                        </DropdownItem>
+                                    )
+                                })}
                             </DropdownMenu>
                         </Dropdown>
                     </div>
                     <div className={"col"}>
                         <div className="title_3_sub mt-3">Number of Beds</div>
                         <input type="number" className="form-control input_full" id="num_of_beds"
-                               style={{backgroundColor: '#ffffff', borderColor: "#908F8F"}} value={numOfBeds} onChange={onChangeNumOfBeds}/>
+                               style={{backgroundColor: '#ffffff', borderColor: "#908F8F"}} value={numOfBeds}
+                               onChange={onChangeNumOfBeds}/>
                     </div>
                 </div>
 
@@ -163,7 +156,8 @@ function CreateRoomModal(props) {
 
                 <div className="title_3_sub mt-3">Price for one person per night ($)</div>
                 <input type="text" className="form-control input_half" id="price_per_night"
-                       style={{backgroundColor: '#ffffff', borderColor: "#908F8F", width: "50%"}} value={pricePerNight} onChange={onChangePricePerNight}/>
+                       style={{backgroundColor: '#ffffff', borderColor: "#908F8F", width: "50%"}} value={pricePerNight}
+                       onChange={onChangePricePerNight}/>
                 <RoomFacilities onChange={onChangeFacility}/>
 
                 <div className={"row center_div pt-3"}>
