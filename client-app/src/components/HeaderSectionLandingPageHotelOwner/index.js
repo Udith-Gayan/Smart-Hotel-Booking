@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Button } from "reactstrap";
-import styles from "./style.module.scss";
+import styles from "./index.module.scss";
 import "../../index.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { show, hide } from "../../features/visibility/visibleSlice";
@@ -13,13 +13,14 @@ const HeaderSectionLandingPageHotelOwner = () => {
 
   const noSecret = () => {
     dispatch(hide());
-    navigate("/register");
+    navigate("/register-hotel");
   };
 
   const submit = () => {
     dispatch(hide());
-    navigate("/register");
+    navigate("/register-hotel");
   };
+
   return (
     <div className={styles.heroImage}>
       <div className={styles.wrapper}>

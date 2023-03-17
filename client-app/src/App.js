@@ -8,6 +8,7 @@ import LandingPageForHotelOwner from "./pages/LandingPageForHotelOwner";
 import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import HotelSearchPage from "./pages/HotelSearchPage";
+import Reservations from "./pages/Reservations";
 
 function App() {
     ContractService.instance.init();
@@ -15,12 +16,13 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<CustomerDashboard />} />
-            <Route path="/landing-page-for-hotel-owner" element={<LandingPageForHotelOwner />} />
-            <Route path="/landing-page-for-customer" element={<LandingPageForCustomer />} />
-            <Route path="/register" element={<RegisterHotel />} />
-            <Route path="/register-customer" element={<RegisterCustomer />} />
-            <Route path="/hotel/:id" element={<HotelHomePage />} />
-            <Route path="/search-hotel" element={<HotelSearchPage />}/>
+            <Route path="/landing-page-for-hotel-owner" element={<LandingPageForHotelOwner />} exact />
+            <Route path="/landing-page-for-customer" element={<LandingPageForCustomer />} exact />
+            <Route path="/register-hotel" element={<RegisterHotel />} exact />
+            <Route path="/register-customer" element={<RegisterCustomer />} exact />
+            <Route path="/hotel/:id" element={<HotelHomePage />} exact />
+            <Route path="/reservations" element={<Reservations />} exact />
+            <Route path="/search-hotel" element={<HotelSearchPage />} />
         </Routes>
     );
 }
