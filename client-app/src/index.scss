@@ -21,10 +21,13 @@ code {
   border: none !important;
 }
 
-.primaryButton:hover {
+.primaryButton:hover,
+.primaryButton:active,
+.primaryButton:focus {
   background-color: $purple-color !important;
   color: $light-purple-color !important;
   border: none !important;
+  box-shadow: none !important;
 }
 
 .secondaryButton {
@@ -33,10 +36,13 @@ code {
   border: none !important;
 }
 
-.secondaryButton:hover {
+.secondaryButton:hover,
+.secondaryButton:active,
+.secondaryButton:focus {
   background-color: $light-purple-color !important;
   color: $purple-color !important;
   border: none !important;
+  box-shadow: none !important;
 }
 
 .smallMargin {

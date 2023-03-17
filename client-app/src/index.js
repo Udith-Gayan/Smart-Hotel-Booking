@@ -9,6 +9,7 @@ import { store } from './app/store'
 import { Provider } from 'react-redux'
 import NavBar from './components/NavBar/NavBar';
 import { Toaster } from 'react-hot-toast';
+import Footer from './components/Footer/Footer';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,6 +17,7 @@ root.render(
         <Provider store={store}>
             <NavBar />
             <App />
+            <Footer />
             <Toaster position="top-right"
                 reverseOrder={false} />
         </Provider>

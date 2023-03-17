@@ -8,7 +8,6 @@ import {
   Button,
   Label,
 } from "reactstrap";
-import Footer from "../components/Footer/Footer";
 import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
@@ -78,7 +77,6 @@ function CustomerDashboard() {
           </div>
         </section>
       </Container>
-      <Footer />
     </>
   );
 }
