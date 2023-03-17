@@ -7,6 +7,7 @@ import HotelHomePage from "./pages/HotelHomePage";
 import LandingPageForHotelOwner from "./pages/LandingPageForHotelOwner";
 import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
+import HotelSearchPage from "./pages/HotelSearchPage";
 
 function App() {
     ContractService.instance.init();
@@ -19,6 +20,7 @@ function App() {
             <Route path="/register" element={<RegisterHotel />} />
             <Route path="/register-customer" element={<RegisterCustomer />} />
             <Route path="/hotel/:id" element={<HotelHomePage />} />
+            <Route path="/search-hotel" element={<HotelSearchPage />}/>
         </Routes>
     );
 }
