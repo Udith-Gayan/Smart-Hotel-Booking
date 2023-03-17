@@ -7,11 +7,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter } from "react-router-dom";
 import { store } from './app/store'
 import { Provider } from 'react-redux'
+import NavBar from './components/NavBar/NavBar';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <Provider store={store}>
+            <NavBar />
             <App />
         </Provider>
     </BrowserRouter>,
