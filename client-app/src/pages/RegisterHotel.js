@@ -4,17 +4,16 @@ import '../styles/text_styles.scss';
 import '../styles/layout_styles.scss';
 import React, { useState, useCallback } from "react";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Button } from "reactstrap";
-import Facilities from "../components/register_hotel_components/Facilities";
-import ContactDetails from "../components/register_hotel_components/ContactDetails";
-import PropertyPhotos from "../components/register_hotel_components/PropertyPhotos";
+import Facilities from "../components/RegisterHotelComponents/Facilities";
+import ContactDetails from "../components/RegisterHotelComponents/ContactDetails";
+import PropertyPhotos from "../components/RegisterHotelComponents/PropertyPhotos";
 import Footer from "../components/Footer/Footer";
 import { Link, useNavigate } from "react-router-dom";
 
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
 import { Navigate } from "react-router-dom";
-import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
-import {FirebaseService} from "../services-common/firebase-service";
+import ImagePreviewSection from "../components/RegisterHotelComponents/ImagePreviewSection";
 
 function RegisterHotel() {
 
@@ -38,6 +37,7 @@ function RegisterHotel() {
     const [DistanceFromCenter, setDistanceFromCenter] = useState(0);
 
     const [HotelFacilities, setHotelFacilities] = useState([]);
+    console.log(HotelFacilities);
     const [uploadedImages, setUploadedImages] = useState([]);
 
     const [isCondition1Checked, setIsCondition1Checked] = useState(false);
@@ -121,7 +121,7 @@ function RegisterHotel() {
 
                         <div className="title_3 mt-3">Star Rating</div>
                         <Dropdown isOpen={dropDownOpen} toggle={toggleDropDown} group>
-                            <button style={{ width: "100px" }}>{StarRate || 'Select'}</button>
+                            <button style={{ width: "100px" }} className={"rating_button"}><span className={"title_3_sub"}>{StarRate || 'Select'}</span></button>
                             <DropdownToggle caret
                                 style={{ textAlign: "right", backgroundColor: '#ffffff', borderColor: "#908F8F" }}
                                 className={"dropdown_1"} color={"black"}>
@@ -144,7 +144,7 @@ function RegisterHotel() {
                 <ContactDetails setOwnerName={setOwnerName} setEmail={setEmail} setContactNumber1={setContactNumber1} setContactNumber2={setContactNumber2}
                     setaddressLine1={setaddressLine1} setaddressLine2={setaddressLine2} setCity={setCity} setDistanceFromCenter={setDistanceFromCenter} />
 
-                <Facilities setHotelFacilities={setHotelFacilities} />
+                <Facilities HotelFacilities={HotelFacilities} setHotelFacilities={setHotelFacilities} />
 
                 {/* <PropertyPhotos setImages={setImages} /> */}
                 <PropertyPhotos onChangeUploadImages={onChangeUploadImages} />
