@@ -20,6 +20,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
     dispatch(hide());
     navigate("/register-hotel");
   };
+
   return (
     <div className={styles.heroImage}>
       <div className={styles.wrapper}>
