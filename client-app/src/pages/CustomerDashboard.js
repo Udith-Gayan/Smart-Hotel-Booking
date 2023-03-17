@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
     Col,
     Container,
@@ -94,7 +94,6 @@ function CustomerDashboard() {
                     </div>
                 </section>
             </Container>
-            <Footer />
         </>
     );
 }

@@ -1,11 +1,5 @@
 @import "../../index.scss";
 
-.wrapper {
-  width: 100%;
-  height: 300px;
-  background: $light-purple-color;
-  position: relative;
-}
 .backgroundShape {
   background: $purple-color;
   width: 90%;
@@ -39,9 +33,9 @@
 }
 
 .heroImage {
-  background-image: url("/Assets/Images/hotel-landing-page-banner.webp"); /* The image used */
+  background-image: url("/Assets/Images/hotel-owner-landing-page.webp"); /* The image used */
   background-color: #cccccc; /* Used if the image is unavailable */
-  height: 100vh; /* You must set a specified height */
+  height: 75vh; /* You must set a specified height */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */

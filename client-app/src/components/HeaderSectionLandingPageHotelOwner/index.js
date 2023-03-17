@@ -46,7 +46,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
 
   return (
     <div className={styles.heroImage}>
-      <div className={styles.wrapper}>
+      <div>
         <div className={styles.content}>
           <span className={styles.heading}>Your world</span> <br />
           <hr className="noMargin" />

@@ -15,7 +15,6 @@ import {
 import Facilities from "../components/RegisterHotelComponents/Facilities";
 import ContactDetails from "../components/RegisterHotelComponents/ContactDetails";
 import PropertyPhotos from "../components/RegisterHotelComponents/PropertyPhotos";
-import Footer from "../components/Footer/Footer";
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
 import { useNavigate } from "react-router-dom";
@@ -263,7 +262,6 @@ function RegisterHotel() {
           </button>
         </div>
       </MainContainer>
-      <Footer />
     </>
   );
 }
