@@ -13,7 +13,7 @@ function RoomDetails(props) {
                             <span>{room.Name} ({room.MaxRoomCount})</span>
                         </div>
                         <div className={"col-3 title_4"}>{room.BedType} Bed ({room.NoOfBeds})</div>
-                        <div className={"col-3 title_4"}>Rs. {parseFloat(room.CostPerNight).toFixed(2)} </div>
+                        <div className={"col-3 title_4"}> {parseFloat(room.CostPerNight).toFixed(2)} $ </div>
                         <div className={"col-2 title_4"}>
                             <button className={"delete_button"} onClick={props.onOpenDeleteRoomModal.bind(this, room)}>
                                 <span>

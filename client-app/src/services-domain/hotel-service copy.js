@@ -205,7 +205,6 @@ export default class HotelService {
       }
     }
     
-
     // make the transaction and set the transaction id to the object before sending
     const res = await this.#xrplService.makePayment(SharedStateService.instance.hotelWallet.seed, roomCreationCost, contractWalletAddress);
 

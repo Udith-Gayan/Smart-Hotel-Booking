@@ -29,7 +29,7 @@ function HotelHomePage() {
 
     useEffect(() => {
         getRooms();
-    });
+    }, []);
 
     const address = "Box 11, Heritance Kandalama, Sigiriya"
     const images = ["https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",

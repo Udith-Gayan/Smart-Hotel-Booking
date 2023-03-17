@@ -44,7 +44,7 @@ function Footer(props) {
                         <p>Save time, save money!</p>
                         <InputGroup>
                             <Input type="text" name="newsletter" placeholder="Your email address" />
-                            <Button>Subscribe</Button>
+                            <Button className="primaryButton">Subscribe</Button>
                         </InputGroup>
                         <h4 className="customer_support">Customer Support</h4>
                         <p>+94 11 4443 333</p>

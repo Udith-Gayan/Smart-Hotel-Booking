@@ -71,7 +71,7 @@ class RoomService {
         // check if Hotelid exists
         let query = `SELECT * from Hotels WHERE Id = ${data.HotelId}`;
         const res = await this.#db.runNativeGetFirstQuery(query);
-        if (!res){
+        if (!res) {
             console.log("Hotel not found.")
             throw ("Hotel not found.");
         }
@@ -80,20 +80,18 @@ class RoomService {
 
 
         // Trasaction Validity
-        const txList = (await this.#xrplApi.getAccountTrx(res.HotelWalletAddress)).filter(t => t.TransactionType == "Payment");
+        const txList = (await this.#xrplApi.getAccountTrx(res.HotelWalletAddress)).filter(ob => ob.tx.TransactionType == "Payment");
         console.log(txList);
-        const paidTx = txList.find(tx => tx.hash == data.TransactionId);
+        const paidTx = txList.find(ob => ob.tx.hash == data.TransactionId);
         if (!paidTx) {
             console.log("Invalid transaction hash.");
             throw ("Invalid transaction hash.");
         }
 
-        if (Number(paidTx.Amount) < businessConfigurations.ROOM_CREATION_COST){
+        if (Number(paidTx.tx.Amount) < businessConfigurations.ROOM_CREATION_COST) {
             console.log("Insuffcient amount paid for room creation.")
             throw ("Insuffcient amount paid for room creation.");
         }
-
-
 
         // Save the Room Entity
         const roomEntity = {
@@ -103,13 +101,16 @@ class RoomService {
             CostPerNight: data.CostPerNight,
             NoOfBeds: data.NoOfBeds,
             HotelId: data.HotelId,
-            BedType: BedType
-        }
+            BedType: data.BedType
+        };
         let roomId;
         if (await this.#db.isTableExists('Rooms')) {
             try {
+                console.log(6)
                 roomId = (await this.#db.insertValue('Rooms', roomEntity)).lastId;
+                console.log(7)
             } catch (error) {
+                console.log(8)
                 throw (`Error occured in saving the room ${roomEntity.Name}`);
             }
         } else {
@@ -119,11 +120,11 @@ class RoomService {
         // If RFacilityId is present, in each array object, get that and save to m2m tble
         // Otherwise, create a facility record and add it to the m2m table.
         if (data.Facilities && data.Facilities.length > 0) {
-            for(const facility of data.Facilities) {
+            for (const facility of data.Facilities) {
                 let rFacilityId = 0;
-                if(facility.RFacilityId && facility.RFacilityId > 0) {
+                if (facility.RFacilityId && facility.RFacilityId > 0) {
                     rFacilityId = facility.RFacilityId;
-                } 
+                }
                 else {
                     // Save RFacility Entity
                     const rFacilityEntity = {
@@ -131,18 +132,18 @@ class RoomService {
                         Description: facility.Description,
                     }
 
-                    if(await this.#db.isTableExists('RFacilities')) {
+                    if (await this.#db.isTableExists('RFacilities')) {
                         try {
                             rFacilityId = (await this.#db.insertValue('RFacilities', rFacilityEntity)).lastId;
                         } catch (error) {
-                            throw(`Error occured in saving room Facility ${rFacilityEntity.Name} `);
+                            throw (`Error occured in saving room Facility ${rFacilityEntity.Name} `);
                         }
                     } else {
-                        throw(`Room Facility table not found.`);
+                        throw (`Room Facility table not found.`);
                     }
                 }
 
-                
+
                 // Save in the m2m table
                 const roomFacilityEntity = {
                     RoomId: roomId,
@@ -150,14 +151,14 @@ class RoomService {
                     Quantity: facility.Quantity ?? 1
                 }
 
-                if(await this.#db.isTableExists('RoomFacilities')) {
+                if (await this.#db.isTableExists('RoomFacilities')) {
                     try {
                         await this.#db.insertValue('RoomFacilities', roomFacilityEntity);
                     } catch (error) {
-                        throw(`Error occured in saving Room-Facility ${roomFacilityEntity.RFacilityId} `);
+                        throw (`Error occured in saving Room-Facility ${roomFacilityEntity.RFacilityId} `);
                     }
                 } else {
-                    throw(`Room-Facility table not found.`);
+                    throw (`Room-Facility table not found.`);
                 }
             }
         }
@@ -179,12 +180,12 @@ class RoomService {
         const res = await this.#db.runNativeGetFirstQuery(query);
         if (!res)
             throw ("Room not found.");
-        
+
         try {
-            await this.#db.updateValue('Rooms', data.NewData, { Id: data.RoomId }); 
+            await this.#db.updateValue('Rooms', data.NewData, { Id: data.RoomId });
         } catch (error) {
             console.log(error);
-            throw("Error occured in updating the room table.");
+            throw ("Error occured in updating the room table.");
         }
 
         response.success = { roomId: res.Id };
@@ -194,22 +195,22 @@ class RoomService {
     async #deleteRoom() {
         let response = {};
 
-        if(!(this.#message.data && this.#message.data.RoomId ))
-            throw("Invalid Request.");
-        
+        if (!(this.#message.data && this.#message.data.RoomId))
+            throw ("Invalid Request.");
+
         const data = this.#message.data;
         // check if RoomId exists
         let query = `SELECT * from Rooms WHERE Id = ${data.RoomId}`;
         const res = await this.#db.runNativeGetFirstQuery(query);
         if (!res)
             throw ("Room not found.");
-    
+
         try {
-            await this.#db.deleteValues('RoomFacilities', {RoomId: data.RoomId});
-            await this.#db.deleteValues('Rooms', {Id: data.RoomId});
+            await this.#db.deleteValues('RoomFacilities', { RoomId: data.RoomId });
+            await this.#db.deleteValues('Rooms', { Id: data.RoomId });
         } catch (error) {
             console.log(error);
-            throw("Error in deleting the room.")
+            throw ("Error in deleting the room.")
         }
 
         response.success = "Room successfully removed."
@@ -222,19 +223,19 @@ class RoomService {
 
     async #getRoomsByHotelId() {
         let response = {};
-        if(!(this.#message.filters && this.#message.filters.HotelId && this.#message.filters.HotelId > 0))
-            throw("Invalid Request.");
-        
+        if (!(this.#message.filters && this.#message.filters.HotelId && this.#message.filters.HotelId > 0))
+            throw ("Invalid Request.");
+
         const hotelId = this.#message.filters.HotelId;
         let query = `SELECT * FROM Hotels WHERE Id = ${hotelId}`
         const res = await this.#db.runNativeGetFirstQuery(query);
         if (!res)
             throw ("Hotel not found.");
 
-        const roomList = await this.#db.getValues('Rooms', {HotelId: hotelId});
+        const roomList = await this.#db.getValues('Rooms', { HotelId: hotelId });
 
-        if(roomList && roomList.length > 0)
-            response.success = { roomList: roomList};
+        if (roomList && roomList.length > 0)
+            response.success = { roomList: roomList };
         else {
             response.success = [];
         }
