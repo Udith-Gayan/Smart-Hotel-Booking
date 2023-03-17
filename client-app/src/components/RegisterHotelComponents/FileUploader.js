@@ -11,7 +11,7 @@ const FileUploader = props => {
     };
 
     const handleUploadImages = event => {
-       props.onChangeUploadImages(event);
+       props.onChangeUploadImages(event.target.files);
     };
 
     return (

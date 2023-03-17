@@ -81,7 +81,6 @@ export class DbService {
                 Id INTEGER,
                 Name TEXT NOT NULL,
                 Description TEXT,
-                Status TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
                 )`);
 
@@ -154,6 +153,28 @@ export class DbService {
         (9,'Restaurant','This is test description of this facility.','Available'),
         (5,'Spa & Wellness','This is test description of this facility.','Available')`;
         await this.#runQuery(hFacilities);
+
+        let rFacilities = `INSERT INTO "RFacilities" ("Id", "Name", "Description") VALUES (1, "Private Bathroom", "This room has this facility."),
+        (2, "Private Pool", "This room has this facility."),
+        (3, "Washing Machine", "This room has this facility."),
+        (4, "TV", "This room has this facility."),
+        (5, "Air Conditioning", "This room has this facility."),
+        (6, "Terrace", "This room has this facility."),
+        (7, "Refrigerator", "This room has this facility."),
+        (8, "Balcony", "This room has this facility."),
+        (9, "Kitchen/Kitchenette", "This room has this facility."),
+        (10, "Coffee/tea maker", "This room has this facility."),
+        (11, "Clothes rack", "This room has this facility."),
+        (12, "Entire unit located on ground floor", "This room has this facility."),
+        (13, "Elevators availble", "This room has this facility."),
+        (14, "Toilet with grab rails", "This room has this facility."),
+        (15, "Adapted Bath", "This room has this facility."),
+        (16, "Walk-in Shower", "This room has this facility."),
+        (17, "Raised toilet", "This room has this facility."),
+        (18, "Lowered sink", "This room has this facility."),
+        (19, "Shower Chair", "This room has this facility.")`;
+
+        await this.#runQuery(rFacilities);
 
 
         // // Inserting hotels

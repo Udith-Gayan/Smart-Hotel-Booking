@@ -16,8 +16,7 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<CustomerDashboard />} />
-            <Route path="/landing-page-for-hotel-owner" element={<LandingPageForHotelOwner />} exact />
-            <Route path="/landing-page-for-customer" element={<LandingPageForCustomer />} exact />
+            <Route path="/listProperty" element={<LandingPageForHotelOwner />} exact />
             <Route path="/register-hotel" element={<RegisterHotel />} exact />
             <Route path="/register-customer" element={<RegisterCustomer />} exact />
             <Route path="/hotel/:id" element={<HotelHomePage />} exact />

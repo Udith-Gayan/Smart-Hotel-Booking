@@ -41,6 +41,8 @@ class HotelService {
                     return await this.#deregisterHotel();
                 case constants.RequestSubTypes.RATE_HOTEL:
                     return await this.#rateHotel();
+                case constants.RequestSubTypes.IS_REGISTERED_HOTEL:
+                    return await this.#isRegisteredHotel();
                 default:
                     throw ("Invalid Request");
             }
@@ -51,6 +53,26 @@ class HotelService {
             await this.#xrplApi.disconnect();
             this.#db.close();
         }
+    }
+
+    /**
+     * 
+     * @returns {hotel fields....} || null
+     */
+    async #isRegisteredHotel() {
+        let response = {};
+        if(!(this.#message.data && this.#message.data.HotelWalletAddress))
+            throw("Invalid request.");
+        
+        let query =  `SELECT * FROM Hotels WHERE HotelWalletAddress = '${this.#message.data.HotelWalletAddress}' AND IsRegistered = 1`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if(res){
+            response.success = res;
+        } else {
+            response.success = null;
+        }
+
+        return response;
     }
 
     async #registerHotel() {
@@ -159,12 +181,12 @@ class HotelService {
         response.success = { rowId: insertedId, offerId: availableOffer.index }
         return response;
     }
-    
+
     async #checkIfHotelExists(walletAddress) {
         const query = `SELECT * FROM HOTELS WHERE HotelWalletAddress = ?`;
         try {
             const res = await this.#db.runNativeGetFirstQuery(query, [walletAddress]);
-            if(res && res.length > 0)
+            if (res && res.length > 0)
                 return res;
             else
                 return null;
@@ -215,7 +237,7 @@ class HotelService {
             throw ("Error in confirming registration. Re-register please.");
         }
 
-        response.success = 'Hotel Registration Successful.'
+        response.success = { hotelId: rowId }
         return response;
     }
 

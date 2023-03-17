@@ -11,8 +11,10 @@ const RequestSubTypes = {
     GET_HOTELS: "GetHotels",
     DEREG_HOTEL: "DeregHotel",
     RATE_HOTEL: "RateHotel",
+    IS_REGISTERED_HOTEL: "IsRegisteredHotel",
 
     GET_ROOMS: "GetRooms",
+    GET_ROOMS_BY_HOTELID: "GetRoomsByHotelId",
     CREATE_ROOM: "CreateRoom",
     EDIT_ROOM: "EditRoom",
     DELETE_ROOM: "DeleteRoom",

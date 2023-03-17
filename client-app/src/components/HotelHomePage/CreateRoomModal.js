@@ -65,14 +65,13 @@ function CreateRoomModal(props) {
 
     const onSubmitRoom = () => {
         props.onSubmitRoom({
-            "Id": uuid().slice(0, 8),
             "Name": roomName,
             "Description": description,
-            "NumOfRooms": numOfRooms,
+            "MaxRoomCount": numOfRooms,
             "BedType": bedType,
-            "NumOfBeds": numOfBeds,
-            "PricePerNight": pricePerNight,
-            "Facilities": checkedFacilities
+            "NoOfBeds": numOfBeds,
+            "CostPerNight": pricePerNight,
+            "Facilities": checkedFacilities.map(fc => ({RFacilityId: fc.Id, ...fc}))
         });
     }
 
@@ -131,10 +130,10 @@ function CreateRoomModal(props) {
                             </DropdownToggle>
                             <DropdownMenu style={{width: "100%"}}>
 
-                                {bed_types.map(bed_type => {
+                                {bed_types.map((bed_type, index) => {
                                     return (
-                                        <DropdownItem className="dropdown_items">
-                                            <div onClick={changeBedType.bind(this, bed_type)}>{bed_type}</div>
+                                        <DropdownItem className="dropdown_items" key={index}>
+                                            <div onClick={changeBedType.bind(this, bed_type.Name)}>{bed_type.Name}</div>
                                         </DropdownItem>
                                     )
                                 })}

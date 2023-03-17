@@ -16,6 +16,10 @@ export default class XrplService {
         this.#xrplClient = new xrpl.Client(xrplServerURL)
     };
 
+    isValidSecret(secret) {
+        return xrpl.isValidSecret(secret);
+    }
+
 
     /**
      * 
@@ -114,9 +118,9 @@ export default class XrplService {
     /**
      * 
      * @param {string} secret | Secret of the sender wallet
-     * @param {string} amount | Amount to be sent in XRP (string)
+     * @param {string} amount | Amount to be sent in drops (string)
      * @param {*} destination | Address of the receiver
-     * @returns tesSUCCESS
+     * @returns object { id, code: "tesSUCCESS", details: {}, meta: {}}
      */
     async makePayment(secret, amount, destination) {
         try {
@@ -132,8 +136,7 @@ export default class XrplService {
             const signed = _wallet.sign(prepared);
             const tx = await this.#xrplClient.submitAndWait(signed.tx_blob);
             console.log("Transaction result:", tx.result.meta.TransactionResult);
-            return tx.result.meta.TransactionResult;
-
+            return tx.result;
         } catch (error) {
             console.log(error);
             throw error;

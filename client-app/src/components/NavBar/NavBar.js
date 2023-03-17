@@ -22,7 +22,7 @@ function NavBar(props) {
             <NavbarText className="explore_txt white-text" >Explore</NavbarText>
             <NavbarText className="vacation_txt white-text" >Vacation Rental</NavbarText>
             <NavbarText className="community_txt white-text" >Community</NavbarText>
-            <Button outline className="primaryButton smallMarginLeftRight" onClick={(() => navigate('/landing-page-for-hotel-owner'))}>List Your Property</Button>
+            <Button outline className="primaryButton smallMarginLeftRight" onClick={props.goToListProperty}>List Your Property</Button>
             <Button outline className="primaryButton smallMarginLeftRight" onClick={(() => navigate('/reservations'))}>My Reservations</Button>
 
         </Navbar>

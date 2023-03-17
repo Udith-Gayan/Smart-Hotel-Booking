@@ -75,7 +75,7 @@ class SqliteDatabase {
     /**
      * 
      * @param {*} tableName 
-     * @param {Object} filter An object with table column values as the keys
+     * @param {Object} filter | An object with table column values as the keys
      * @param {'=' | 'IN'} op  
      * @returns A lit of rows of the table
      */

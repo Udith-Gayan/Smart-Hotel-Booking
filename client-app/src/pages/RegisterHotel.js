@@ -17,11 +17,12 @@ import ContactDetails from "../components/RegisterHotelComponents/ContactDetails
 import PropertyPhotos from "../components/RegisterHotelComponents/PropertyPhotos";
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImagePreviewSection from "../components/RegisterHotelComponents/ImagePreviewSection";
 
 function RegisterHotel() {
   const hotelService = HotelService.instance;
+  const navigate = useNavigate();
 
   let user = "User";
   const [dropDownOpen, setDropDownOpen] = useState(false);
@@ -90,32 +91,20 @@ function RegisterHotel() {
       // 4 - Submit for registration
       const res = await hotelService.registerHotel(submissionData);
 
-      if (res) {
-        alert("Successful");
-        // navigate("/");
-      } else {
-        alert("Registration failed!");
-      }
-    } catch (err) {
-      setRegisterButtonDisable(false);
-      console.log(err);
-      alert("Error occurred in Registration.!");
-    }
-  }, [
-    Name,
-    StarRate,
-    Description,
-    OwnerName,
-    Email,
-    AddressLine1,
-    AddressLine2,
-    City,
-    ContactNumber1,
-    ContactNumber2,
-    DistanceFromCenter,
-    HotelFacilities,
-    uploadedImages,
-  ]);
+            if (res.hotelId > 0) {
+                alert("Successful");
+                navigate(`/hotel/${res.hotelId}`);
+            } else {
+                alert("Registration failed!");
+            }
+        } catch (err) {
+            setRegisterButtonDisable(false);
+            console.log(err);
+            alert("Error occurred in Registration.!")
+        }
+
+    }, [Name, StarRate, Description, OwnerName, Email, AddressLine1, AddressLine2, City, ContactNumber1, ContactNumber2, DistanceFromCenter, HotelFacilities, uploadedImages]);
+
 
   return (
     <>
