@@ -19,7 +19,7 @@ import Footer from "../components/Footer/Footer";
 import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
 import { Navigate } from "react-router-dom";
-import ImagePreviewSection from "../components/register_hotel_components/ImagePreviewSection";
+import ImagePreviewSection from "../components/RegisterHotelComponents/ImagePreviewSection";
 
 function RegisterHotel() {
   const hotelService = HotelService.instance;
