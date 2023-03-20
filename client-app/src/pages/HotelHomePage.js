@@ -60,14 +60,6 @@ function HotelHomePage() {
         getRooms();
     }, []);
 
-    // const address = "Box 11, Heritance Kandalama, Sigiriya"
-    // const images = ["https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
-    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
-    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_85146f5f-f693-4a02-a778-582757acc2b9.txt?alt=media&token=bd165f22-5dd9-44f7-a900-7292bda3b0fc",
-    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
-    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
-    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_85146f5f-f693-4a02-a778-582757acc2b9.txt?alt=media&token=bd165f22-5dd9-44f7-a900-7292bda3b0fc"
-    // ]
     const [images, setImages] = useState([]);
     const [hotelName, setHotelName] = useState(null);
     const [address1, setAddress1] = useState(null);
