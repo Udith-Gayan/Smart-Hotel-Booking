@@ -3,7 +3,7 @@ import {FormGroup, Input, Label} from "reactstrap";
 import {useState} from "react";
 
 function CardWithCheckBox(props) {
-    const [checked, setChecked] = useState(props.facility.status ? props.facility.status : false);
+    const [checked, setChecked] = useState(props.readOnly ? props.readOnly : false);
     const onChange = (event) => {
         if(props.readOnly)
             return;

@@ -95231,12 +95231,12 @@ class HotelService {
      */
     async #isRegisteredHotel() {
         let response = {};
-        if(!(this.#message.data && this.#message.data.HotelWalletAddress))
-            throw("Invalid request.");
-        
-        let query =  `SELECT * FROM Hotels WHERE HotelWalletAddress = '${this.#message.data.HotelWalletAddress}' AND IsRegistered = 1`;
+        if (!(this.#message.data && this.#message.data.HotelWalletAddress))
+            throw ("Invalid request.");
+
+        let query = `SELECT * FROM Hotels WHERE HotelWalletAddress = '${this.#message.data.HotelWalletAddress}' AND IsRegistered = 1`;
         const res = await this.#db.runNativeGetFirstQuery(query);
-        if(res){
+        if (res) {
             response.success = res;
         } else {
             response.success = null;
@@ -95308,7 +95308,7 @@ class HotelService {
             }
         }
 
-        // Saving to the HFacilities table
+        // Saving to thequery HFacilities table
         if (data.Facilities && data.Facilities.length > 0) {
             for (const facility of data.Facilities) {
                 // let facilityId = 0;
@@ -95425,26 +95425,79 @@ class HotelService {
     }
 
     async #getHotels() {
-        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.Description, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.City, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1, Hotels.ContactNumber2,
-                              Images.Id AS ImageId, Images.Url
+        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.Description, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.City, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1,
+                              Images.Id AS ImageId, Images.Url, HotelHFacilities.HFacilityId AS FacilityId
                        FROM Hotels
                        LEFT OUTER JOIN Images
-                       ON Hotels.Id = Images.HotelId 
-                       WHERE Hotels.IsRegistered = 1 `
+                       ON Hotels.Id = Images.HotelId
+                       LEFT OUTER JOIN HotelHFacilities
+                       ON Hotels.Id = HotelHFacilities.HotelId
+                       WHERE Hotels.IsRegistered = 1 `;  // Ending space is required
 
 
 
+        let filterString = "AND ";
         let filters = null;
         if (this.#message.filters) {
             filters = this.#message.filters;
+            
+            // join to a string
+            for (const key in filters) {
+                filterString += `Hotels.${key}=${filters[key]} AND `;
+            }
+            filterString = filterString.slice(0, -5);
+            query = query + filterString;
         }
 
         let response = {};
 
         const hotels = await this.#db.runNativeGetAllQuery(query);
 
+        console.log(hotels);
 
-        response.success = { hotelList: hotels };
+        // Creating new object array
+        const hotelList = [];
+        const hotelNames = [...new Set(hotels.map(h => h.Id))];
+        for(let idx in hotelNames) {
+            const newHotel = {};
+            const imgObjects = [];
+            const facilityIds = [];
+
+            (hotels.filter(h => h.Id == hotelNames[idx])).forEach((h, idxx) => {
+                    if(idxx == 0) {
+                        newHotel.Id = h.Id;
+                        newHotel.Name = h.Name;
+                        newHotel.HotelWalletAddress = h.HotelWalletAddress;
+                        newHotel.HotelNftId = h.HotelNftId;
+                        newHotel.OwnerName = h.OwnerName;
+                        newHotel.Description = h.Description;
+                        newHotel.City = h.City;
+                        newHotel.AddressLine1 = h.AddressLine1;
+                        newHotel.AddressLine2 = h.AddressLine2;
+                        newHotel.DistanceFromCenter = h.DistanceFromCenter;
+                        newHotel.Email = h.Email;
+                        newHotel.ContactNumber1 = h.ContactNumber1;
+                        newHotel.ContactNumber2 = h.ContactNumber2 ?? null;
+                    }
+
+                    if(h.ImageId && h.Url) {
+                        imgObjects.push({Id: h.ImageId, Url: h.Url});
+                    }
+
+                    if(h.FacilityId) {
+                        facilityIds.push(h.FacilityId);
+                    }
+            });
+
+            newHotel.Images = [...new Map(imgObjects.map((m) => [m.Id, m])).values()];
+            newHotel.Facilities = [...new Set(facilityIds)];
+
+            hotelList.push(newHotel);
+
+        }
+
+        response.success = { hotelList: hotelList };
+        console.log(hotelList);
         return response;
     }
 

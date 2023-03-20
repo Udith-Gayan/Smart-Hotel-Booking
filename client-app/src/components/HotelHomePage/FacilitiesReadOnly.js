@@ -5,8 +5,10 @@ import CheckBoxRow from "../CheckBoxRow";
 function FacilitiesReadOnly(props) {
     const rowsData = [];
 
-    for (let i = 0; i < facilitiesData.length; i += 3) {
-        const rowItems = facilitiesData.slice(i, i + 3);
+    const facilityData = facilitiesData.filter(fc => props.selectedFacilityIds.includes(fc.Id))
+
+    for (let i = 0; i < facilityData.length; i += 3) {
+        const rowItems = facilityData.slice(i, i + 3);
         rowsData.push(rowItems);
     }
 

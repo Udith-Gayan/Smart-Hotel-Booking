@@ -1,44 +1,83 @@
 import MainContainer from "../layout/MainContainer";
 import "../components/HotelHomePage/StarRating"
 import StarRating from "../components/HotelHomePage/StarRating";
-import {FaMapMarkerAlt} from "react-icons/fa";
-import {FaPlusCircle} from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaPlusCircle } from "react-icons/fa";
 import HotelImages from "../components/HotelHomePage/HotelImages";
 import FacilitiesReadOnly from "../components/HotelHomePage/FacilitiesReadOnly";
-import React, {useRef, useState, useEffect } from "react";
-import {useParams} from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import CreateRoomModal from "../components/HotelHomePage/CreateRoomModal";
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap"
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
 import RoomDetails from "../components/HotelHomePage/RoomDetails";
 import HotelService from "../services-domain/hotel-service copy";
+import SharedStateService from "../services-domain/sharedState-service";
+import { toast } from 'react-hot-toast';
 
 function HotelHomePage() {
 
     const { id } = useParams();  // hotel id
+    const sharedInstance = SharedStateService.instance;
+    const hotelService = HotelService.instance;
+
+    // Load hotel details
+    async function getHotelDetails() {
+        if (id && id > 0) {
+            try {
+                const res = await hotelService.getMyHotel(id);
+                if (!res) {
+                    toast.error("Error occured !");
+                }
+
+                setHotelName(res.Name);
+                setDescription(res.Description ?? null);
+                setAddress1(res.AddressLine1 ?? null);
+                setAddress2(res.AddressLine2 ?? null);
+                setCity(res.City);
+                setImages(res.Images);
+                setSelectedFacilityIds(res.Facilities);
+
+            } catch (error) {
+                toast.error(`Error occured: ${error} `);
+            }
+        }
+    }
 
     // Load room details
     async function getRooms() {
         if (id && id > 0) {
             const res = await HotelService.instance.getMyHotelRoomList(id);
-            if(res.roomList && res.roomList.length > 0) {
+            if (res.roomList && res.roomList.length > 0) {
                 setRooms(res.roomList)
             }
         }
 
     }
 
+    // Init function 
     useEffect(() => {
+        getHotelDetails();
         getRooms();
     }, []);
 
-    const address = "Box 11, Heritance Kandalama, Sigiriya"
-    const images = ["https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
-        "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
-        "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_85146f5f-f693-4a02-a778-582757acc2b9.txt?alt=media&token=bd165f22-5dd9-44f7-a900-7292bda3b0fc",
-        "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
-        "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
-        "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_85146f5f-f693-4a02-a778-582757acc2b9.txt?alt=media&token=bd165f22-5dd9-44f7-a900-7292bda3b0fc"
-    ]
+    // const address = "Box 11, Heritance Kandalama, Sigiriya"
+    // const images = ["https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
+    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
+    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_85146f5f-f693-4a02-a778-582757acc2b9.txt?alt=media&token=bd165f22-5dd9-44f7-a900-7292bda3b0fc",
+    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_0dfddf17-7b17-4788-983e-9be1107df7da.txt?alt=media&token=e18d29ed-8761-4d9c-bccd-a9e3bf28b605",
+    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_2de1f920-0ab8-4911-a5be-3e9f5e70f25c.txt?alt=media&token=c7669d09-5363-4d0c-adaf-eac1cb026ecf",
+    //     "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2F1%2F1_85146f5f-f693-4a02-a778-582757acc2b9.txt?alt=media&token=bd165f22-5dd9-44f7-a900-7292bda3b0fc"
+    // ]
+    const [images, setImages] = useState([]);
+    const [hotelName, setHotelName] = useState(null);
+    const [address1, setAddress1] = useState(null);
+    const [address2, setAddress2] = useState(null);
+    const [city, setCity] = useState(null);
+    const [description, setDescription] = useState(null);
+    const [selectedFacilityIds, setSelectedFacilityIds] = useState([]);
+
+
+
     const infoSection = useRef(null);
     const facilitiesSection = useRef(null);
     const houseRulesSection = useRef(null);
@@ -49,22 +88,22 @@ function HotelHomePage() {
     const [activeTab, setActiveTab] = useState(null);
     const onClickInfoSectionButton = () => {
         setActiveTab("info")
-        infoSection.current.scrollIntoView({behavior: 'smooth'});
+        infoSection.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     const onClickFacilitiesSectionButton = () => {
         setActiveTab("facilities")
-        facilitiesSection.current.scrollIntoView({behavior: 'smooth'});
+        facilitiesSection.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     const onClickHouseRulesSectionButton = () => {
         setActiveTab("house_rules")
-        houseRulesSection.current.scrollIntoView({behavior: 'smooth'});
+        houseRulesSection.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     const onClickRoomLayoutSectionButton = () => {
         setActiveTab("room_layout")
-        roomLayoutSection.current.scrollIntoView({behavior: 'smooth'});
+        roomLayoutSection.current.scrollIntoView({ behavior: 'smooth' });
     };
     const [creatingRoom, setCreatingRoom] = useState(false);
     const [deletingRoom, setDeletingRoom] = useState(false);
@@ -84,7 +123,7 @@ function HotelHomePage() {
         // If there is a roomdata,  send a request to submit the room for creation.
         // on successfull return id, call the fetch room query method   
         const res = await HotelService.instance.createRoom(id, room_data);
-        if(res.roomId && res.roomId > 0) {
+        if (res.roomId && res.roomId > 0) {
             await getRooms();
             // setRooms(prevState => {
             //     return [...prevState, room_data]
@@ -126,9 +165,9 @@ function HotelHomePage() {
 
         <>
             <Modal isOpen={creatingRoom} toggle={onCloseCreateRoomModal} size="lg" centered
-                   className={""}
-                   style={{maxWidth: '850px', width: '100%'}}>
-                <CreateRoomModal onSubmitRoom={onSubmitRoom}/>
+                className={""}
+                style={{ maxWidth: '850px', width: '100%' }}>
+                <CreateRoomModal onSubmitRoom={onSubmitRoom} />
             </Modal>
 
             {deletingRoom && <Modal isOpen={deletingRoom} toggle={onCloseDeleteRoomModal}>
@@ -146,21 +185,21 @@ function HotelHomePage() {
             <MainContainer>
                 <section>
                     <div className={"row"}>
-                        <div className={"title_2"} style={{width: "300px"}}>
-                            Heritage Kandalama
+                        <div className={"title_1"} style={{ width: "80%" }}>
+                            {hotelName}
                         </div>
 
-                        <div className={"col"} style={{paddingTop: "10px"}}>
-                            <StarRating ratings={3} reviews={726}/>
+                        <div className={"col"} style={{ paddingTop: "10px" }}>
+                            <StarRating ratings={3} reviews={726} />
                         </div>
                     </div>
 
                     <div className={"row left_div"}>
-                        <div style={{width: "20px"}}>
-                            <FaMapMarkerAlt/>
+                        <div style={{ width: "20px" }}>
+                            <FaMapMarkerAlt />
                         </div>
                         <div className={"subtext pt-2 col"}>
-                            {address}
+                            {address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}
                         </div>
                     </div>
 
@@ -184,44 +223,23 @@ function HotelHomePage() {
 
                     </div>
 
-                    <HotelImages images={images.slice(0, 6)}/>
+                    <HotelImages images={(images.slice(0, 6)).map(i => i.Url)} />
                 </section>
 
                 <section ref={infoSection} id="info_section" className={"pt-2"}>
-                    <div className={"subtext"} style={{lineHeight: "25px", textAlign: "justify", padding: "0 10px"}}>
+                    <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify", padding: "0 10px" }}>
 
-                        A tranquil retreat perched on hills, Heritance Kandalama offers panoramic views of the Sigiriya
-                        Rocks. Boasting a spectacular architecture, this unique design hotel provides 3 impressive pools
-                        and exotic
-                        activities like bird watching.
-
-                        Kandalama Heritance is a 20-minute drive from UNESCO World Heritage Sites, the 2,000-year-old
-                        cave
-                        temple at Dambulla and the Sigiriya rock fortress. The 5-star hotel is a 3.5-hour drive from the
-                        airport. The spacious rooms are fitted with rattan furniture and timber panels. Each comes with
-                        a private
-                        bathroom featuring oversized glass walls that allow much natural light in.
-
-                        The hotel features tennis courts, a well-equipped gym and the well-known Coco Spa. To enjoy Sri
-                        Lanka’s breathtaking natural landscapes, the hotel offers various excursions like mountain
-                        cycling
-                        excursions and lake safaris.
-
-                        Start the day with breakfast on the lake or enjoy a memorable dining experience in the nearby
-                        cave.
-                        The Kanchana Restaurant offers daily themed nights with international cuisine. Views of the
-                        Sigiriya
-                        citadel and the Kandalama Lake accompany meals.
+                        {description}
                     </div>
 
                 </section>
 
-                <FacilitiesReadOnly facilitiesSection={facilitiesSection}/>
+                <FacilitiesReadOnly facilitiesSection={facilitiesSection} selectedFacilityIds={selectedFacilityIds} />
 
                 <section id={"house_rules_section"} ref={houseRulesSection}>
                     <div className="title_2 pt-2 pb-2">House Rules</div>
 
-                    <div className={"subtext"} style={{lineHeight: "25px", textAlign: "justify"}}>
+                    <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify" }}>
                         You are liable for any damage howsoever caused (whether by deliberate, negligent, or reckless
                         act)
                         to the room(s), hotel's premises or property caused by you or any person in your party, whether
@@ -246,8 +264,8 @@ function HotelHomePage() {
                         costs
                         that the guest would incur to a minimum.
 
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
                         Damage to rooms, fixtures, furnishing and equipment including the removal of electronic
                         equipment,
                         towels, artwork, etc. will be charged at 150% of full and new replacement value plus any
@@ -264,12 +282,12 @@ function HotelHomePage() {
                     <div className="title_2 pt-2 pb-2">Room Layout</div>
                     <div className={"subtext"}>Details about your rooms.</div>
 
-                    <button className={"create_room_button mt-5"} style={{width: "200px"}}
-                            onClick={onOpenCreateRoomModal}>
-                        <FaPlusCircle size={26}/> <span>&nbsp;Add Room</span>
+                    <button className={"create_room_button mt-5"} style={{ width: "200px" }}
+                        onClick={onOpenCreateRoomModal}>
+                        <FaPlusCircle size={26} /> <span>&nbsp;Add Room</span>
                     </button>
 
-                    {rooms.length !== 0 && <RoomDetails rooms={rooms} onOpenDeleteRoomModal={onOpenDeleteRoomModal}/>}
+                    {rooms.length !== 0 && <RoomDetails rooms={rooms} onOpenDeleteRoomModal={onOpenDeleteRoomModal} />}
 
                 </section>
 
