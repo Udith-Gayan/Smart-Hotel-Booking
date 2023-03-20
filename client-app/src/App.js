@@ -9,6 +9,7 @@ import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
+import ConfirmBooking from "./pages/ConfirmBooking";
 
 function App() {
     ContractService.instance.init();
@@ -22,7 +23,8 @@ function App() {
             <Route path="/register-customer" element={<RegisterCustomer />} exact />
             <Route path="/hotel/:id" element={<HotelHomePage />} exact />
             <Route path="/reservations" element={<Reservations />} exact />
-            <Route path="/search-hotel" element={<HotelSearchPage />} />
+            <Route path="/search-hotel" element={<HotelSearchPage exact />} />
+            <Route path="/confirm-booking" element={<ConfirmBooking />} />
         </Routes>
     );
 }

@@ -1,0 +1,24 @@
+.hotelImg {
+  background-image: url("/Assets/Images/selected-hotel.webp");
+  //background-color: #cccccc; /* Used if the image is unavailable */
+  width: 100%;
+  height: 150px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.bookedHotelCard {
+  padding: 20px;
+}
+
+.facilities {
+  margin-top: 15px;
+}
+
+.facilityIcon {
+  margin-right: 5px;
+}
+
+.FacilityText {
+  margin-right: 10px;
+}
