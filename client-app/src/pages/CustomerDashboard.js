@@ -8,27 +8,52 @@ import {
     Button,
     Label,
 } from "reactstrap";
-import NavBar from "../components/NavBar/NavBar";
-import Footer from "../components/Footer/Footer";
 import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
 import OfferCard from "../components/OfferCard/OfferCard";
+import { useNavigate } from "react-router-dom";
 // import 'moment/locale/ko';
 
 
 function CustomerDashboard() {
+    const navigate = useNavigate();
     const bestOffers = [
         "Jetwing blue",
         "Koggala Miracles",
         " Heritance Rambukkana",
     ];
-
-    const [dates, setDates] = useState(null);
     const [open, setOpen] = useState(false);
 
+    const [dateRange, setDateRange] = useState(null);
+    const [city, setCity] = useState('');
+    const [peopleCount, setPeopleCount] = useState(0);
 
-    const onDateChange = (...args) => console.log(args);
+    const [errorMessage, setErrorMessge] = useState(null);
+
+    const onDateChange = (...args) => {
+        setDateRange(args);
+    };
+
+    function onSearchSubmit() {
+        if(!city || city.length < 3) {
+            setErrorMessge("Requires a valid city.");
+            return;
+        }
+
+        if( !dateRange || !dateRange[0] || !dateRange[1]) {
+            console.log("Invalid date range.")
+            setErrorMessge("Invalid date range.");
+            return;
+        }
+
+        if(peopleCount < 1) {
+            setErrorMessge("Invalid people count.");
+            return;
+        }
+
+        navigate(`/search-hotel?city=${city}&fromDate=${dateRange[0]}&toDate=${dateRange[1]}&peopleCount=${peopleCount}`)
+    }
 
     return (
         <>
@@ -47,7 +72,7 @@ function CustomerDashboard() {
                             <Col style={{ flex: "1 0" }}>
                                 <Label>Where to go?</Label>
                                 <InputGroup>
-                                    <Input placeholder="City" />
+                                    <Input placeholder="City" onChange={e => setCity(e.target.value)} />
                                 </InputGroup>
                             </Col>
                             <Col style={{ flex: "3 0" }}>
@@ -63,13 +88,14 @@ function CustomerDashboard() {
                             <Col>
                                 <Label>No. of people</Label>
                                 <InputGroup>
-                                    <Input placeholder="0" type="number" />
+                                    <Input placeholder="0" type="number" onChange={e => setPeopleCount(e.target.value)} />
                                 </InputGroup>
                             </Col>
                             <Col>
-                                <Button className="secondaryButton overrideSearchButton">
+                                <Button className="secondaryButton overrideSearchButton" onClick={onSearchSubmit}>
                                     Search your stay
                                 </Button>
+                                { errorMessage ? <p style={{ margin: '0px', marginBottom: '-23px', color: 'red'}}>{errorMessage}</p> : ''}
                             </Col>
                         </Row>
                     </div>
