@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 
-import {FaCloudUploadAlt} from 'react-icons/fa';
+import { FaCloudUploadAlt } from 'react-icons/fa';
+import { Button } from 'reactstrap'
 
 const FileUploader = props => {
 
@@ -11,27 +12,27 @@ const FileUploader = props => {
     };
 
     const handleUploadImages = event => {
-       props.onChangeUploadImages(event.target.files);
+        props.onChangeUploadImages(event.target.files);
     };
 
     return (
         <React.Fragment>
             <div className={"image_uploader_container"} onClick={handleClickUploadImagesArea}>
                 <div className={"row"}>
-                    <FaCloudUploadAlt size={60} color={"#B7B7C8"}/>
+                    <FaCloudUploadAlt size={60} color={"#B7B7C8"} />
                 </div>
 
-                <div className={"row center_div title_3 pt-4 pb-4"} style={{lineHeight: "20px", fontSize: "16px"}}>
-                    <b>Drag and drop your photos here<br/>
+                <div className={"row center_div title_3 pt-4 pb-4"} style={{ lineHeight: "20px", fontSize: "16px" }}>
+                    <b>Drag and drop your photos here<br />
                         or</b>
                 </div>
 
                 <div className={"row center_div"}>
-                    <button className={"upload_button"} style={{width: "180px"}}>Add Photos</button>
+                    <Button className='secondaryButton' style={{ width: "180px" }}>Add Photos</Button>
                 </div>
 
                 <div className={"row center_div pt-3"}>
-                    <div className={"subtext"} style={{color: "#333333"}}>+ Add at least 3 photos</div>
+                    <div className={"subtext"} style={{ color: "#333333" }}>+ Add at least 3 photos</div>
                 </div>
             </div>
             <input
@@ -39,7 +40,7 @@ const FileUploader = props => {
                 multiple
                 ref={hiddenFileInput}
                 onChange={handleUploadImages}
-                style={{display: 'none'}}
+                style={{ display: 'none' }}
             />
         </React.Fragment>
     );

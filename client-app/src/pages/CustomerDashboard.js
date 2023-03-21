@@ -14,7 +14,6 @@ import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
 import OfferCard from "../components/OfferCard/OfferCard";
-import { useNavigate } from "react-router";
 // import 'moment/locale/ko';
 
 
@@ -24,7 +23,6 @@ function CustomerDashboard() {
         "Koggala Miracles",
         " Heritance Rambukkana",
     ];
-    const navigate = useNavigate();
 
     const [dates, setDates] = useState(null);
     const [open, setOpen] = useState(false);
@@ -32,15 +30,9 @@ function CustomerDashboard() {
 
     const onDateChange = (...args) => console.log(args);
 
-    const goToListProperty = () => {
-        navigate("/listProperty");
-    }
-
-
-
     return (
         <>
-            <NavBar style={{ position: "fixed" }} goToListProperty={goToListProperty} />
+
             <div className="main-image-div">
                 <Container className="main-txt">
                     <h3>Enjoy your next stay in Sri Lanka</h3>

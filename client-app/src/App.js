@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 import ContractService from "./services-common/contract-service";
 import HotelHomePage from "./pages/HotelHomePage";
 import LandingPageForHotelOwner from "./pages/LandingPageForHotelOwner";
-import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
@@ -17,7 +16,7 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<CustomerDashboard />} />
-            <Route path="/listProperty" element={<LandingPageForHotelOwner />} exact />
+            <Route path="/list-property" element={<LandingPageForHotelOwner />} exact />
             <Route path="/register-hotel" element={<RegisterHotel />} exact />
             <Route path="/register-customer" element={<RegisterCustomer />} exact />
             <Route path="/hotel/:id" element={<HotelHomePage />} exact />
