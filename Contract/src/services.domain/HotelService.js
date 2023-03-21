@@ -41,6 +41,8 @@ class HotelService {
                     return await this.#deregisterHotel();
                 case constants.RequestSubTypes.RATE_HOTEL:
                     return await this.#rateHotel();
+                case constants.RequestSubTypes.IS_REGISTERED_HOTEL:
+                    return await this.#isRegisteredHotel();
                 default:
                     throw ("Invalid Request");
             }
@@ -53,6 +55,26 @@ class HotelService {
         }
     }
 
+    /**
+     * 
+     * @returns {hotel fields....} || null
+     */
+    async #isRegisteredHotel() {
+        let response = {};
+        if (!(this.#message.data && this.#message.data.HotelWalletAddress))
+            throw ("Invalid request.");
+
+        let query = `SELECT * FROM Hotels WHERE HotelWalletAddress = '${this.#message.data.HotelWalletAddress}' AND IsRegistered = 1`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (res) {
+            response.success = res;
+        } else {
+            response.success = null;
+        }
+
+        return response;
+    }
+
     async #registerHotel() {
         const response = { success: null };
 
@@ -63,8 +85,10 @@ class HotelService {
             HotelNftId: "",
             OwnerName: data.OwnerName,
             Name: data.Name,
+            Description: data.Description,
             AddressLine1: data.AddressLine1,
             AddressLine2: data.AddressLine2,
+            City: data.City,
             DistanceFromCenter: data.DistanceFromCenter,
             Email: data.Email,
             ContactNumber1: data.ContactNumber1,
@@ -114,30 +138,30 @@ class HotelService {
             }
         }
 
-        // Saving to the HFacilities table
+        // Saving to thequery HFacilities table
         if (data.Facilities && data.Facilities.length > 0) {
             for (const facility of data.Facilities) {
-                let facilityId = 0;
-                const facilityEntity = {
-                    Name: facility.Name,
-                    Description: facility.Description,
-                    Status: constants.FacilityStatuses.AVAILABLE
-                }
+                // let facilityId = 0;
+                // const facilityEntity = {
+                //     Name: facility.Name,
+                //     Description: facility.Description,
+                //     Status: constants.FacilityStatuses.AVAILABLE
+                // }
 
-                if (await this.#db.isTableExists('HFacilities')) {
-                    try {
-                        facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
-                    } catch (error) {
-                        throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
-                    }
-                } else {
-                    throw ('HFacility table not found.');
-                }
+                // if (await this.#db.isTableExists('HFacilities')) {
+                //     try {
+                //         facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
+                //     } catch (error) {
+                //         throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
+                //     }
+                // } else {
+                //     throw ('HFacility table not found.');
+                // }
 
                 // Saving to M2M table Hotel-Facilities table
                 const hotelHfacilityEntity = {
                     HotelId: insertedId,
-                    HFacilityId: facilityId
+                    HFacilityId: facility.Id
                 }
 
                 if (await this.#db.isTableExists('HotelHFacilities')) {
@@ -157,6 +181,20 @@ class HotelService {
         response.success = { rowId: insertedId, offerId: availableOffer.index }
         return response;
     }
+
+    async #checkIfHotelExists(walletAddress) {
+        const query = `SELECT * FROM HOTELS WHERE HotelWalletAddress = ?`;
+        try {
+            const res = await this.#db.runNativeGetFirstQuery(query, [walletAddress]);
+            if (res && res.length > 0)
+                return res;
+            else
+                return null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
     async #getAnAvailableOffer() {
         try {
@@ -199,7 +237,7 @@ class HotelService {
             throw ("Error in confirming registration. Re-register please.");
         }
 
-        response.success = 'Hotel Registration Successful.'
+        response.success = { hotelId: rowId }
         return response;
     }
 
@@ -217,26 +255,76 @@ class HotelService {
     }
 
     async #getHotels() {
-        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1, Hotels.ContactNumber2,
-                              Images.Id, Images.Url
+        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.Description, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.City, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1,
+                              Images.Id AS ImageId, Images.Url, HotelHFacilities.HFacilityId AS FacilityId
                        FROM Hotels
                        LEFT OUTER JOIN Images
-                       ON Hotels.Id = Images.HotelId 
-                       WHERE Hotels.IsRegistered = 1 `
+                       ON Hotels.Id = Images.HotelId
+                       LEFT OUTER JOIN HotelHFacilities
+                       ON Hotels.Id = HotelHFacilities.HotelId
+                       WHERE Hotels.IsRegistered = 1 `;  // Ending space is required
 
 
 
+        let filterString = "AND ";
         let filters = null;
         if (this.#message.filters) {
             filters = this.#message.filters;
+            
+            // join to a string
+            for (const key in filters) {
+                filterString += `Hotels.${key}=${filters[key]} AND `;
+            }
+            filterString = filterString.slice(0, -5);
+            query = query + filterString;
         }
 
         let response = {};
 
         const hotels = await this.#db.runNativeGetAllQuery(query);
 
+        // Creating new object array
+        const hotelList = [];
+        const hotelNames = [...new Set(hotels.map(h => h.Id))];
+        for(let idx in hotelNames) {
+            const newHotel = {};
+            const imgObjects = [];
+            const facilityIds = [];
 
-        response.success = { hotelList: hotels };
+            (hotels.filter(h => h.Id == hotelNames[idx])).forEach((h, idxx) => {
+                    if(idxx == 0) {
+                        newHotel.Id = h.Id;
+                        newHotel.Name = h.Name;
+                        newHotel.HotelWalletAddress = h.HotelWalletAddress;
+                        newHotel.HotelNftId = h.HotelNftId;
+                        newHotel.OwnerName = h.OwnerName;
+                        newHotel.Description = h.Description;
+                        newHotel.City = h.City;
+                        newHotel.AddressLine1 = h.AddressLine1;
+                        newHotel.AddressLine2 = h.AddressLine2;
+                        newHotel.DistanceFromCenter = h.DistanceFromCenter;
+                        newHotel.Email = h.Email;
+                        newHotel.ContactNumber1 = h.ContactNumber1;
+                        newHotel.ContactNumber2 = h.ContactNumber2 ?? null;
+                    }
+
+                    if(h.ImageId && h.Url) {
+                        imgObjects.push({Id: h.ImageId, Url: h.Url});
+                    }
+
+                    if(h.FacilityId) {
+                        facilityIds.push(h.FacilityId);
+                    }
+            });
+
+            newHotel.Images = [...new Map(imgObjects.map((m) => [m.Id, m])).values()];
+            newHotel.Facilities = [...new Set(facilityIds)];
+
+            hotelList.push(newHotel);
+
+        }
+
+        response.success = { hotelList: hotelList };
         return response;
     }
 

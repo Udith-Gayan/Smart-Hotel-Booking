@@ -94462,18 +94462,7 @@ class ApiService {
         else if (message.type == constants.RequestTypes.RESERVATION) {                                        //-------------------- Reservation related Api-------------------------
             result = await new ReservationService(message).handleRequest();
         }
-        // else if (message.type == 'makeBooking') {                                        //--------------------Make a booking-----------------------------
-        //     result = await this.#transactionService.makeReservation(user.publicKey);
-        // }
-        // else if (message.type == 'getAllBookings') {                                     //------------------ Get all bookings (with filters)----------------------------------
-        //     result = await this.#transactionService.getAllBookings();
-        // }
-        // else if (message.type == 'getAllBookingsByUser') {                                     //------------------ Get all bookings of a User----------------------------------
-        //     result = await this.#transactionService.getAllBookings(user.publicKey);
-        // }
-        // else if (message.type == 'transactions') {                                      //---------------------- Transaction Handler----------------------------
-        //      result = await this.#transactionService.handleTransaction();
-        // }
+
 
         if(isReadOnly){
             await this.sendOutput(user, result);
@@ -94526,8 +94515,10 @@ class DbService {
                     HotelNftId TEXT NOT NULL UNIQUE,
                     OwnerName TEXT,
                     Name TEXT,
+                    Description TEXT,
                     AddressLine1 TEXT,
                     AddressLine2 TEXT,
+                    City TEXT,
                     DistanceFromCenter FLOAT,
                     Email TEXT,
                     ContactNumber1 TEXT,
@@ -94570,8 +94561,9 @@ class DbService {
                         Name TEXT NOT NULL,
                         Description TEXT,
                         MaxRoomCount Integer,
-                        CostPerNight DOUBLE,
+                        BedType TEXT,
                         NoOfBeds Integer,
+                        CostPerNight DOUBLE,
                         HotelId INTEGER,
                         PRIMARY KEY("Id" AUTOINCREMENT),
                         FOREIGN KEY (HotelId) REFERENCES Hotels (Id)
@@ -94582,7 +94574,6 @@ class DbService {
                 Id INTEGER,
                 Name TEXT NOT NULL,
                 Description TEXT,
-                Status TEXT,
                 PRIMARY KEY("Id" AUTOINCREMENT)
                 )`);
 
@@ -94591,7 +94582,7 @@ class DbService {
             await this.#runQuery(`CREATE TABLE IF NOT EXISTS RoomFacilities (
                 RoomId INTEGER,
                 RFacilityId INTEGER,
-                Quantity INTEGER,
+                Quantity INTEGER,  
                 PRIMARY KEY("RoomId", "RFacilityId"),
                 FOREIGN KEY (RoomId) REFERENCES Rooms (Id),
                 FOREIGN KEY (RFacilityId) REFERENCES RFacilities (Id)
@@ -94634,7 +94625,7 @@ class DbService {
                 FOREIGN KEY (HotelId) REFERENCES Hotels (Id)
             )`);
 
-            // await this.#insertData();
+            await this.#insertData();
 
             console.log("Database initialized.");
             this.#db.close();
@@ -94643,38 +94634,74 @@ class DbService {
 
     static async #insertData() {
 
-        // Inserting hotels
-        let hotels = `INSERT INTO Hotels(Id, HotelWalletAddress, HotelNftId, Name, Address, Email, IsRegistered) VALUES 
-                        (1, "rpnzMDvKfN1ewJs4ddSRXFFZQF6Ubmhkqx", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Hotel Mandara Rosen", "Kataragama", "test1@gmail.com", 1),
-                        (2, "rfKk9cRbspDzo62rbWniTMQX93FfCt8w5o", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D66", "Hotel Hilton", "Colombo 1", "hilton.lk@gmail.com", 1),
-                        (3, "rLkLngcLBKfiYRL32Ygk4WYofBudgii3zk", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D67", "Hotel Galadari", "Colombo 1", "galadari@gmail.com", 1)`;
 
-        await this.#runQuery(hotels);
+        let hFacilities = `INSERT INTO "HFacilities" ("Id","Name","Description","Status") VALUES (1,'Free WiFi','This is test description of this facility.','Available'),
+        (6,'Family Room','This is test description of this facility.','Available'),
+        (3,'Fitness Center','This is test description of this facility.','Available'),
+        (2,'Swimming Pool','This is test description of this facility.','Available'),
+        (7,'Pet friendly','This is test description of this facility.','Available'),
+        (4,'Room Service','This is test description of this facility.','Available'),
+        (8,'Disabled access','This is test description of this facility.','Available'),
+        (10,'Parking','This is test description of this facility.','Available'),
+        (9,'Restaurant','This is test description of this facility.','Available'),
+        (5,'Spa & Wellness','This is test description of this facility.','Available')`;
+        await this.#runQuery(hFacilities);
 
-        // Inserting Rooms
-        let rooms = `INSERT INTO Rooms(Id, HotelId, RoomNftId, Name) VALUES
-                        (1, 1, "000B013A95F14B0044F78A264E41713C64B5F8924254055E208C3098E00000D65", "Sea-View Room"),
-                        (2, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D33", "Coconut-Grove Room"),
-                        (3, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EEDD08C3098E00000D65", "Presidential Room"),
-                        (4, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE20866098E00000D65", "Presidential Room"),
-                        (5, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CFEWF98E00000D65", "Beach-View Room"),
-                        (6, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208VDFV98E00000D65", "Ever-Green Room"),
-                        (7, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CVD098E00000D65", "Double Bed Room"),
-                        (14, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540VDFDFDFF098E00000D65", "Tripple Bed Room"),
-                        (8, 1, "000B013A95F14B0044F78A264E41713C64B5F892425SDDSFDFDC3098E00000D65", "Single Bed Room"),
-                        (9, 1, "000B013A95F14B0044F78A264E41713C64B5F89242SDCVDSSDVC3098E00000D65", "Single Bed Green View Room"),
-                        (10, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Non-AC Room"),
-                        (11, 3, "000B013A95F14B0044F78A264E41713C64B5F89242540EEFVDV3098E00000D65", "Presidential Room"),
-                        (12, 3, "000B013A95F14B0044F78A264E41713C64B5F892425VDFVFVDF3098E00000D65", "Single Bed Room"),
-                        (13, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208D3098E00000D65", "Sea-View Blue Room")`;
-        await this.#runQuery(rooms);
+        let rFacilities = `INSERT INTO "RFacilities" ("Id", "Name", "Description") VALUES (1, "Private Bathroom", "This room has this facility."),
+        (2, "Private Pool", "This room has this facility."),
+        (3, "Washing Machine", "This room has this facility."),
+        (4, "TV", "This room has this facility."),
+        (5, "Air Conditioning", "This room has this facility."),
+        (6, "Terrace", "This room has this facility."),
+        (7, "Refrigerator", "This room has this facility."),
+        (8, "Balcony", "This room has this facility."),
+        (9, "Kitchen/Kitchenette", "This room has this facility."),
+        (10, "Coffee/tea maker", "This room has this facility."),
+        (11, "Clothes rack", "This room has this facility."),
+        (12, "Entire unit located on ground floor", "This room has this facility."),
+        (13, "Elevators availble", "This room has this facility."),
+        (14, "Toilet with grab rails", "This room has this facility."),
+        (15, "Adapted Bath", "This room has this facility."),
+        (16, "Walk-in Shower", "This room has this facility."),
+        (17, "Raised toilet", "This room has this facility."),
+        (18, "Lowered sink", "This room has this facility."),
+        (19, "Shower Chair", "This room has this facility.")`;
 
-        // Inserting Bookings
-        let bookings = `INSERT INTO Bookings(Id, RoomId, PersonName, UserPubkey, FromDate, ToDate) VALUES
-                            (1, 1, "Andrew", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208", "2022-8-10", "2022-8-15"),
-                            (2, 1, "Ravi", "000B013A95F14B0044F78A264E41713C64B5F89242540EE210", "2022-9-3", "2022-9-10"),
-                            (3, 5, "Perera", "000B013A95F14B0044F78A264E41713C64B5F89242540EE209",  "2022-8-31", "2022-9-2")`;
-        await this.#runQuery(bookings);
+        await this.#runQuery(rFacilities);
+
+
+        // // Inserting hotels
+        // let hotels = `INSERT INTO Hotels(Id, HotelWalletAddress, HotelNftId, Name, Address, Email, IsRegistered) VALUES 
+        //                 (1, "rpnzMDvKfN1ewJs4ddSRXFFZQF6Ubmhkqx", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Hotel Mandara Rosen", "Kataragama", "test1@gmail.com", 1),
+        //                 (2, "rfKk9cRbspDzo62rbWniTMQX93FfCt8w5o", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D66", "Hotel Hilton", "Colombo 1", "hilton.lk@gmail.com", 1),
+        //                 (3, "rLkLngcLBKfiYRL32Ygk4WYofBudgii3zk", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D67", "Hotel Galadari", "Colombo 1", "galadari@gmail.com", 1)`;
+
+        // await this.#runQuery(hotels);
+
+        // // Inserting Rooms
+        // let rooms = `INSERT INTO Rooms(Id, HotelId, RoomNftId, Name) VALUES
+        //                 (1, 1, "000B013A95F14B0044F78A264E41713C64B5F8924254055E208C3098E00000D65", "Sea-View Room"),
+        //                 (2, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D33", "Coconut-Grove Room"),
+        //                 (3, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EEDD08C3098E00000D65", "Presidential Room"),
+        //                 (4, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE20866098E00000D65", "Presidential Room"),
+        //                 (5, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CFEWF98E00000D65", "Beach-View Room"),
+        //                 (6, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208VDFV98E00000D65", "Ever-Green Room"),
+        //                 (7, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208CVD098E00000D65", "Double Bed Room"),
+        //                 (14, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540VDFDFDFF098E00000D65", "Tripple Bed Room"),
+        //                 (8, 1, "000B013A95F14B0044F78A264E41713C64B5F892425SDDSFDFDC3098E00000D65", "Single Bed Room"),
+        //                 (9, 1, "000B013A95F14B0044F78A264E41713C64B5F89242SDCVDSSDVC3098E00000D65", "Single Bed Green View Room"),
+        //                 (10, 1, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208C3098E00000D65", "Non-AC Room"),
+        //                 (11, 3, "000B013A95F14B0044F78A264E41713C64B5F89242540EEFVDV3098E00000D65", "Presidential Room"),
+        //                 (12, 3, "000B013A95F14B0044F78A264E41713C64B5F892425VDFVFVDF3098E00000D65", "Single Bed Room"),
+        //                 (13, 2, "000B013A95F14B0044F78A264E41713C64B5F89242540EE208D3098E00000D65", "Sea-View Blue Room")`;
+        // await this.#runQuery(rooms);
+
+        // // Inserting Bookings
+        // let bookings = `INSERT INTO Bookings(Id, RoomId, PersonName, UserPubkey, FromDate, ToDate) VALUES
+        //                     (1, 1, "Andrew", "000B013A95F14B0044F78A264E41713C64B5F89242540EE208", "2022-8-10", "2022-8-15"),
+        //                     (2, 1, "Ravi", "000B013A95F14B0044F78A264E41713C64B5F89242540EE210", "2022-9-3", "2022-9-10"),
+        //                     (3, 5, "Perera", "000B013A95F14B0044F78A264E41713C64B5F89242540EE209",  "2022-8-31", "2022-9-2")`;
+        // await this.#runQuery(bookings);
     }
 
     static #runQuery(query, params = null) {
@@ -94775,7 +94802,7 @@ class SqliteDatabase {
     /**
      * 
      * @param {*} tableName 
-     * @param {Object} filter An object with table column values as the keys
+     * @param {Object} filter | An object with table column values as the keys
      * @param {'=' | 'IN'} op  
      * @returns A lit of rows of the table
      */
@@ -94964,7 +94991,7 @@ class SqliteDatabase {
     /**
      * 
      * @param {string} query 
-     * @param {[]} params | An array of values to be replaced in ? places in thr]e query
+     * @param {[]} params | An array of values to be replaced in ? places in the query
      * @returns A promise of an object of a single row. Otherwise undefined.
      */
     runNativeGetFirstQuery(query, params = []) {
@@ -95184,6 +95211,8 @@ class HotelService {
                     return await this.#deregisterHotel();
                 case constants.RequestSubTypes.RATE_HOTEL:
                     return await this.#rateHotel();
+                case constants.RequestSubTypes.IS_REGISTERED_HOTEL:
+                    return await this.#isRegisteredHotel();
                 default:
                     throw ("Invalid Request");
             }
@@ -95196,6 +95225,26 @@ class HotelService {
         }
     }
 
+    /**
+     * 
+     * @returns {hotel fields....} || null
+     */
+    async #isRegisteredHotel() {
+        let response = {};
+        if (!(this.#message.data && this.#message.data.HotelWalletAddress))
+            throw ("Invalid request.");
+
+        let query = `SELECT * FROM Hotels WHERE HotelWalletAddress = '${this.#message.data.HotelWalletAddress}' AND IsRegistered = 1`;
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (res) {
+            response.success = res;
+        } else {
+            response.success = null;
+        }
+
+        return response;
+    }
+
     async #registerHotel() {
         const response = { success: null };
 
@@ -95206,8 +95255,10 @@ class HotelService {
             HotelNftId: "",
             OwnerName: data.OwnerName,
             Name: data.Name,
+            Description: data.Description,
             AddressLine1: data.AddressLine1,
             AddressLine2: data.AddressLine2,
+            City: data.City,
             DistanceFromCenter: data.DistanceFromCenter,
             Email: data.Email,
             ContactNumber1: data.ContactNumber1,
@@ -95257,30 +95308,30 @@ class HotelService {
             }
         }
 
-        // Saving to the HFacilities table
+        // Saving to thequery HFacilities table
         if (data.Facilities && data.Facilities.length > 0) {
             for (const facility of data.Facilities) {
-                let facilityId = 0;
-                const facilityEntity = {
-                    Name: facility.Name,
-                    Description: facility.Description,
-                    Status: constants.FacilityStatuses.AVAILABLE
-                }
+                // let facilityId = 0;
+                // const facilityEntity = {
+                //     Name: facility.Name,
+                //     Description: facility.Description,
+                //     Status: constants.FacilityStatuses.AVAILABLE
+                // }
 
-                if (await this.#db.isTableExists('HFacilities')) {
-                    try {
-                        facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
-                    } catch (error) {
-                        throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
-                    }
-                } else {
-                    throw ('HFacility table not found.');
-                }
+                // if (await this.#db.isTableExists('HFacilities')) {
+                //     try {
+                //         facilityId = (await this.#db.insertValue('HFacilities', facilityEntity)).lastId;
+                //     } catch (error) {
+                //         throw (`Error occured in saving hotel facility ${facility.Name} : ${e}`);
+                //     }
+                // } else {
+                //     throw ('HFacility table not found.');
+                // }
 
                 // Saving to M2M table Hotel-Facilities table
                 const hotelHfacilityEntity = {
                     HotelId: insertedId,
-                    HFacilityId: facilityId
+                    HFacilityId: facility.Id
                 }
 
                 if (await this.#db.isTableExists('HotelHFacilities')) {
@@ -95300,6 +95351,20 @@ class HotelService {
         response.success = { rowId: insertedId, offerId: availableOffer.index }
         return response;
     }
+
+    async #checkIfHotelExists(walletAddress) {
+        const query = `SELECT * FROM HOTELS WHERE HotelWalletAddress = ?`;
+        try {
+            const res = await this.#db.runNativeGetFirstQuery(query, [walletAddress]);
+            if (res && res.length > 0)
+                return res;
+            else
+                return null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
     async #getAnAvailableOffer() {
         try {
@@ -95342,7 +95407,7 @@ class HotelService {
             throw ("Error in confirming registration. Re-register please.");
         }
 
-        response.success = 'Hotel Registration Successful.'
+        response.success = { hotelId: rowId }
         return response;
     }
 
@@ -95360,26 +95425,79 @@ class HotelService {
     }
 
     async #getHotels() {
-        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1, Hotels.ContactNumber2,
-                              Images.Id, Images.Url
+        let query = `SELECT Hotels.Id, Hotels.HotelWalletAddress, Hotels.HotelNftId, Hotels.OwnerName, Hotels.Name, Hotels.Description, Hotels.AddressLine1, Hotels.AddressLine2, Hotels.City, Hotels.DistanceFromCenter, Hotels.Email, Hotels.ContactNumber1,
+                              Images.Id AS ImageId, Images.Url, HotelHFacilities.HFacilityId AS FacilityId
                        FROM Hotels
                        LEFT OUTER JOIN Images
-                       ON Hotels.Id = Images.HotelId 
-                       WHERE Hotels.IsRegistered = 1 `
+                       ON Hotels.Id = Images.HotelId
+                       LEFT OUTER JOIN HotelHFacilities
+                       ON Hotels.Id = HotelHFacilities.HotelId
+                       WHERE Hotels.IsRegistered = 1 `;  // Ending space is required
 
 
 
+        let filterString = "AND ";
         let filters = null;
         if (this.#message.filters) {
             filters = this.#message.filters;
+            
+            // join to a string
+            for (const key in filters) {
+                filterString += `Hotels.${key}=${filters[key]} AND `;
+            }
+            filterString = filterString.slice(0, -5);
+            query = query + filterString;
         }
 
         let response = {};
 
         const hotels = await this.#db.runNativeGetAllQuery(query);
 
+        console.log(hotels);
 
-        response.success = { hotelList: hotels };
+        // Creating new object array
+        const hotelList = [];
+        const hotelNames = [...new Set(hotels.map(h => h.Id))];
+        for(let idx in hotelNames) {
+            const newHotel = {};
+            const imgObjects = [];
+            const facilityIds = [];
+
+            (hotels.filter(h => h.Id == hotelNames[idx])).forEach((h, idxx) => {
+                    if(idxx == 0) {
+                        newHotel.Id = h.Id;
+                        newHotel.Name = h.Name;
+                        newHotel.HotelWalletAddress = h.HotelWalletAddress;
+                        newHotel.HotelNftId = h.HotelNftId;
+                        newHotel.OwnerName = h.OwnerName;
+                        newHotel.Description = h.Description;
+                        newHotel.City = h.City;
+                        newHotel.AddressLine1 = h.AddressLine1;
+                        newHotel.AddressLine2 = h.AddressLine2;
+                        newHotel.DistanceFromCenter = h.DistanceFromCenter;
+                        newHotel.Email = h.Email;
+                        newHotel.ContactNumber1 = h.ContactNumber1;
+                        newHotel.ContactNumber2 = h.ContactNumber2 ?? null;
+                    }
+
+                    if(h.ImageId && h.Url) {
+                        imgObjects.push({Id: h.ImageId, Url: h.Url});
+                    }
+
+                    if(h.FacilityId) {
+                        facilityIds.push(h.FacilityId);
+                    }
+            });
+
+            newHotel.Images = [...new Map(imgObjects.map((m) => [m.Id, m])).values()];
+            newHotel.Facilities = [...new Set(facilityIds)];
+
+            hotelList.push(newHotel);
+
+        }
+
+        response.success = { hotelList: hotelList };
+        console.log(hotelList);
         return response;
     }
 
@@ -95486,6 +95604,9 @@ class RoomService {
                 case constants.RequestSubTypes.GET_ROOMS:
                     return await this.#getRooms();  // not yet implemented
                     break;
+                case constants.RequestSubTypes.GET_ROOMS_BY_HOTELID:
+                    return await this.#getRoomsByHotelId();
+                    break;
                 default:
                     throw ("Invalid Request");
             }
@@ -95501,31 +95622,39 @@ class RoomService {
     // Create a Room
     async #createRoom() {
         let response = {};
+        console.log(this.#message)
         // Frontend makes a transaction with the amount to the contract wallet. Then , sends the transaction id to the backend.  The contract here checks the transaction Amount to be validated and create a room.
-        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.TransactionId))
+        if (!(this.#message.data && this.#message.data.HotelId && this.#message.data.TransactionId)) {
+            console.log("The required data missing for room creation.")
             throw ("The required data missing for room creation.");
+        }
 
         const data = this.#message.data;
 
         // check if Hotelid exists
         let query = `SELECT * from Hotels WHERE Id = ${data.HotelId}`;
         const res = await this.#db.runNativeGetFirstQuery(query);
-        if (!res)
+        if (!res) {
+            console.log("Hotel not found.")
             throw ("Hotel not found.");
+        }
         if (res.IsRegistered == 0)
             throw ("Hotel is not registered.");
 
 
         // Trasaction Validity
-        const txList = (await this.#xrplApi.getAccountTrx(res.HotelWalletAddress)).filter(t => t.TransactionType == "Payment");
-        const paidTx = txList.find(tx => tx.hash == data.TransactionId);
-        if (!paidTx)
+        const txList = (await this.#xrplApi.getAccountTrx(res.HotelWalletAddress)).filter(ob => ob.tx.TransactionType == "Payment");
+        console.log(txList);
+        const paidTx = txList.find(ob => ob.tx.hash == data.TransactionId);
+        if (!paidTx) {
+            console.log("Invalid transaction hash.");
             throw ("Invalid transaction hash.");
+        }
 
-        if (Number(paidTx.Amount) < businessConfigurations.ROOM_CREATION_COST)
+        if (Number(paidTx.tx.Amount) < businessConfigurations.ROOM_CREATION_COST) {
+            console.log("Insuffcient amount paid for room creation.")
             throw ("Insuffcient amount paid for room creation.");
-
-
+        }
 
         // Save the Room Entity
         const roomEntity = {
@@ -95534,13 +95663,17 @@ class RoomService {
             MaxRoomCount: data.MaxRoomCount,
             CostPerNight: data.CostPerNight,
             NoOfBeds: data.NoOfBeds,
-            HotelId: data.HotelId
-        }
+            HotelId: data.HotelId,
+            BedType: data.BedType
+        };
         let roomId;
         if (await this.#db.isTableExists('Rooms')) {
             try {
+                console.log(6)
                 roomId = (await this.#db.insertValue('Rooms', roomEntity)).lastId;
+                console.log(7)
             } catch (error) {
+                console.log(8)
                 throw (`Error occured in saving the room ${roomEntity.Name}`);
             }
         } else {
@@ -95550,31 +95683,30 @@ class RoomService {
         // If RFacilityId is present, in each array object, get that and save to m2m tble
         // Otherwise, create a facility record and add it to the m2m table.
         if (data.Facilities && data.Facilities.length > 0) {
-            for(const facility of data.Facilities) {
+            for (const facility of data.Facilities) {
                 let rFacilityId = 0;
-                if(facility.RFacilityId && facility.RFacilityId > 0) {
+                if (facility.RFacilityId && facility.RFacilityId > 0) {
                     rFacilityId = facility.RFacilityId;
-                } 
+                }
                 else {
                     // Save RFacility Entity
                     const rFacilityEntity = {
                         Name: facility.Name,
                         Description: facility.Description,
-                        Status: constants.FacilityStatuses.AVAILABLE
                     }
 
-                    if(await this.#db.isTableExists('RFacilities')) {
+                    if (await this.#db.isTableExists('RFacilities')) {
                         try {
                             rFacilityId = (await this.#db.insertValue('RFacilities', rFacilityEntity)).lastId;
                         } catch (error) {
-                            throw(`Error occured in saving room Facility ${rFacilityEntity.Name} `);
+                            throw (`Error occured in saving room Facility ${rFacilityEntity.Name} `);
                         }
                     } else {
-                        throw(`Room Facility table not found.`);
+                        throw (`Room Facility table not found.`);
                     }
                 }
 
-                
+
                 // Save in the m2m table
                 const roomFacilityEntity = {
                     RoomId: roomId,
@@ -95582,14 +95714,14 @@ class RoomService {
                     Quantity: facility.Quantity ?? 1
                 }
 
-                if(await this.#db.isTableExists('RoomFacilities')) {
+                if (await this.#db.isTableExists('RoomFacilities')) {
                     try {
                         await this.#db.insertValue('RoomFacilities', roomFacilityEntity);
                     } catch (error) {
-                        throw(`Error occured in saving Room-Facility ${roomFacilityEntity.RFacilityId} `);
+                        throw (`Error occured in saving Room-Facility ${roomFacilityEntity.RFacilityId} `);
                     }
                 } else {
-                    throw(`Room-Facility table not found.`);
+                    throw (`Room-Facility table not found.`);
                 }
             }
         }
@@ -95611,12 +95743,12 @@ class RoomService {
         const res = await this.#db.runNativeGetFirstQuery(query);
         if (!res)
             throw ("Room not found.");
-        
+
         try {
-            await this.#db.updateValue('Rooms', data.NewData, { Id: data.RoomId }); 
+            await this.#db.updateValue('Rooms', data.NewData, { Id: data.RoomId });
         } catch (error) {
             console.log(error);
-            throw("Error occured in updating the room table.");
+            throw ("Error occured in updating the room table.");
         }
 
         response.success = { roomId: res.Id };
@@ -95626,29 +95758,52 @@ class RoomService {
     async #deleteRoom() {
         let response = {};
 
-        if(!(this.#message.data && this.#message.data.RoomId ))
-            throw("Invalid Request.");
-        
+        if (!(this.#message.data && this.#message.data.RoomId))
+            throw ("Invalid Request.");
+
         const data = this.#message.data;
         // check if RoomId exists
         let query = `SELECT * from Rooms WHERE Id = ${data.RoomId}`;
         const res = await this.#db.runNativeGetFirstQuery(query);
         if (!res)
             throw ("Room not found.");
-    
+
         try {
-            await this.#db.deleteValues('RoomFacilities', {RoomId: data.RoomId});
-            await this.#db.deleteValues('Rooms', {Id: data.RoomId});
+            await this.#db.deleteValues('RoomFacilities', { RoomId: data.RoomId });
+            await this.#db.deleteValues('Rooms', { Id: data.RoomId });
         } catch (error) {
             console.log(error);
-            throw("Error in deleting the room.")
+            throw ("Error in deleting the room.")
         }
 
-        response.success = "Room successfullt removed."
+        response.success = "Room successfully removed."
         return response;
     }
 
     async #getRooms() {
+
+    }
+
+    async #getRoomsByHotelId() {
+        let response = {};
+        if (!(this.#message.filters && this.#message.filters.HotelId && this.#message.filters.HotelId > 0))
+            throw ("Invalid Request.");
+
+        const hotelId = this.#message.filters.HotelId;
+        let query = `SELECT * FROM Hotels WHERE Id = ${hotelId}`
+        const res = await this.#db.runNativeGetFirstQuery(query);
+        if (!res)
+            throw ("Hotel not found.");
+
+        const roomList = await this.#db.getValues('Rooms', { HotelId: hotelId });
+
+        if (roomList && roomList.length > 0)
+            response.success = { roomList: roomList };
+        else {
+            response.success = [];
+        }
+
+        return response;
 
     }
 
@@ -95677,8 +95832,10 @@ const RequestSubTypes = {
     GET_HOTELS: "GetHotels",
     DEREG_HOTEL: "DeregHotel",
     RATE_HOTEL: "RateHotel",
+    IS_REGISTERED_HOTEL: "IsRegisteredHotel",
 
     GET_ROOMS: "GetRooms",
+    GET_ROOMS_BY_HOTELID: "GetRoomsByHotelId",
     CREATE_ROOM: "CreateRoom",
     EDIT_ROOM: "EditRoom",
     DELETE_ROOM: "DeleteRoom",
@@ -96014,7 +96171,7 @@ module.exports = JSON.parse('{"TYPES":{"Validation":10003,"Done":-1,"Hash128":4,
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rNbB3AE3Tnti7YqnyHxdBRXGqswgevFBHK","contractWalletSecret":"snfBYDBFd7EwKXTtWaBDcuwoXvzJW"},"s":{"ROOM_CREATION_COST":2000000,"ROOM_COMMISSION_PERCENTAGE":5}}');
+module.exports = JSON.parse('{"X":{"dbPath":"HotelBooking1.db","contractWalletAddress":"rE4ziTqKHUdSTFridczfEsRpKscESF1Lr3","contractWalletSecret":"snpbbYW5WVM2fqgyNbL7Y4WTUY7F4"},"s":{"ROOM_CREATION_COST":2000000,"ROOM_COMMISSION_PERCENTAGE":5}}');
 
 /***/ })
 

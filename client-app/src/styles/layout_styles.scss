@@ -1,0 +1,115 @@
+.cardContainer {
+  background: #f9f7f7;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 30px 50px;
+  margin-top: 21px;
+}
+
+.main_Container {
+  margin-bottom: 50px;
+}
+
+section {
+  margin: 50px 0;
+}
+
+.card_with_checkbox {
+  box-sizing: border-box;
+  width: 266px;
+  height: 50px;
+  border: 1px solid #908f8f;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.image_uploader_container {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px dashed #a9a6a6;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 30px;
+}
+
+.center_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.left_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.text_area {
+  width: 100%;
+  border-radius: 10px;
+  padding: 20px 20px;
+}
+
+.inline_parent {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.inline_childWrapper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.room_modal {
+  //width: 75%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //text-align: center;
+}
+
+.custom_backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.custom_modal {
+  position: fixed;
+  //top: 30vh;
+  left: 10%;
+  width: 80%;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.row_justify {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row_fit {
+  display: flex;
+  justify-content: flex-start;
+  //width: 400px;
+  flex-wrap: wrap;
+}
+
+.row_right {
+  display: flex;
+  justify-content: flex-end;
+  //width: 400px;
+  flex-wrap: wrap;
+}
+
+.bookingWrapper {
+  margin-top: 30px !important;
+}

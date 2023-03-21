@@ -1,0 +1,259 @@
+.dropdown {
+  border: 1px solid #908F8F;
+  height: 40px;
+}
+
+.city_text {
+  width: 160px;
+  text-align: left;
+  padding-top: 5px;
+  padding-left: 20px;
+}
+
+.date_range_text {
+  width: 210px;
+  text-align: left;
+  padding-top: 5px;
+  padding-left: 20px;
+}
+
+.people_text {
+  width: 110px;
+  text-align: left;
+  padding-top: 5px;
+  padding-left: 20px;
+}
+
+.bedroom_text {
+  text-align: left;
+  padding-top: 2px;
+  padding-right: 10px;
+  padding-left: 7px
+}
+
+.increment_button {
+  border: 1px solid #A9A6A6;
+  border-radius: 5px;
+  background: transparent;
+  height: 25px;
+  width: 25px;
+  margin-top: 7px
+}
+
+.increment_button:hover {
+  background: #cecccc;
+}
+
+.increment_button:active {
+  background: #afadad;
+}
+
+.decrement_button {
+  border: 1px solid #A9A6A6;
+  border-radius: 5px;
+  background: transparent;
+  height: 25px;
+  width: 25px;
+  margin-top: 7px;
+  margin-right: 10px
+}
+
+.decrement_button:hover {
+  background: #cecccc;
+}
+
+.decrement_button:active {
+  background: #afadad;
+}
+
+.clear_button {
+  border: 1px solid #A9A6A6;
+  border-radius: 5px;
+  background: transparent;
+  width: 100%;
+  height: 38px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.clear_button:hover {
+  background: #cecccc;
+}
+
+.clear_button:active {
+  background: #afadad;
+}
+
+.search_button {
+  border: 1px solid #A9A6A6;
+  border-radius: 5px;
+  background: #2C2C76;
+  color: #D9D9D9;
+  width: 100%;
+  height: 38px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.search_button:hover {
+  background-color: #0c0c79; /* Change the background color */
+}
+
+.search_button:active {
+  background-color: #060642; /* Change the background color */
+}
+
+.filter_card {
+  box-sizing: border-box;
+  border: 2px solid #F0EFEF;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 6px;
+  padding: 10px 15px;
+  background: #FFFFFF;
+  width: 400px;
+}
+
+.reset_button {
+  background: transparent;
+  border: none;
+  width: auto;
+  margin-top: -5px;
+  color: #555555;
+}
+
+.reset_button:hover {
+  color: #1e1d1d;
+}
+
+.reset_button:active {
+  color: #000000;
+}
+
+.reset_text {
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 29px;
+}
+
+.input_field {
+  background-color: #ffffff;
+  border-color: #908F8F;
+  width: 50%;
+  height: 38px;
+  margin-top: 5px;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  line-height: 34px;
+
+}
+
+.box_button {
+  border: 1px solid #A9A6A6;
+  border-radius: 6px;
+  padding: 5px 10px;
+  margin: 5px;
+  height: 40px;
+  width: auto;
+  background-color: transparent;
+  color: #000000;
+
+}
+
+.disabled_box_button {
+  border: 1px solid #A9A6A6;
+  border-radius: 6px;
+  padding: 5px 10px;
+  margin: 5px;
+  height: 40px;
+  width: auto;
+  background-color: transparent;
+  color: #908F8F;
+}
+
+.box_text {
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 29px;
+}
+
+.box_button:hover {
+  background: #cecccc;
+}
+
+.box_button:active {
+  background: #afadad;
+  color: #000000;
+}
+
+.box_button_active {
+  background: #afadad;
+  color: #000000;
+}
+
+.dropdown_container {
+  background-color: transparent;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  display: flex;
+  width: 75%;
+}
+
+.dropdown_container_disabled {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  display: flex;
+  width: 75%;
+}
+
+.dropdown_toggle {
+  width: 100%;
+  height: 38px;
+  //margin-top: 5px;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 34px;
+  border: none;
+}
+
+.dropdown_items_custom {
+  height: 35px;
+  width: 50%;
+  text-align: center;
+  background-color: #ffffff;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.hotel_card {
+  box-sizing: border-box;
+  //color: #D9D9D9;
+  border: 1px solid #D9D9D9;
+  border-radius: 5px;
+  width: 684px;
+}
+
+.view_availability_button {
+  background: #2C2C76;
+  padding: 6px 20px;
+  border-radius: 5px;
+  color: #D9D9D9;
+  font-family: 'Inter', serif;
+  font-weight: 500;
+  font-size: 16px;
+  align-items: center;
+
+}
+
+.view_availability_button:hover {
+  background-color: #0c0c79; /* Change the background color */
+}
+
+.view_availability_button:active {
+  background-color: #060642; /* Change the background color */
+}

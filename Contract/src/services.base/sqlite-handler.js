@@ -75,7 +75,7 @@ class SqliteDatabase {
     /**
      * 
      * @param {*} tableName 
-     * @param {Object} filter An object with table column values as the keys
+     * @param {Object} filter | An object with table column values as the keys
      * @param {'=' | 'IN'} op  
      * @returns A lit of rows of the table
      */
@@ -264,7 +264,7 @@ class SqliteDatabase {
     /**
      * 
      * @param {string} query 
-     * @param {[]} params | An array of values to be replaced in ? places in thr]e query
+     * @param {[]} params | An array of values to be replaced in ? places in the query
      * @returns A promise of an object of a single row. Otherwise undefined.
      */
     runNativeGetFirstQuery(query, params = []) {
