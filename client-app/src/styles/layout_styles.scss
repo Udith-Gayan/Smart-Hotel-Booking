@@ -1,5 +1,5 @@
 .cardContainer {
-  background: #F9F7F7;
+  background: #f9f7f7;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   padding: 30px 50px;
@@ -18,7 +18,7 @@ section {
   box-sizing: border-box;
   width: 266px;
   height: 50px;
-  border: 1px solid #908F8F;
+  border: 1px solid #908f8f;
   border-radius: 5px;
   padding: 10px;
 }
@@ -26,7 +26,7 @@ section {
 .image_uploader_container {
   width: 100%;
   box-sizing: border-box;
-  border: 2px dashed #A9A6A6;
+  border: 2px dashed #a9a6a6;
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 30px;
@@ -64,7 +64,7 @@ section {
   overflow: hidden;
 }
 
-.room_modal{
+.room_modal {
   //width: 75%;
   display: flex;
   justify-content: center;
@@ -91,23 +91,25 @@ section {
   overflow: hidden;
 }
 
-.row_justify{
+.row_justify {
   display: flex;
   justify-content: space-between;
 }
 
-.row_fit{
+.row_fit {
   display: flex;
-  justify-content:flex-start;
-  //width: 400px;
-  flex-wrap: wrap;
-
-}
-
-.row_right{
-  display: flex;
-  justify-content:flex-end;
+  justify-content: flex-start;
   //width: 400px;
   flex-wrap: wrap;
 }
 
+.row_right {
+  display: flex;
+  justify-content: flex-end;
+  //width: 400px;
+  flex-wrap: wrap;
+}
+
+.bookingWrapper {
+  margin-top: 30px !important;
+}

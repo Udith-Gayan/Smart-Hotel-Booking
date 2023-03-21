@@ -50,15 +50,19 @@ code {
 }
 
 .smallMarginLeftRight {
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 5px !important;
+  margin-right: 5px !important;
 }
 
 .smallMarginTopBottom {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 .noMargin {
   margin: 0;
+}
+
+.fontBold {
+  font-weight: 800;
 }
