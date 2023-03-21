@@ -121,12 +121,12 @@ export default class HotelService {
    * 
    * @returns An hotel object || null
    */
-  async getMyHotel() {
+  async getMyHotel(id) {
     const submitObject = {
       type: constants.RequestTypes.HOTEL,
       subType: constants.RequestSubTypes.GET_HOTELS,
       filters: {
-        HotelWalletAddress: SharedStateService.instance.hotelWallet.address
+        Id: id
       }
     }
     try {
