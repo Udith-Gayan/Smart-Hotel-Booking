@@ -15,8 +15,8 @@ const HeaderSectionLandingPageHotelOwner = () => {
   const xrplService = XrplService.xrplInstance;
   const hotelService = HotelService.instance;
 
-  const [secret, setSecret] = useState('');
-  const [ errorMessage, setErrorMessage ] = useState(null);
+  const [secret, setSecret] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const [disableSubmitBtn, setDisableSubmitBtn] = useState(false);
 
   const noSecret = () => {
@@ -26,7 +26,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
 
   const submit = async () => {
     setDisableSubmitBtn(true);
-    if(! xrplService.isValidSecret(secret)) {
+    if (!xrplService.isValidSecret(secret)) {
       setErrorMessage("Invalid secret.");
       setDisableSubmitBtn(false);
       return;
@@ -34,7 +34,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
 
     // Check if registered hotel
     const res = await hotelService.generateHotelWallet(secret);
-    if(!res) {
+    if (!res) {
       setErrorMessage("This is not a registered hotel's secret.");
       setDisableSubmitBtn(false);
       return;
@@ -82,9 +82,9 @@ const HeaderSectionLandingPageHotelOwner = () => {
                 name="secret"
                 id="secret"
                 placeholder="Secret"
-                onChange={e => setSecret(e.target.value)}
+                onChange={(e) => setSecret(e.target.value)}
               />{" "}
-              <p style={{color: 'red'}}>{errorMessage}</p>
+              <p style={{ color: "red" }}>{errorMessage}</p>
               <Button
                 className="secondaryButton smallMarginTopBottom"
                 onClick={() => submit()}

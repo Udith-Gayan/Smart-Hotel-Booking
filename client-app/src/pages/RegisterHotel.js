@@ -11,6 +11,9 @@ import {
   FormGroup,
   Input,
   Label,
+  Button,
+  Col,
+  Row,
 } from "reactstrap";
 import Facilities from "../components/RegisterHotelComponents/Facilities";
 import ContactDetails from "../components/RegisterHotelComponents/ContactDetails";
@@ -83,6 +86,8 @@ function RegisterHotel() {
         DistanceFromCenter: DistanceFromCenter,
       };
 
+      console.log("first", submissionData);
+
       if (imageUrls.length > 0) submissionData.ImageUrls = imageUrls;
 
       if (HotelFacilities.length > 0)
@@ -91,92 +96,102 @@ function RegisterHotel() {
       // 4 - Submit for registration
       const res = await hotelService.registerHotel(submissionData);
 
-            if (res.hotelId > 0) {
-                alert("Successful");
-                navigate(`/hotel/${res.hotelId}`);
-            } else {
-                alert("Registration failed!");
-            }
-        } catch (err) {
-            setRegisterButtonDisable(false);
-            console.log(err);
-            alert("Error occurred in Registration.!")
-        }
-
-    }, [Name, StarRate, Description, OwnerName, Email, AddressLine1, AddressLine2, City, ContactNumber1, ContactNumber2, DistanceFromCenter, HotelFacilities, uploadedImages]);
-
+      if (res.hotelId > 0) {
+        alert("Successful");
+        navigate(`/hotel/${res.hotelId}`);
+      } else {
+        alert("Registration failed!");
+      }
+    } catch (err) {
+      setRegisterButtonDisable(false);
+      console.log(err);
+      alert("Error occurred in Registration.!");
+    }
+  }, [
+    Name,
+    StarRate,
+    Description,
+    OwnerName,
+    Email,
+    AddressLine1,
+    AddressLine2,
+    City,
+    ContactNumber1,
+    ContactNumber2,
+    DistanceFromCenter,
+    HotelFacilities,
+    uploadedImages,
+  ]);
 
   return (
     <>
       <MainContainer>
         <section>
           <div className="title_1">Welcome {user}!</div>
-          <Card1 width={"850px"}>
-            <div className="title_3">Name of Your Property</div>
-            <div className="subtext">
-              Guests will see this name when they search for a place to stay.
-            </div>
-            <input
-              type="text"
-              className="form-control input_half"
-              id="property_name"
-              onChange={(e) => setName(e.target.value)}
-              style={{
-                backgroundColor: "#ffffff",
-                borderColor: "#908F8F",
-                marginTop: "15px",
-              }}
-            />
-
-            <div className="title_3 mt-3">Star Rating</div>
-            <Dropdown isOpen={dropDownOpen} toggle={toggleDropDown} group>
-              <button style={{ width: "100px" }}>{StarRate || "Select"}</button>
-              <DropdownToggle
-                caret
-                style={{
-                  textAlign: "right",
-                  backgroundColor: "#ffffff",
-                  borderColor: "#908F8F",
-                }}
-                className={"dropdown_1"}
-                color={"black"}
-              ></DropdownToggle>
-              <DropdownMenu style={{ width: "50%" }}>
-                <DropdownItem
-                  className="dropdown_items"
-                  onClick={(e) => setStarRate("1 Star")}
-                >
-                  1 Star
-                </DropdownItem>
-                <DropdownItem
-                  className="dropdown_items"
-                  onClick={(e) => setStarRate("2 Star")}
-                >
-                  2 Star
-                </DropdownItem>
-                <DropdownItem
-                  className="dropdown_items"
-                  onClick={(e) => setStarRate("3 Star")}
-                >
-                  3 Star
-                </DropdownItem>
-                <DropdownItem
-                  className="dropdown_items"
-                  onClick={(e) => setStarRate("4 Star")}
-                >
-                  4 Star
-                </DropdownItem>
-                <DropdownItem
-                  className="dropdown_items"
-                  onClick={(e) => setStarRate("5 Star")}
-                >
-                  5 Star
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-
-            <div className="title_3 mt-3">Description</div>
-            <textarea
+          <Card1>
+            <Row>
+              <Col md={6}>
+                <Label for="property_name" className="noMargin">
+                  Name of Your Property
+                </Label>
+                <div className="subtext">
+                  Guests will see this name when they search for a place to
+                  stay.
+                </div>
+                <Input
+                  type="text"
+                  id="property_name"
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Col>
+              <Col md={6}>
+                <Label className="noMargin"> Star Rating</Label>
+                <div className="subtext">Current rating of the hotel.</div>
+                <div>
+                  <Dropdown isOpen={dropDownOpen} toggle={toggleDropDown} group>
+                    <button style={{ width: "100px", border: "none" }}>
+                      {StarRate || "Select"}
+                    </button>
+                    <DropdownToggle caret color={"black"}></DropdownToggle>
+                    <DropdownMenu style={{ width: "50%" }}>
+                      <DropdownItem
+                        className="dropdown_items"
+                        onClick={(e) => setStarRate("1 Star")}
+                      >
+                        1 Star
+                      </DropdownItem>
+                      <DropdownItem
+                        className="dropdown_items"
+                        onClick={(e) => setStarRate("2 Star")}
+                      >
+                        2 Star
+                      </DropdownItem>
+                      <DropdownItem
+                        className="dropdown_items"
+                        onClick={(e) => setStarRate("3 Star")}
+                      >
+                        3 Star
+                      </DropdownItem>
+                      <DropdownItem
+                        className="dropdown_items"
+                        onClick={(e) => setStarRate("4 Star")}
+                      >
+                        4 Star
+                      </DropdownItem>
+                      <DropdownItem
+                        className="dropdown_items"
+                        onClick={(e) => setStarRate("5 Star")}
+                      >
+                        5 Star
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+              </Col>
+            </Row>
+            <Label style={{ marginTop: "10px" }}>Description</Label>
+            <Input
+              type="textarea"
               className={"text_area"}
               name="postContent"
               rows={5}
@@ -205,11 +220,11 @@ function RegisterHotel() {
         )}
 
         <section>
-          <div className={"title_3"} style={{ lineHeight: "25px" }}>
+          <h5 style={{ lineHeight: "25px" }}>
             You’re almost done.
             <br />
             To complete your registration, check the boxes below:
-          </div>
+          </h5>
 
           <div className={"pt-3"} style={{ marginLeft: "20px" }}>
             <FormGroup check inline>
@@ -220,13 +235,13 @@ function RegisterHotel() {
               />
               &nbsp;&nbsp;&nbsp;
               <Label check style={{ lineHeight: "20px" }}>
-                <div className={"title_4"}>
+                <p>
                   I certify that this is a legitimate accommodation business
                   with all necessary licenses and permits, which can be shown
                   upon first request.
                   <br /> VoyageLanka reserves the right to verify and
                   investigate any details provided in this registration.
-                </div>
+                </p>
               </Label>
             </FormGroup>
           </div>
@@ -240,17 +255,17 @@ function RegisterHotel() {
               />
               &nbsp;&nbsp;&nbsp;
               <Label check>
-                <div className={"title_4"}>
+                <p style={{ lineHeight: "35px" }}>
                   I have read, accepted, and agreed to the Terms & Policies.
-                </div>
+                </p>
               </Label>
             </FormGroup>
           </div>
         </section>
 
         <div className={"row center_div pt-3"}>
-          <button
-            className={"complete_registration_button"}
+          <Button
+            className="secondaryButton"
             style={{ width: "650px" }}
             disabled={
               registerButtonDisable ||
@@ -258,8 +273,8 @@ function RegisterHotel() {
             }
             onClick={submitForm}
           >
-            Complete registration
-          </button>
+            Complete Hotel Registration
+          </Button>
         </div>
       </MainContainer>
     </>
