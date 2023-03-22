@@ -145,6 +145,11 @@ export default class HotelService {
   }
 
 
+  /**
+   * 
+   * @param {Object} filterObj 
+   * @returns An array of objects || []
+   */
   async getRoomHotelList (filterObj) {
     const submitObject = {
       type: constants.RequestTypes.HOTEL,

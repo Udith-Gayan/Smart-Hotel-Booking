@@ -69,7 +69,7 @@ function CustomerDashboard() {
                     <div className="search-area">
                         <Row className="search-wrapper-row">
                             <Col style={{ flex: "1 0" }}>
-                                <Label>Where to go?</Label>
+                                <Label>Where ?</Label>
                                 <InputGroup>
                                     <Input placeholder="City" onChange={e => setCity(e.target.value)} />
                                 </InputGroup>
@@ -85,7 +85,7 @@ function CustomerDashboard() {
                                 />
                             </Col>
                             <Col>
-                                <Label>No. of people</Label>
+                                <Label>No. of rooms</Label>
                                 <InputGroup>
                                     <Input placeholder="0" type="number" onChange={e => setPeopleCount(e.target.value)} />
                                 </InputGroup>

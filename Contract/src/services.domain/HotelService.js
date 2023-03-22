@@ -344,6 +344,7 @@ class HotelService {
         const toDateFilter = new Date(filters.CheckOutDate);
         const filteringDateRange = DateHelper.getDatesArrayInBewtween(fromDateFilter, toDateFilter);
 
+
         let query = `SELECT * FROM Hotels WHERE City = '${filters.City}'`;
         let hotelRows = await this.#db.runNativeGetAllQuery(query);
         if (!(hotelRows && hotelRows.length > 0)) {
@@ -366,7 +367,7 @@ class HotelService {
         const reservationList = await this.#db.runNativeGetAllQuery(query);
 
         if (!reservationList) {  // No reservation means, all the rooms are free for new reservations
-            const resultList = await this.#prepareSearchResultPhase2(hotelRows, roomsList);
+            const resultList = await this.#prepareSearchResultPhase2(hotelRows, roomsList, filteringDateRange.length);
             response.success = { searchResult: resultList };
             return response;
         }
@@ -419,13 +420,13 @@ class HotelService {
 
         hotelIdList = [...new Set(availableRoomList.map(rl => rl.HotelId))];
         hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
-        const resultList = await this.#prepareSearchResultPhase2(hotelRows, availableRoomList);
+        const resultList = await this.#prepareSearchResultPhase2(hotelRows, availableRoomList, filteringDateRange.length);
 
         response.success = { searchResult: resultList };
         return response;
     }
 
-    async #prepareSearchResultPhase2(hotelList, roomList) {
+    async #prepareSearchResultPhase2(hotelList, roomList, noOfDays = 0) {
         const resultList = [];
 
         for(const hotel of hotelList) {
@@ -433,9 +434,9 @@ class HotelService {
             let query = `SELECT Id, Url FROM Images WHERE HotelId = ${hotel.Id}`;
             const img = await this.#db.runNativeGetFirstQuery(query);
 
-            const hotelObj = {id: hotel.Id, roomDetails: []}
+            const hotelObj = {Id: hotel.Id, city: hotel.City, Name: hotel.Name, noOfDays: noOfDays,  roomDetails: []}
             if(img) {
-                hotelObj.imageUrl = img.Url;
+                hotelObj.ImageUrl = img.Url;
             }
             roomList.forEach(r => {
                 if(hotel.Id == r.HotelId) {
