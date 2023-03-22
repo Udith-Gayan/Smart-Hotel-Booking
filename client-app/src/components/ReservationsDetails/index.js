@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Table, Input } from "reactstrap";
+import { Table, Input } from "reactstrap";
 import MainContainer from "../../layout/MainContainer";
 import {
   reservationDataForCustomer,
