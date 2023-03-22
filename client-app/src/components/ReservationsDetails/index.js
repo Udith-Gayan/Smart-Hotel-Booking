@@ -78,7 +78,7 @@ const ReservationsForCustomer = () => {
               })}
             </tbody>
           </Table>
-        ) : (
+        ) : isCustomer === "false" ? (
           <Table striped>
             <thead>
               <tr>
@@ -122,13 +122,15 @@ const ReservationsForCustomer = () => {
               })}
             </tbody>
           </Table>
-        )}
+        ) : null}
 
-        <Pagination
-          nPages={nPages}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        {isCustomer !== "" ? (
+          <Pagination
+            nPages={nPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        ) : null}
       </MainContainer>
     </div>
   );
