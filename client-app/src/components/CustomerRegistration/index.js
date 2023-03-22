@@ -207,6 +207,12 @@ const CustomerRegistration = () => {
           >
             Confirm Booking
           </Button>
+          <Button
+            className="secondaryButton smallMargin"
+            disabled={registerCustomerVisibility ? false : true}
+          >
+            Pay at Door
+          </Button>
         </div>
       </Form>
     </Card1>
