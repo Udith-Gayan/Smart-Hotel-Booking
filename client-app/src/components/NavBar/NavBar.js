@@ -1,15 +1,20 @@
 import { useState } from "react";
-import { Button, Navbar, NavbarBrand, NavbarText, Card } from "reactstrap";
+import {
+  Button, Navbar, NavbarBrand, NavbarText, Card, Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+} from "reactstrap";
 import { useNavigate } from "react-router-dom";
-import styles from "./index.module.scss";
 import "./styles.scss";
+import { RiFileSettingsFill } from 'react-icons/ri'
 
 function NavBar(props) {
   const navigate = useNavigate();
-  const [registry, setRegistry] = useState(
-    "r9T5bQscdYWkY9MFQUNfyoWbHo4ZrP9eqs"
-  );
-  const [xrp, setXrp] = useState(200);
+  const  walletAddress = process.env.REACT_APP_CONTRACT_WALLET_ADDRESS;
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   const isCustomer = localStorage.getItem("customer");
   return (
@@ -57,14 +62,13 @@ function NavBar(props) {
         >
           My Reservations
         </Button>
+        <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={'down'} className="primaryButton setting-button">
+        <DropdownToggle  className="primaryButton setting-button" style={{ height: '100%'}} > <RiFileSettingsFill style={{ fontSize: "1.5rem"}} /> </DropdownToggle>
+        <DropdownMenu  style={{ marginTop:" 15px"}}>
+        <DropdownItem text><span className="fontBold">Wallet Address: </span>{walletAddress}</DropdownItem>
+        </DropdownMenu>
+        </Dropdown>
       </Navbar>
-      <Card className={styles.navbox}>
-        <small>
-          <span className="fontBold">Registry: </span> {registry}
-          <hr className={styles.seperator} />
-          <span className="fontBold">XRP: </span> {xrp}
-        </small>
-      </Card>
     </>
   );
 }
