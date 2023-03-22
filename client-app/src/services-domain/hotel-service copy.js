@@ -144,6 +144,28 @@ export default class HotelService {
     }
   }
 
+
+  async getRoomHotelList (filterObj) {
+    const submitObject = {
+      type: constants.RequestTypes.HOTEL,
+      subType: constants.RequestSubTypes.SEARCH_HOTELS_WITH_ROOM,
+      filters: filterObj
+    }
+
+    try {
+      const res = await this.contractService.submitReadRequest(submitObject);
+      if(res && res.searchResult && res.searchResult.length > 0) {
+        return res.searchResult;
+      }
+      else {
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+      throw(error);
+    }
+  }
+
   /**
    * 
    * @param {number} hotelId | Hotel Id

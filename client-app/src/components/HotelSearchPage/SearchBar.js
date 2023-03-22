@@ -23,7 +23,7 @@ function SearchBar(props) {
     }
     return (
         <section>
-            <div className={"title_2"}>{hotelsData.length} Hotels in {props.city}</div>
+            <div className={"title_2"}>{hotelsData ? hotelsData.length : `No `} Hotels in {props.city}</div>
             <div className={"subtext"} style={{lineHeight: "15px"}}>Book your next stay at one of our properties</div>
 
             <div className={"row mt-4"}>

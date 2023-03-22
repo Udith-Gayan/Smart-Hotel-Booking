@@ -2,7 +2,7 @@ import React from "react";
 import {FaMapMarkerAlt} from "react-icons/fa";
 import StarRating from "../HotelHomePage/StarRating";
 
-function Hotel({hotel, numOfPeople}) {
+function SearchHotelResult({hotel, numOfPeople}) {
     const styles = {
         image: {
             width: "284px",
@@ -61,4 +61,4 @@ function Hotel({hotel, numOfPeople}) {
     );
 }
 
-export default Hotel
+export default SearchHotelResult;

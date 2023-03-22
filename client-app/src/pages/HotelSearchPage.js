@@ -1,7 +1,7 @@
 import MainContainer from "../layout/MainContainer";
 import {useNavigate, useLocation} from "react-router-dom";
 import hotelsData from "../data/hotels"
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Toast} from "reactstrap";
 import React, {useEffect, useState} from "react";
 import SearchBar from "../components/HotelSearchPage/SearchBar";
 import Filters from "../components/HotelSearchPage/Filters";
@@ -11,16 +11,19 @@ import RoomFacilitiesSearch from "../components/HotelSearchPage/RoomFacilitiesSe
 import {bed_types} from "../constants/constants";
 import hotelData from "../data/hotels"
 import HotelList from "../components/HotelSearchPage/HotelList";
+import HotelService from "../services-domain/hotel-service copy";
 
 function HotelSearchPage(props) {
     const history = useNavigate();
     const location = useLocation();
+    const hotelService = HotelService.instance;
+
 
     const queryParams = new URLSearchParams(location.search);
     const city = queryParams.get("city");
-    const checkInDate = queryParams.get("check-in-date");
-    const checkOutDate = queryParams.get("check-out-date");
-    const numOfPeople = queryParams.get("people");
+    const checkInDate = queryParams.get("fromDate");
+    const checkOutDate = queryParams.get("toDate");
+    const numOfPeople = queryParams.get("peopleCount");
 
     const [bedRooms, setBedRooms] = useState(1);
     const [searchText, setSearchText] = useState("");
@@ -34,6 +37,25 @@ function HotelSearchPage(props) {
     const [bedTypes, setBedTypes] = useState([]);
 
     const isFilerDisable = true;
+
+    async function getRoomHotelList() {
+        if(!(city && checkInDate && checkOutDate && numOfPeople)) {
+            return;
+        }
+
+        const obj = {
+            City: city,
+            CheckInDate: checkInDate,
+            CheckOutDate: checkOutDate,
+            PeopleCount: numOfPeople
+        }
+
+        try {
+            const res = await hotelService.getRoomHotelList(obj);       
+        } catch (error) {
+            
+        }
+    }
 
     useEffect(() => {
         let convenienceWithAvailability = facilitiesData.map(facility => {
