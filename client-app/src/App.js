@@ -10,6 +10,7 @@ import RegisterCustomer from "./pages/RegisterCustomer";
 import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
 import ConfirmBooking from "./pages/ConfirmBooking";
+import AvailabilityPage from "./pages/AvailabilityPage";
 
 function App() {
     ContractService.instance.init();
@@ -24,6 +25,7 @@ function App() {
             <Route path="/reservations" element={<Reservations />} exact />
             <Route path="/search-hotel" element={<HotelSearchPage exact />} />
             <Route path="/confirm-booking" element={<ConfirmBooking />} />
+            <Route path="/availability" element={<AvailabilityPage />} />
         </Routes>
     );
 }

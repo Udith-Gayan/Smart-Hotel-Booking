@@ -1,0 +1,26 @@
+.availability_room_section {
+  table {
+    width: 100%;
+    margin-top: 15px;
+    border-style: hidden;
+  }
+
+  th{
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 15px 10px;
+    
+  }
+
+  td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+
+  .header {
+    font-family: "Inter", serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 29px;
+  }
+}
