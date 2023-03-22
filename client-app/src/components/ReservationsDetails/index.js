@@ -9,6 +9,7 @@ import styles from "./index.module.scss";
 import Pagination from "../Pagination/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
+import toast from "react-hot-toast";
 
 const ReservationsForCustomer = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,6 +45,7 @@ const ReservationsForCustomer = () => {
     setHotelOwnerData(listItems);
     const body = listItems;
 
+    toast.success("Successfully changed the payment status");
     // Allowing multiple checks by allowing to send the whole body(only the changed page number of items - excluding other paginations items since user has no control over them)
     console.log("body", body);
   };
