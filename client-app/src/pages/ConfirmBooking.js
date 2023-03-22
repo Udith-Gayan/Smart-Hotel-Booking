@@ -10,7 +10,7 @@ import "../styles/layout_styles.scss";
 const ConfirmBooking = () => {
   return (
     <MainContainer>
-      <Row className="bookingWrapper">
+      <Row>
         <Col md={4}>
           <BookingDetails />
           <BookedHotelPrice />

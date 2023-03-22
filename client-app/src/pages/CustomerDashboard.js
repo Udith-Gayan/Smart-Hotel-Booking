@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import {
-    Col,
-    Container,
-    Row,
-    InputGroup,
-    Input,
-    Button,
-    Label,
+  Col,
+  Container,
+  Row,
+  InputGroup,
+  Input,
+  Button,
+  Label,
 } from "reactstrap";
 import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
 import OfferCard from "../components/OfferCard/OfferCard";
 import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import 'moment/locale/ko';
-
 
 function CustomerDashboard() {
     const navigate = useNavigate();
