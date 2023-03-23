@@ -1,18 +1,26 @@
+@import "../../index.scss";
+
 .plannerbutton{
     margin-right: 10px;
-    background: #2C2C76;
-    border-radius: 24px;
+    background-color: $purple-color!important;
+    border-radius: 24px!important;
     width: max-content;
-    
+    .svg_img{
+
+    }
 }
 
 .buttonNotSelected{
     margin-right: 10px;
-    background: white;
-    border-color:  #2C2C76;
-    color:  #2C2C76;
-    border-radius: 24px;
+    background-color: white!important;
+    border-color:  $purple-color!important;
+    color:  $purple-color!important;
+    border-radius: 24px!important;
     width: max-content;
+    .svg_img{
+        fill: $purple-color;
+        stroke: $purple-color;
+    }
     
 }
 

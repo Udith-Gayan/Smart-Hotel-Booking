@@ -3,7 +3,6 @@ import {
   Col,
   Container,
   Row,
-  InputGroupAddon,
   InputGroup,
   Input,
   Button,
@@ -19,7 +18,6 @@ import properties from "../data/properties";
 import TopHotelCard from "../components/TopHotelCard";
 import Ellipse from "../Assets/Icons/ellipse.svg";
 import ExploreCard from "../components/ExploreCard";
-import { IoLocationOutline } from "react-icons/io5";
 import QuickPlanner from "../components/QuickPlanner";
 
 function CustomerDashboard() {
@@ -202,6 +200,34 @@ function CustomerDashboard() {
             </div>
 
             <QuickPlanner className="quickPlanner" />
+          </div>
+        </section>
+        <section className="connect">
+          <div className=" wrapper">
+            <div className="row">
+              <div className="col-6">
+                <div className="row-4">
+                  <h1 className="connectTitle">
+                    Connect with <br />
+                    other travellers
+                  </h1>
+                </div>
+                <div className="row-4">
+                  <p className="connectDesc">
+                    The Pearl of the Indian Ocean’ or the ‘teardrop of India’.
+                    Sri Lanka has many names – and they all encompass its
+                    beauty. Make the birthplace of cinnamon your next
+                    destination with advice from other travellers.
+                  </p>
+                </div>
+                <div className="row-4">
+                  <div className="connectButton">
+                    <Button className="connectButtonInside">View more</Button>
+                  </div>
+                </div>
+              </div>
+              <div className="col-6"></div>
+            </div>
           </div>
         </section>
       </Container>

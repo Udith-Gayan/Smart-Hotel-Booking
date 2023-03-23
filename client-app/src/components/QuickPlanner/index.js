@@ -10,6 +10,7 @@ import { ReactComponent as Romance } from "../../Assets/Icons/QuickPlanner/roman
 import {} from "reactstrap";
 import ExploreCard from "../ExploreCard";
 import plannerProperties from "../../data/plannerProperties";
+import PlannerCard from "../PlannerCard";
 
 function QuickPlanner(props) {
   const [selectedButton, setSelectedButton] = useState("beach");
@@ -90,51 +91,53 @@ function QuickPlanner(props) {
           Romance
         </Button>
       </div>
-      {selectedButton === "beach" && (
-        <div className="row">
-          {plannerProperties[0].slice(0, 4).map((property, index) => (
-            <div className={`col-md-3 ${style.explorecd}`}>
-              <ExploreCard property={property} />
-            </div>
-          ))}
-        </div>
-      )}
-      {selectedButton === "historical" && (
-        <div className="row">
-          {plannerProperties[1].slice(0, 4).map((property, index) => (
-            <div className={`col-md-3 ${style.explorecd}`}>
-              <ExploreCard property={property} />
-            </div>
-          ))}
-        </div>
-      )}
-      {selectedButton === "adventure" && (
-        <div className="row">
-          {plannerProperties[2].slice(0, 4).map((property, index) => (
-            <div className={`col-md-3 ${style.explorecd}`}>
-              <ExploreCard property={property} />
-            </div>
-          ))}
-        </div>
-      )}
-      {selectedButton === "city" && (
-        <div className="row">
-          {plannerProperties[3].slice(0, 4).map((property, index) => (
-            <div className={`col-md-3 ${style.explorecd}`}>
-              <ExploreCard property={property} />
-            </div>
-          ))}
-        </div>
-      )}
-      {selectedButton === "romance" && (
-        <div className="row">
-          {plannerProperties[4].slice(0, 4).map((property, index) => (
-            <div className={`col-md-3 ${style.explorecd}`}>
-              <ExploreCard property={property} />
-            </div>
-          ))}
-        </div>
-      )}
+      <div>
+        {selectedButton === "beach" && (
+          <div className="row">
+            {plannerProperties[0].slice(0, 4).map((property, index) => (
+              <div className={`col-md-3 ${style.explorecd}`}>
+                <PlannerCard property={property} />
+              </div>
+            ))}
+          </div>
+        )}
+        {selectedButton === "historical" && (
+          <div className="row">
+            {plannerProperties[1].slice(0, 4).map((property, index) => (
+              <div className={`col-md-3 ${style.explorecd}`}>
+                <PlannerCard property={property} />
+              </div>
+            ))}
+          </div>
+        )}
+        {selectedButton === "adventure" && (
+          <div className="row">
+            {plannerProperties[2].slice(0, 4).map((property, index) => (
+              <div className={`col-md-3 ${style.explorecd}`}>
+                <PlannerCard property={property} />
+              </div>
+            ))}
+          </div>
+        )}
+        {selectedButton === "city" && (
+          <div className="row">
+            {plannerProperties[3].slice(0, 4).map((property, index) => (
+              <div className={`col-md-3 ${style.explorecd}`}>
+                <PlannerCard property={property} />
+              </div>
+            ))}
+          </div>
+        )}
+        {selectedButton === "romance" && (
+          <div className="row">
+            {plannerProperties[4].slice(0, 4).map((property, index) => (
+              <div className={`col-md-3 ${style.explorecd}`}>
+                <PlannerCard property={property} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 }

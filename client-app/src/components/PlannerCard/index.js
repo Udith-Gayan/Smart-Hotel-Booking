@@ -13,7 +13,7 @@ import { IoCalendarOutline, FaBed } from "react-icons/io5";
 import { IoMdBed } from "react-icons/io";
 import StarRatings from "react-star-ratings";
 
-function ExploreCard(props) {
+function PlannerCard(props) {
   return (
     <div className={`${style.card}`}>
       <img
@@ -25,10 +25,10 @@ function ExploreCard(props) {
       />
       <CardTitle tag="h5">{props.property.name}</CardTitle>
       <CardSubtitle className="mb-2 text-muted" tag="h6">
-        {props.property.number} Properties
+        {props.property.number}km away from
       </CardSubtitle>
     </div>
   );
 }
 
-export default ExploreCard;
+export default PlannerCard;
