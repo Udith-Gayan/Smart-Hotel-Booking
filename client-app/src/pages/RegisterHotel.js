@@ -69,6 +69,9 @@ function RegisterHotel() {
 
       // 2 - Generate a wallet Address
       const newWallet = await hotelService.createNewHotelWallet();
+      localStorage.setItem("isCustomer", "false");
+      localStorage.setItem("seed", newWallet.seed);
+
       console.log(newWallet);
 
       // 3 - Create request object

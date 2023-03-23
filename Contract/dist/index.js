@@ -95171,7 +95171,8 @@ module.exports = {
 const evernode = __nccwpck_require__(6238)
 const settings = (__nccwpck_require__(9419)/* .settings */ .X);
 const constants = __nccwpck_require__(9420)
-const { SqliteDatabase } = __nccwpck_require__(6257)
+const { SqliteDatabase } = __nccwpck_require__(6257);
+const { default: DateHelper } = __nccwpck_require__(9726);
 // import { RequestSubTypes } from 'constants';
 
 class HotelService {
@@ -95182,7 +95183,6 @@ class HotelService {
     #db = null;
     #registrationURIPrefix = 'HotelReg';
     #dbPath = settings.dbPath;
-
 
 
     constructor(message) {
@@ -95213,6 +95213,8 @@ class HotelService {
                     return await this.#rateHotel();
                 case constants.RequestSubTypes.IS_REGISTERED_HOTEL:
                     return await this.#isRegisteredHotel();
+                case constants.RequestSubTypes.SEARCH_HOTELS_WITH_ROOM:
+                    return await this.#getHotelsWithRoomSearch();
                 default:
                     throw ("Invalid Request");
             }
@@ -95440,7 +95442,7 @@ class HotelService {
         let filters = null;
         if (this.#message.filters) {
             filters = this.#message.filters;
-            
+
             // join to a string
             for (const key in filters) {
                 filterString += `Hotels.${key}=${filters[key]} AND `;
@@ -95453,40 +95455,38 @@ class HotelService {
 
         const hotels = await this.#db.runNativeGetAllQuery(query);
 
-        console.log(hotels);
-
         // Creating new object array
         const hotelList = [];
         const hotelNames = [...new Set(hotels.map(h => h.Id))];
-        for(let idx in hotelNames) {
+        for (let idx in hotelNames) {
             const newHotel = {};
             const imgObjects = [];
             const facilityIds = [];
 
             (hotels.filter(h => h.Id == hotelNames[idx])).forEach((h, idxx) => {
-                    if(idxx == 0) {
-                        newHotel.Id = h.Id;
-                        newHotel.Name = h.Name;
-                        newHotel.HotelWalletAddress = h.HotelWalletAddress;
-                        newHotel.HotelNftId = h.HotelNftId;
-                        newHotel.OwnerName = h.OwnerName;
-                        newHotel.Description = h.Description;
-                        newHotel.City = h.City;
-                        newHotel.AddressLine1 = h.AddressLine1;
-                        newHotel.AddressLine2 = h.AddressLine2;
-                        newHotel.DistanceFromCenter = h.DistanceFromCenter;
-                        newHotel.Email = h.Email;
-                        newHotel.ContactNumber1 = h.ContactNumber1;
-                        newHotel.ContactNumber2 = h.ContactNumber2 ?? null;
-                    }
+                if (idxx == 0) {
+                    newHotel.Id = h.Id;
+                    newHotel.Name = h.Name;
+                    newHotel.HotelWalletAddress = h.HotelWalletAddress;
+                    newHotel.HotelNftId = h.HotelNftId;
+                    newHotel.OwnerName = h.OwnerName;
+                    newHotel.Description = h.Description;
+                    newHotel.City = h.City;
+                    newHotel.AddressLine1 = h.AddressLine1;
+                    newHotel.AddressLine2 = h.AddressLine2;
+                    newHotel.DistanceFromCenter = h.DistanceFromCenter;
+                    newHotel.Email = h.Email;
+                    newHotel.ContactNumber1 = h.ContactNumber1;
+                    newHotel.ContactNumber2 = h.ContactNumber2 ?? null;
+                }
 
-                    if(h.ImageId && h.Url) {
-                        imgObjects.push({Id: h.ImageId, Url: h.Url});
-                    }
+                if (h.ImageId && h.Url) {
+                    imgObjects.push({ Id: h.ImageId, Url: h.Url });
+                }
 
-                    if(h.FacilityId) {
-                        facilityIds.push(h.FacilityId);
-                    }
+                if (h.FacilityId) {
+                    facilityIds.push(h.FacilityId);
+                }
             });
 
             newHotel.Images = [...new Map(imgObjects.map((m) => [m.Id, m])).values()];
@@ -95497,8 +95497,144 @@ class HotelService {
         }
 
         response.success = { hotelList: hotelList };
-        console.log(hotelList);
         return response;
+    }
+
+    async #getHotelsWithRoomSearch() {
+        console.log(0);
+        const response = {};
+        if (!this.#message.filters) {
+            throw ("Invalid request.");
+        }
+        const filters = this.#message.filters;
+
+        // Assumption : ( no of  people = no of rooms required)
+        const necessaryRoomCount = this.#message.filters.PeopleCount;
+
+        const fromDateFilter = new Date(filters.CheckInDate);
+        const toDateFilter = new Date(filters.CheckOutDate);
+        console.log('InDate', fromDateFilter)
+        console.log('toDate', toDateFilter)
+        const filteringDateRange = DateHelper.getDatesArrayInBewtween(fromDateFilter, toDateFilter);
+        console.log("DateRange", filteringDateRange, " length: ", filteringDateRange.length);
+
+        console.log(1);
+        let query = `SELECT * FROM Hotels WHERE City LIKE '%${filters.City}%'`;
+        let hotelRows = await this.#db.runNativeGetAllQuery(query);
+        if (!(hotelRows && hotelRows.length > 0)) {
+            response.success = { searchResult: null };
+            return response;
+        }
+        let hotelIdList = hotelRows.map(hr => hr.Id);
+        console.log(hotelIdList)
+        console.log(2);
+        query = `SELECT * FROM Rooms WHERE HotelId IN (${hotelIdList})`;
+        console.log(query)
+
+        let roomsList = await this.#db.runNativeGetAllQuery(query);
+        if (!roomsList || roomsList.length < 1) {
+            response.success = { searchResult: null };
+            return response;
+        }
+        hotelIdList = [...new Set(roomsList.map(rl => rl.HotelId))];
+        hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
+        let roomIdList = roomsList.map(rl => rl.Id);
+
+        console.log(3);
+        query = `SELECT * from Reservations WHERE RoomId IN (${roomIdList})`;
+        const reservationList = await this.#db.runNativeGetAllQuery(query);
+        console.log('Reservationlist: ' ,reservationList)
+
+        if (!reservationList || reservationList.length < 1) {  // No reservation means, all the rooms are free for new reservations
+            console.log(43)
+            roomsList = roomsList.filter(r => r.MaxRoomCount >= necessaryRoomCount);
+            hotelIdList = [...new Set(roomsList.map(rl => rl.HotelId))];
+            hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
+            console.log(44)
+            const resultList = await this.#prepareSearchResultPhase2(hotelRows, roomsList, filteringDateRange.length);
+            response.success = { searchResult: resultList };
+            return response;
+        }
+        console.log(4)
+        // Filter avaialble roomList by checking the avaialble reservation dates
+
+        // First, create an array of rooms  with their reservedDates and count as arrays.
+        let availableRoomList = [];
+        console.log(5);
+        for (let room of roomsList) {
+            let roomObj1 = { roomId: room.Id, maxRoomCount: room.MaxRoomCount, ...room, checkedDates: [], roomCounts: [] }
+            const reservedDates = [];
+            const reservedRoomCounts = [];
+            reservationList.forEach(rv => {
+                if (rv.RoomId == room.Id) {
+                    reservedDates.push({ checkInDate: rv.FromDate, checkOutDate: rv.ToDate })
+                    reservedRoomCounts.push(rv.RoomCount);
+                }
+            });
+            roomObj1.checkedDates = reservedDates;
+            roomObj1.roomCounts = reservedRoomCounts;
+            availableRoomList.push(roomObj1);
+        }
+
+        // Second, loop the room objects and their reserved dates for availability check. 
+        // If 
+        console.log(6);
+        const removingRoomIds = [];
+        for (const idx in availableRoomList) {
+            const roomObj = availableRoomList[idx];
+
+            if (roomObj.checkedDates.length == 0) {
+                continue;
+            }
+
+            for (let filterDate of filteringDateRange) {
+                let reservedRoomCount = 0;
+                for (const dateIdx in roomObj.checkedDates) {
+                    const reservedRange = (roomObj.checkedDates)[dateIdx];
+                    if (DateHelper.isDateInRange(filterDate, reservedRange.checkInDate, reservedRange.checkOutDate)) {
+                        reservedRoomCount += (roomObj.roomCounts)[dateIdx];
+                    }
+                }
+
+                if ((reservedRoomCount + necessaryRoomCount) > roomObj.maxRoomCount) {
+                    removingRoomIds.push(roomId);
+                }
+            }
+        }
+
+        console.log(7);
+        availableRoomList = availableRoomList.filter(ar => !removingRoomIds.includes(ar.roomId));
+
+        hotelIdList = [...new Set(availableRoomList.map(rl => rl.HotelId))];
+        hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
+        const resultList = await this.#prepareSearchResultPhase2(hotelRows, availableRoomList, filteringDateRange.length);
+        console.log(8);
+        console.log(resultList)
+        response.success = { searchResult: resultList };
+        return response;
+    }
+
+    async #prepareSearchResultPhase2(hotelList, roomList, noOfDays = 0) {
+        const resultList = [];
+
+        for (const hotel of hotelList) {
+            // Get one image url if exists for the hotel
+            let query = `SELECT Id, Url FROM Images WHERE HotelId = ${hotel.Id}`;
+            const img = await this.#db.runNativeGetFirstQuery(query);
+
+            const hotelObj = { Id: hotel.Id, city: hotel.City, Name: hotel.Name, noOfDays: noOfDays, roomDetails: [] }
+            if (img) {
+                hotelObj.ImageUrl = img.Url;
+            }
+            roomList.forEach(r => {
+                if (hotel.Id == r.HotelId) {
+                    hotelObj.roomDetails.push(r);
+                }
+            });
+
+            resultList.push(hotelObj);
+        }
+        return resultList;
     }
 
     async #deregisterHotel() {
@@ -95833,6 +95969,7 @@ const RequestSubTypes = {
     DEREG_HOTEL: "DeregHotel",
     RATE_HOTEL: "RateHotel",
     IS_REGISTERED_HOTEL: "IsRegisteredHotel",
+    SEARCH_HOTELS_WITH_ROOM: "SearchHotelsWithRoom",
 
     GET_ROOMS: "GetRooms",
     GET_ROOMS_BY_HOTELID: "GetRoomsByHotelId",
@@ -95861,6 +95998,56 @@ module.exports = {
     RequestSubTypes,
     FacilityStatuses
 }
+
+/***/ }),
+
+/***/ 9726:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class DateHelper {
+
+
+    /**
+     * 
+     * @param {Date} startDate 
+     * @param {Date} endDate 
+     * @returns An array of dates in between.
+     */
+    static getDatesArrayInBewtween(startDate, endDate) {
+        const dates = [];
+        let currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            dates.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return dates;
+    }
+
+    /**
+     * Check if a given date is included in the given range.
+     * @param {Date} dateToCheck 
+     * @param {Date} startDate 
+     * @param {Date} endDate 
+     * @returns Boolean
+     */
+    static isDateInRange(dateToCheck, startDate, endDate) {
+        const dateToCheckTime = new Date(dateToCheck).getTime();
+        const startDateToCheck = new Date(startDate).getTime();
+        const endDateToCheck = new Date(endDate).getTime();
+
+        return dateToCheckTime >= startDateToCheck && dateToCheckTime <= endDateToCheck;
+    }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DateHelper);
 
 /***/ }),
 

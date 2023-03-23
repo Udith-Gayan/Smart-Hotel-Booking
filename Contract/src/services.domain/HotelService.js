@@ -340,21 +340,27 @@ class HotelService {
         // Assumption : ( no of  people = no of rooms required)
         const necessaryRoomCount = this.#message.filters.PeopleCount;
 
-        const fromDateFilter = new Date(filters.checkInDate);
+        const fromDateFilter = new Date(filters.CheckInDate);
         const toDateFilter = new Date(filters.CheckOutDate);
+        console.log('InDate', fromDateFilter)
+        console.log('toDate', toDateFilter)
         const filteringDateRange = DateHelper.getDatesArrayInBewtween(fromDateFilter, toDateFilter);
+        console.log("DateRange", filteringDateRange, " length: ", filteringDateRange.length);
 
-
-        let query = `SELECT * FROM Hotels WHERE City = '${filters.City}'`;
+        console.log(1);
+        let query = `SELECT * FROM Hotels WHERE City LIKE '%${filters.City}%'`;
         let hotelRows = await this.#db.runNativeGetAllQuery(query);
         if (!(hotelRows && hotelRows.length > 0)) {
             response.success = { searchResult: null };
             return response;
         }
         let hotelIdList = hotelRows.map(hr => hr.Id);
+        console.log(hotelIdList)
+        console.log(2);
+        query = `SELECT * FROM Rooms WHERE HotelId IN (${hotelIdList})`;
+        console.log(query)
 
-        query = `SELECT * FROM Rooms WHERE HotelId IN ${hotelIdList}`;
-        const roomsList = await this.#db.runNativeGetAllQuery(query);
+        let roomsList = await this.#db.runNativeGetAllQuery(query);
         if (!roomsList || roomsList.length < 1) {
             response.success = { searchResult: null };
             return response;
@@ -363,19 +369,27 @@ class HotelService {
         hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
         let roomIdList = roomsList.map(rl => rl.Id);
 
-        query = `SELECT * from Reservations WHERE RoomId IN ${roomIdList}`;
+        console.log(3);
+        query = `SELECT * from Reservations WHERE RoomId IN (${roomIdList})`;
         const reservationList = await this.#db.runNativeGetAllQuery(query);
+        console.log('Reservationlist: ' ,reservationList)
 
-        if (!reservationList) {  // No reservation means, all the rooms are free for new reservations
+        if (!reservationList || reservationList.length < 1) {  // No reservation means, all the rooms are free for new reservations
+            console.log(43)
+            roomsList = roomsList.filter(r => r.MaxRoomCount >= necessaryRoomCount);
+            hotelIdList = [...new Set(roomsList.map(rl => rl.HotelId))];
+            hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
+            console.log(44)
             const resultList = await this.#prepareSearchResultPhase2(hotelRows, roomsList, filteringDateRange.length);
             response.success = { searchResult: resultList };
             return response;
         }
-
+        console.log(4)
         // Filter avaialble roomList by checking the avaialble reservation dates
 
         // First, create an array of rooms  with their reservedDates and count as arrays.
         let availableRoomList = [];
+        console.log(5);
         for (let room of roomsList) {
             let roomObj1 = { roomId: room.Id, maxRoomCount: room.MaxRoomCount, ...room, checkedDates: [], roomCounts: [] }
             const reservedDates = [];
@@ -393,6 +407,7 @@ class HotelService {
 
         // Second, loop the room objects and their reserved dates for availability check. 
         // If 
+        console.log(6);
         const removingRoomIds = [];
         for (const idx in availableRoomList) {
             const roomObj = availableRoomList[idx];
@@ -416,12 +431,14 @@ class HotelService {
             }
         }
 
+        console.log(7);
         availableRoomList = availableRoomList.filter(ar => !removingRoomIds.includes(ar.roomId));
 
         hotelIdList = [...new Set(availableRoomList.map(rl => rl.HotelId))];
         hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
         const resultList = await this.#prepareSearchResultPhase2(hotelRows, availableRoomList, filteringDateRange.length);
-
+        console.log(8);
+        console.log(resultList)
         response.success = { searchResult: resultList };
         return response;
     }
@@ -429,17 +446,17 @@ class HotelService {
     async #prepareSearchResultPhase2(hotelList, roomList, noOfDays = 0) {
         const resultList = [];
 
-        for(const hotel of hotelList) {
+        for (const hotel of hotelList) {
             // Get one image url if exists for the hotel
             let query = `SELECT Id, Url FROM Images WHERE HotelId = ${hotel.Id}`;
             const img = await this.#db.runNativeGetFirstQuery(query);
 
-            const hotelObj = {Id: hotel.Id, city: hotel.City, Name: hotel.Name, noOfDays: noOfDays,  roomDetails: []}
-            if(img) {
+            const hotelObj = { Id: hotel.Id, city: hotel.City, Name: hotel.Name, noOfDays: noOfDays, roomDetails: [] }
+            if (img) {
                 hotelObj.ImageUrl = img.Url;
             }
             roomList.forEach(r => {
-                if(hotel.Id == r.HotelId) {
+                if (hotel.Id == r.HotelId) {
                     hotelObj.roomDetails.push(r);
                 }
             });

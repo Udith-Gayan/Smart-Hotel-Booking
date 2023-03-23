@@ -1,6 +1,7 @@
 import React from "react";
 
 const HotelImages = ({ images }) => {
+    console.log(images)
     const styles = {
         container: {
             display: "flex",
