@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import ContractService from "./services-common/contract-service";
 import HotelHomePage from "./pages/HotelHomePage";
 import LandingPageForHotelOwner from "./pages/LandingPageForHotelOwner";
+import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
