@@ -54,6 +54,7 @@ function NavBar(props) {
           outline
           className="primaryButton smallMarginLeftRight"
           onClick={() => navigate("/reservations")}
+          disabled={isCustomer === ""}
         >
           My Reservations
         </Button>

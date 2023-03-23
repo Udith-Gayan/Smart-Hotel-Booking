@@ -13,7 +13,7 @@ import {
   Label,
   Button,
   Col,
-  Row,
+  Row, FormFeedback
 } from "reactstrap";
 import Facilities from "../components/RegisterHotelComponents/Facilities";
 import ContactDetails from "../components/RegisterHotelComponents/ContactDetails";
@@ -49,6 +49,8 @@ function RegisterHotel() {
   const [isCondition1Checked, setIsCondition1Checked] = useState(false);
   const [isCondition2Checked, setIsCondition2Checked] = useState(false);
 
+  const [propertyNameInvaid, setPropertyNameInvaid] = useState(false)
+
   const toggleDropDown = () => {
     setDropDownOpen((prevState) => !prevState);
   };
@@ -57,9 +59,21 @@ function RegisterHotel() {
     setUploadedImages((prevState) => [...prevState, ...images]);
   };
 
+  const validationForm = () => {
+    if (!Name) {
+      setPropertyNameInvaid(true)
+    }
+  }
+
   // Form submit
   const submitForm = useCallback(async () => {
     setRegisterButtonDisable(true);
+
+    validationForm();
+
+    if (!propertyNameInvaid) {
+      console.log('submit')
+    }
 
     try {
       // 1 - Upload Images
@@ -131,18 +145,24 @@ function RegisterHotel() {
           <Card1>
             <Row>
               <Col md={6}>
-                <Label for="property_name" className="noMargin">
-                  Name of Your Property
-                </Label>
-                <div className="subtext">
-                  Guests will see this name when they search for a place to
-                  stay.
-                </div>
-                <Input
-                  type="text"
-                  id="property_name"
-                  onChange={(e) => setName(e.target.value)}
-                />
+                <FormGroup>
+                  <Label for="property_name" className="noMargin">
+                    Name of Your Property
+                  </Label>
+                  <div className="subtext">
+                    Guests will see this name when they search for a place to
+                    stay.
+                  </div>
+                  <Input
+                    type="text"
+                    id="property_name"
+                    onChange={(e) => setName(e.target.value)}
+                    invalid={propertyNameInvaid}
+                  />
+                  <FormFeedback>
+                    Name of your property required!
+                  </FormFeedback>
+                </FormGroup>
               </Col>
               <Col md={6}>
                 <Label className="noMargin"> Star Rating</Label>
