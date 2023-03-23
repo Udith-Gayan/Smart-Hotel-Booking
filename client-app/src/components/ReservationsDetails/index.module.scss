@@ -1,3 +1,20 @@
+@import "../../index.scss";
+
 .containerOverride {
-  height: 75vh !important;
+  height: 95vh !important;
+}
+
+.searchButton {
+  border-radius: 0 !important;
+}
+
+.searchButton:focus {
+  box-shadow: none !important;
+}
+
+.address {
+  background-color: $light-purple-color;
+  padding: 20px;
+  border-radius: 15px;
+  display: table-cell;
 }

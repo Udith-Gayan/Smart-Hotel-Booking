@@ -28,7 +28,7 @@ import { toast } from "react-hot-toast";
 function RegisterHotel() {
   const hotelService = HotelService.instance;
   let emailRegex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-  let phoneNoRegex = new RegExp("[0-9 ]+");
+  let phoneNoRegex = new RegExp("^[0-9 ]*$");
   const navigate = useNavigate();
 
   let user = "User";
@@ -99,11 +99,11 @@ function RegisterHotel() {
       setEmailInvaid(true);
     }
 
-    if (
-      !phoneNoRegex.test(ContactNumber1) ||
-      ContactNumber1.length !== 10 ||
-      ContactNumber1.length !== 11
-    ) {
+    if (!phoneNoRegex.test(ContactNumber1)) {
+      setContactNumber1Invaid(true);
+    }
+
+    if (!(ContactNumber1.length === 10 || ContactNumber1.length === 11)) {
       setContactNumber1Invaid(true);
     }
     if (!AddressLine1) {
@@ -177,15 +177,15 @@ function RegisterHotel() {
         emailRegex.test(Email) &&
         AddressLine1 &&
         City &&
-        phoneNoRegex.test(ContactNumber1) &&
         (ContactNumber1.length === 10 || ContactNumber1.length === 11) &&
+        phoneNoRegex.test(ContactNumber1) &&
         DistanceFromCenter &&
         HotelFacilities.length > 0 &&
         uploadedImages.length > 2
       ) {
         // 4 - Submit for registration
         res = await hotelService.registerHotel(submissionData);
-        console.log(res);
+        console.log("res", res);
         if (res.hotelId > 0) {
           //alert("Successful");
           toast.success("Registered successfully!");
