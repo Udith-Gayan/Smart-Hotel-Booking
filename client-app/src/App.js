@@ -1,14 +1,16 @@
 import RegisterHotel from "./pages/RegisterHotel";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import './App.scss'
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import ContractService from "./services-common/contract-service";
 import HotelHomePage from "./pages/HotelHomePage";
 import LandingPageForHotelOwner from "./pages/LandingPageForHotelOwner";
+import LandingPageForCustomer from "./pages/LandingPageForCustomer";
 import RegisterCustomer from "./pages/RegisterCustomer";
 import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
 import ConfirmBooking from "./pages/ConfirmBooking";
+import AvailabilityPage from "./pages/AvailabilityPage";
 import { useEffect, useState } from "react";
 import { Spinner } from 'reactstrap'
 
@@ -53,6 +55,8 @@ function App() {
                     <Route path="/reservations" element={<Reservations />} exact />
                     <Route path="/search-hotel" element={<HotelSearchPage exact />} />
                     <Route path="/confirm-booking" element={<ConfirmBooking exact />} />
+                    <Route path="/availability/:id" element={<AvailabilityPage/>} exact />
+
                 </Routes>
             )}
             {!isContractInitiated && (

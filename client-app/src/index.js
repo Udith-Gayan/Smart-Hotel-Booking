@@ -20,7 +20,11 @@ root.render(
         <App />
       </div>
       <Footer />
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-right" reverseOrder={false} toastOptions={{
+        style: {
+          padding: "20px"
+        },
+      }} />
     </Provider>
   </BrowserRouter>
 );
