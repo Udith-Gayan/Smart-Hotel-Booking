@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Input } from "reactstrap";
+import { Table, Input, Spinner, Row } from "reactstrap";
 import MainContainer from "../../layout/MainContainer";
 import {
   reservationDataForCustomer,
@@ -129,7 +129,20 @@ const ReservationsForCustomer = () => {
               })}
             </tbody>
           </Table>
-        ) : null}
+        ) : (
+          <Row className="spinnerWrapper">
+            <Spinner
+              color="primary"
+              style={{
+                height: "3rem",
+                width: "3rem",
+              }}
+              type="grow"
+            >
+              Loading...
+            </Spinner>
+          </Row>
+        )}
 
         {isCustomer !== "" ? (
           <Pagination
