@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Table, Input, Spinner, Row } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Table, Input, Spinner, Row, FormGroup, Label, Col, Button, Form } from "reactstrap";
 import MainContainer from "../../layout/MainContainer";
 import {
   reservationDataForCustomer,
@@ -10,10 +10,17 @@ import Pagination from "../Pagination/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid, regular } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
 import toast from "react-hot-toast";
+import XrplService from "../../services-common/xrpl-service";
 
 const ReservationsForCustomer = () => {
+  const xrplService = XrplService.xrplInstance;
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
+  const [showSecretField, setShowSecretField] = useState(false)
+  const [secret, setSecret] = useState("")
+  const [customer, setCustomer] = useState(false);
+  const [hotelOwner, setHotelOwner] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("")
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -21,9 +28,10 @@ const ReservationsForCustomer = () => {
   let hotelOwnerRecords = [];
   let nPages = 0;
 
-  const isCustomer = localStorage.getItem("customer");
+  //const isCustomer = localStorage.getItem("customer");
+  const isCustomer = customer;
 
-  if (isCustomer === "true") {
+  if (isCustomer) {
     customerRecords = reservationDataForCustomer?.slice(
       indexOfFirstRecord,
       indexOfLastRecord
@@ -49,10 +57,62 @@ const ReservationsForCustomer = () => {
     // Allowing multiple checks by allowing to send the whole body(only the changed page number of items - excluding other paginations items since user has no control over them)
     console.log("body", body);
   };
+
+  const searchHandler = async (e) => {
+    e.preventDefault();
+    const address = await xrplService.generateWalletFromSeed(secret);
+    setWalletAddress(address?.classicAddress);
+    const body = { walletAddress: address, customer: customer, hotelOwner: hotelOwner }
+    console.log(body)
+  }
   return (
     <div className={styles.containerOverride}>
       <MainContainer>
-        {isCustomer === "true" ? (
+        {walletAddress ? <h2 className={styles.address}>{walletAddress}</h2> : null}
+
+        <Form onSubmit={searchHandler} style={{ marginTop: "30px" }}>
+          <FormGroup tag="fieldset">
+            <FormGroup check>
+              <Input
+                name="radio1"
+                type="radio"
+                value={customer}
+                onClick={() => setShowSecretField(true)}
+                onChange={(e) => { setHotelOwner(false); setCustomer(e.target.checked) }}
+              />
+              <Label check>
+                I'm a customer. Let's see my reservations.
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Input
+                name="radio1"
+                type="radio"
+                onClick={() => setShowSecretField(true)}
+                value={hotelOwner}
+                onChange={(e) => { setCustomer(false); setHotelOwner(e.target.checked) }}
+              />
+              <Label check>
+                I'm a hotel owner. Let's see my reservations.
+              </Label>
+            </FormGroup>
+          </FormGroup>
+
+          {showSecretField ? <Row style={{ marginBottom: "20px" }}>
+            <Col md={4} style={{ paddingRight: "0" }}>
+              <Input type="search" className={styles.searchButton} onChange={(e) => setSecret(e.target.value)} value={secret}
+              />
+            </Col>
+            <Col md={8} className="noPadding">
+              <Button className="secondaryButton" style={{ borderRadius: "0", height: "38px" }}>
+                <FontAwesomeIcon icon={solid("magnifying-glass-arrow-right")} size="xl" />
+              </Button>
+            </Col>
+          </Row>
+
+            : null}
+        </Form>
+        {(customer && walletAddress) ? (
           <Table striped>
             <thead>
               <tr>
@@ -81,7 +141,7 @@ const ReservationsForCustomer = () => {
               })}
             </tbody>
           </Table>
-        ) : isCustomer === "false" ? (
+        ) : (hotelOwner && walletAddress) ? (
           <Table striped>
             <thead>
               <tr>
@@ -130,21 +190,22 @@ const ReservationsForCustomer = () => {
             </tbody>
           </Table>
         ) : (
-          <Row className="spinnerWrapper">
-            <Spinner
-              color="primary"
-              style={{
-                height: "3rem",
-                width: "3rem",
-              }}
-              type="grow"
-            >
-              Loading...
-            </Spinner>
-          </Row>
+          // <Row className="spinnerWrapper">
+          //   <Spinner
+          //     color="primary"
+          //     style={{
+          //       height: "3rem",
+          //       width: "3rem",
+          //     }}
+          //     type="grow"
+          //   >
+          //     Loading...
+          //   </Spinner>
+          // </Row>
+          null
         )}
 
-        {isCustomer !== "" ? (
+        {((customer || hotelOwner) && walletAddress) ? (
           <Pagination
             nPages={nPages}
             currentPage={currentPage}
