@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Card } from "reactstrap";
 import styles from "./index.module.scss";
 
-const BookHotelRoom = () => {
+const BookHotelRoom = (props) => {
   return (
     <div>
       <Card className={styles.bookingDetailCard}>

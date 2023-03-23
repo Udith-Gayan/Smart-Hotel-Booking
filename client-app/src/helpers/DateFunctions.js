@@ -9,11 +9,8 @@ class DateFunctions {
     */
     static convertDateMonthDate = (date_string) => {
         const date = new Date(date_string);
-
-
         const monthIndex = date.getMonth();
         const day = date.getDate();
-
         return `${this.monthNames[monthIndex]} ${day}`;
     }
 
@@ -27,6 +24,20 @@ class DateFunctions {
         const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
         return diffInDays;
+    }
+
+    /**
+     *  Convert date  --->  March 24, 2023
+     * @param {string} date_string
+     * @returns {`${string} ${number}, ${number}`}
+     */
+    static convertDateToMonthDateYear = (date_string) => {
+        const date = new Date(date_string);
+        const monthIndex = date.getMonth();
+        const day = date.getDate();
+        const year = date.getFullYear();
+
+        return `${this.monthNames[monthIndex]} ${day}, ${year}`;
     }
 
     
