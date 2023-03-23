@@ -99,7 +99,11 @@ function RegisterHotel() {
       setEmailInvaid(true);
     }
 
-    if (!phoneNoRegex.test(ContactNumber1) || ContactNumber1.length !== 11) {
+    if (
+      !phoneNoRegex.test(ContactNumber1) ||
+      ContactNumber1.length !== 10 ||
+      ContactNumber1.length !== 11
+    ) {
       setContactNumber1Invaid(true);
     }
     if (!AddressLine1) {
@@ -174,7 +178,7 @@ function RegisterHotel() {
         AddressLine1 &&
         City &&
         phoneNoRegex.test(ContactNumber1) &&
-        ContactNumber1.length === 11 &&
+        (ContactNumber1.length === 10 || ContactNumber1.length === 11) &&
         DistanceFromCenter &&
         HotelFacilities.length > 0 &&
         uploadedImages.length > 2
