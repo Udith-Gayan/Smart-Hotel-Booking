@@ -27,6 +27,7 @@ import { toast } from "react-hot-toast";
 
 function RegisterHotel() {
   const hotelService = HotelService.instance;
+  let emailRegex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
   const navigate = useNavigate();
 
   let user = "User";
@@ -73,8 +74,6 @@ function RegisterHotel() {
   };
 
   const validationForm = () => {
-    let emailRegex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-
     setPropertyNameInvaid(false);
     setPropertyDescriptionInvaid(false);
     setOwnerNameInvaid(false);
@@ -99,7 +98,7 @@ function RegisterHotel() {
       setEmailInvaid(true);
     }
 
-    if (ContactNumber1.length !== 10) {
+    if (!ContactNumber1) {
       setContactNumber1Invaid(true);
     }
     if (!AddressLine1) {
@@ -115,7 +114,7 @@ function RegisterHotel() {
     if (HotelFacilities.length <= 0) {
       setHotelFacilitiesInvaid(true);
     }
-    if (uploadedImages.length <= 0) {
+    if (uploadedImages.length < 3) {
       setUploadedImagesInvaid(true);
     }
   };
@@ -170,17 +169,17 @@ function RegisterHotel() {
         Name &&
         Description &&
         OwnerName &&
-        Email &&
+        emailRegex.test(Email) &&
         AddressLine1 &&
         City &&
         ContactNumber1 &&
         DistanceFromCenter &&
-        HotelFacilities &&
-        uploadedImages
+        HotelFacilities.length > 0 &&
+        uploadedImages.length > 2
       ) {
         // 4 - Submit for registration
         res = await hotelService.registerHotel(submissionData);
-
+        console.log(res);
         if (res.hotelId > 0) {
           //alert("Successful");
           toast.success("Registered successfully!");

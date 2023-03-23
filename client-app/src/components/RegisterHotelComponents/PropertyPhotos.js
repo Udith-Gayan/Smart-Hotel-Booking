@@ -19,7 +19,7 @@ function PropertyPhotos(props) {
       <br />
       {props.uploadedImagesInvaid ? (
         <span style={{ color: "red" }}>
-          At least one photo should be uploaded!
+          At least 3 photos should be uploaded!
         </span>
       ) : null}
     </section>

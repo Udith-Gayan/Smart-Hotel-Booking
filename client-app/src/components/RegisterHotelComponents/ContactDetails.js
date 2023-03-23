@@ -41,7 +41,7 @@ function ContactDetails(props) {
               <FormGroup>
                 <Label>Phone Number</Label>
                 <Input
-                  type="number"
+                  type="text"
                   className="form-control input_half"
                   id="phone_number"
                   invalid={props.contactNumber1Invaid}
