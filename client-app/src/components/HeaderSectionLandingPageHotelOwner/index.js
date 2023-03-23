@@ -7,6 +7,7 @@ import { show, hide } from "../../features/visibility/visibleSlice";
 import { useNavigate } from "react-router-dom";
 import XrplService from "../../services-common/xrpl-service";
 import HotelService from "../../services-domain/hotel-service copy";
+import toast from 'react-hot-toast';
 
 const HeaderSectionLandingPageHotelOwner = () => {
   const navigate = useNavigate();
@@ -15,8 +16,8 @@ const HeaderSectionLandingPageHotelOwner = () => {
   const xrplService = XrplService.xrplInstance;
   const hotelService = HotelService.instance;
 
-  const [secret, setSecret] = useState('');
-  const [ errorMessage, setErrorMessage ] = useState(null);
+  const [secret, setSecret] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const [disableSubmitBtn, setDisableSubmitBtn] = useState(false);
 
   const noSecret = () => {
@@ -24,17 +25,19 @@ const HeaderSectionLandingPageHotelOwner = () => {
     navigate("/register-hotel");
   };
 
-  const submit = async () => {
+  const submit = async (e) => { 
+    e.preventDefault();
     setDisableSubmitBtn(true);
-    if(! xrplService.isValidSecret(secret)) {
-      setErrorMessage("Invalid secret.");
+    if (!xrplService.isValidSecret(secret)) {
+      //setErrorMessage("Invalid secret.");
+      toast.error("Invalid secret.")
       setDisableSubmitBtn(false);
       return;
     }
 
     // Check if registered hotel
     const res = await hotelService.generateHotelWallet(secret);
-    if(!res) {
+    if (!res) {
       setErrorMessage("This is not a registered hotel's secret.");
       setDisableSubmitBtn(false);
       return;
@@ -82,12 +85,12 @@ const HeaderSectionLandingPageHotelOwner = () => {
                 name="secret"
                 id="secret"
                 placeholder="Secret"
-                onChange={e => setSecret(e.target.value)}
+                onChange={(e) => setSecret(e.target.value)}
               />{" "}
-              <p style={{color: 'red'}}>{errorMessage}</p>
+              <p style={{ color: "red" }}>{errorMessage}</p>
               <Button
                 className="secondaryButton smallMarginTopBottom"
-                onClick={() => submit()}
+                onClick={(e) => submit(e)}
                 disabled={disableSubmitBtn}
               >
                 Let's Go

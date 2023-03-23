@@ -43,9 +43,9 @@ export default class ContractService {
                 // console.log(`Output (ledger:${r.ledgerSeqNo})>> ${outputLog}`);
                 const pId = o.promiseId;
                 if (o.error) {
-                    this.promiseMap.get(pId).rejecter(o.error);
+                    this.promiseMap.get(pId)?.rejecter(o.error);
                 } else {
-                    this.promiseMap.get(pId).resolver(o.success);
+                    this.promiseMap.get(pId)?.resolver(o.success);
                 }
 
                 this.promiseMap.delete(pId);
@@ -77,7 +77,7 @@ export default class ContractService {
 
         this.client.submitContractInput(inpString).then(input => {
             // console.log(input.hash);
-            input.submissionStatus.then(s => {
+            input?.submissionStatus.then(s => {
                 if (s.status !== "accepted") {
                     console.log(`Ledger_Rejection: ${s.reason}`);
                     throw (`Ledger_Rejection: ${s.reason}`);
@@ -102,8 +102,8 @@ export default class ContractService {
         const inpString = JSON.stringify(inp);
 
         const output = await this.client.submitContractReadRequest(inpString);
-        if(output.error) {
-            throw(output.error);
+        if (output.error) {
+            throw (output.error);
         } else {
             return output.success;
         }

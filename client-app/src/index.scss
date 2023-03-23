@@ -60,9 +60,16 @@ code {
 }
 
 .noMargin {
-  margin: 0;
+  margin: 0 !important;
 }
 
 .fontBold {
   font-weight: 800;
+}
+
+.spinnerWrapper {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

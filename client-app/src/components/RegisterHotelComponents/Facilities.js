@@ -1,7 +1,7 @@
 import Card1 from "../../layout/Card";
 import facilitiesData from "../../data/facilities"
 import CheckBoxRow from "../CheckBoxRow";
-import {useState} from "react";
+import { useState } from "react";
 
 function Facilities(props) {
     const rowsData = [];
@@ -35,7 +35,7 @@ function Facilities(props) {
                 <div className="title_3">Conveniences</div>
 
                 {rowsData.map(row => {
-                    return <CheckBoxRow facilities={row} key={row[0].Id} onChange={onChangeFacility}/>
+                    return <CheckBoxRow facilities={row} key={row[0].Id} onChange={onChangeFacility} />
                 })}
             </Card1>
 

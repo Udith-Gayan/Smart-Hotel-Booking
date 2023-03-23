@@ -1,0 +1,157 @@
+
+.availability-room-section {
+  table {
+    width: 100%;
+    margin-top: 15px;
+    border-style: hidden;
+  }
+
+  th {
+    border: 1px solid #5bbaff;
+    border-collapse: collapse;
+    padding: 10px 15px;
+    background-color: #4c76b2;
+    color: white;
+    font-family: "Inter", serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 29px;
+  }
+
+  td {
+    border: 1px solid #5bbaff;
+    border-collapse: collapse;
+    padding: 10px 15px;
+    //background-color: #4c76b2;
+    //color: white;
+    font-family: "Inter", serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 29px;
+  }
+
+  .td-room {
+    max-width: 430px;
+    min-width: 300px;
+  }
+
+  .td-sleeps {
+    max-width: 200px;
+    min-width: 120px;
+  }
+
+  .td-price {
+    max-width: 250px;
+    min-width: 220px;
+  }
+
+  .td-room-count {
+    min-width: 140px;
+    max-width: 200px;
+  }
+
+  .room-name {
+    color: #004cb8
+  }
+
+  .available_rooms{
+    font-family: "Inter", serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #02a402;
+  }
+
+  .room-count {
+    font-family: "Inter", serif;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .facilities {
+    margin-top: 7px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    //max-width: 500px;
+  }
+
+  .facility {
+    margin-right: 15px;
+    color: #6b6b6b;
+
+  }
+
+  .facility-text {
+    margin-left: 5px;
+    font-family: "Inter", serif;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .sleep-icon {
+    margin-right: 5px;
+  }
+
+  .price-text {
+    font-family: "Inter", serif;
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .price-subtext {
+    font-family: "Inter", serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #6b6b6b;
+    line-height: 16px;
+
+  }
+
+  .reserve-button {
+    width: 200px;
+    height: 40px;
+  }
+
+  .dropdown-container {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    display: flex;
+    width: 75px;
+  }
+
+  .dropdown-toggler {
+    width: 75px;
+    font-family: "Inter", serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 34px;
+    border: none;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dropdownMenu {
+    width: 75px;
+  }
+
+  .dropdownItem {
+    height: 35px;
+    text-align: center;
+    background-color: #ffffff;
+    font-family: "Inter", serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    width: 75px;
+
+  }
+
+  .button_container {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+}
