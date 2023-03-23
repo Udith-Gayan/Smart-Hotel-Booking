@@ -5,7 +5,7 @@ class DateFunctions {
     ];
 
     /*
-     Convert 2023/03/17 => March 17
+     Convert 2023-03-17 => March 17
     */
     static convertDateMonthDate = (date_string) => {
         const date = new Date(date_string);
@@ -29,7 +29,15 @@ class DateFunctions {
         return diffInDays;
     }
 
-    
+    static convertDateObjectToDateOnlyString = (dateObject) => {
+        let year = dateObject.getFullYear();
+        let month = dateObject.getMonth() + 1;
+        let day = dateObject.getDate();
+
+        return `${year}-${month}-${day}`
+    }
+
+
 }
 
 export default DateFunctions

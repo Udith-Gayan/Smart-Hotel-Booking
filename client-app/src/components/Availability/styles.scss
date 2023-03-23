@@ -1,0 +1,45 @@
+.availability_section {
+  .picker{
+    margin-bottom: 20px;
+    margin-right: 25px;
+  }
+  .range-picker-input {
+    display: inline-flex;
+    width: 100%;
+    border: none;
+
+    .picker-input__text {
+      padding-left: 10px;
+      height: 40px;
+      border-radius: 7px !important;
+      border: 1px solid rgb(102, 102, 102) !important;
+      width: 100% !important;
+    }
+  }
+
+  .calendar__head {
+    background: #2c2c76;
+  }
+
+  .title_3_sub {
+    font-family: "Inter", serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 34px;
+  }
+
+
+  .overrideSearchButton {
+    height: 40px;
+    width: 100%;
+  }
+
+  .search-wrapper-row {
+    height: 20px;
+  }
+}
+
+
+
+
+
