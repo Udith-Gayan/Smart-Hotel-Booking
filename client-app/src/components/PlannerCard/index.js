@@ -1,23 +1,13 @@
 import React from "react";
 import style from "./index.module.scss";
 
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardImg,
-  Button,
-} from "reactstrap";
-import { IoCalendarOutline, FaBed } from "react-icons/io5";
-import { IoMdBed } from "react-icons/io";
-import StarRatings from "react-star-ratings";
+import { CardTitle, CardSubtitle } from "reactstrap";
 
 function PlannerCard(props) {
   return (
     <div className={`${style.card}`}>
       <img
-        src={props.property.image}
+        src={`${props.property.image}`}
         alt="offer"
         className="logo"
         width={243}

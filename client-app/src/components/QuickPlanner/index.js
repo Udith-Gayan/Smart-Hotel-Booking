@@ -95,7 +95,7 @@ function QuickPlanner(props) {
         {selectedButton === "beach" && (
           <div className="row">
             {plannerProperties[0].slice(0, 4).map((property, index) => (
-              <div className={`col-md-3 ${style.explorecd}`}>
+              <div className={`col-md-3 ${style.explorecd}`} key={index}>
                 <PlannerCard property={property} />
               </div>
             ))}

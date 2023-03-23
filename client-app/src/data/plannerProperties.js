@@ -2,7 +2,7 @@ const plannerProperties = [
   [
     {
       name: "Kandy",
-      image: "/Assets/Images/dashboard/explore/kandy.png",
+      image: "Assets/Images/dashboard/explore/kandy.png",
       number: 1365,
     },
     {

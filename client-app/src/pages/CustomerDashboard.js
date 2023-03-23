@@ -19,6 +19,8 @@ import TopHotelCard from "../components/TopHotelCard";
 import Ellipse from "../Assets/Icons/ellipse.svg";
 import ExploreCard from "../components/ExploreCard";
 import QuickPlanner from "../components/QuickPlanner";
+import searches from "../data/searches";
+import SearchCard from "../components/SearchCard";
 
 function CustomerDashboard() {
   const navigate = useNavigate();
@@ -228,6 +230,16 @@ function CustomerDashboard() {
               </div>
               <div className="col-6"></div>
             </div>
+          </div>
+        </section>
+        <section className="recent_searches">
+          <h1 className="headline">Your recent Searches</h1>
+          <div className="row">
+            {searches.slice(0, 3).map((search, index) => (
+              <div className="col-md-4 explorecd" key={index}>
+                <SearchCard search={search} />
+              </div>
+            ))}
           </div>
         </section>
       </Container>

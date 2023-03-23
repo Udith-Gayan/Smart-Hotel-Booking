@@ -1,3 +1,4 @@
+@import "../index.scss";
 .main-image-div {
   background: url("./../../public/Assets/Images/dashboard/beach.webp");
   height: 575px;
@@ -58,7 +59,7 @@
     }
 
     .calendar__head {
-      background: #2c2c76;
+      background:  $purple-color;
     }
   }
 }
@@ -135,7 +136,6 @@ div.top_rated_hotels {
   justify-content: center; /* centers horizontally */
   align-items: center; /* centers vertically */
   .explorecd {
-    
   }
 }
 
@@ -149,60 +149,57 @@ div.planner {
   width: 100%;
 }
 
-div.searchDestination{
-  .input{
-   display: flex;
+div.searchDestination {
+  .input {
+    display: flex;
     margin-right: 0;
     width: 258px;
   }
 }
 
-div.quickPlanner{
-  
+div.quickPlanner {
 }
 
-.connect{
+.connect {
   height: 364px;
-  background:url('../Assets/Images/ariel-beach.webp');
-  
+  background: url("../Assets/Images/ariel-beach.webp");
+
   background-size: cover;
-
-  
 }
 
-.wrapper{
+.wrapper {
   background-color: rgba(0, 0, 0, 0.5);
-  width:100%; 
-    height:100%;
-    margin: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
-.connectTitle{
+.connectTitle {
   padding-left: 42px;
   padding-top: 40px;
   font-weight: 700;
-font-size: 48px;
-line-height: 50px;
-color: white;
+  font-size: 48px;
+  line-height: 50px;
+  color: white;
 }
 
-.connectDesc{
+.connectDesc {
   font-weight: 400;
-font-size: 20px;
-line-height: 24px;
-color: white;
-padding-left: 42px;
-  padding-top: 23px;
-}
-
-.connectButton{
+  font-size: 20px;
+  line-height: 24px;
+  color: white;
   padding-left: 42px;
   padding-top: 23px;
-  .connectButtonInside{
+}
+
+.connectButton {
+  padding-left: 42px;
+  padding-top: 23px;
+  .connectButtonInside {
     background-color: white;
     color: black;
     font-weight: 500;
-font-size: 16px;
-line-height: 19px;
+    font-size: 16px;
+    line-height: 19px;
   }
 }
