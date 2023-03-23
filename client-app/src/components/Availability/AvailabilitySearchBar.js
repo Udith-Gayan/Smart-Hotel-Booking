@@ -19,15 +19,6 @@ function AvailabilitySearchBar(props) {
     const [numOfRooms, setNumOfRooms] = useState(queryParams.get("rooms") ? queryParams.get("rooms") : 0);
 
 
-    const [checkInCheckOutDates, setCheckInCheckOutDates] = useState();
-
-
-    const onChangeCheckInCheckOutDates = (checkIn, checkOut) => {
-        console.log(checkIn);
-        console.log(checkOut);
-
-    }
-
     const onChangeRooms = (isAdding) => {
         setNumOfRooms(prevState => {
             return (isAdding ? prevState + 1 : prevState - 1) >= 0 ? (isAdding ? prevState + 1 : prevState - 1) : 0;
@@ -43,8 +34,10 @@ function AvailabilitySearchBar(props) {
                     startPlaceholder="From date"
                     endPlaceholder="To date"
                     dateFormat="ddd DD MMM"
-                    onChange={onChangeCheckInCheckOutDates}
+                    onChange={props.onChangeCheckInCheckOutDates}
                     hide={true}
+                    value={props.checkInCheckOutDates}
+
                 />
 
                 <div className={"mb-3"} style={{width: "225px"}}>

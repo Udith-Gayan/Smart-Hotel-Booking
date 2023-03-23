@@ -55,7 +55,7 @@ function App() {
                     <Route path="/reservations" element={<Reservations />} exact />
                     <Route path="/search-hotel" element={<HotelSearchPage exact />} />
                     <Route path="/confirm-booking" element={<ConfirmBooking exact />} />
-                    <Route path="/availability" element={<AvailabilityPage/>} exact />
+                    <Route path="/availability/:id" element={<AvailabilityPage/>} exact />
 
                 </Routes>
             )}

@@ -5,54 +5,25 @@ import {FaCheck, FaPlus, FaUserAlt, FaWindowMinimize} from "react-icons/fa";
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {bed_types} from "../../constants/constants";
 import roomFacilitiesData from "../../data/room_facilities";
+import {createSearchParams, useNavigate, useParams} from "react-router-dom";
 
 function AvailabilityRooms(props) {
 
-    const [selectedRooms, setSelectedRooms] = useState({});
     const [roomDetails, setRoomDetails] = useState(roomData);
 
-    const onChangeSelectedRooms = (roomIndex, isAdding, maxRooms) => {
-        setSelectedRooms(prevState => {
-            let newState = {...prevState};
-            if (!(roomIndex in newState))
-                newState[roomIndex] = 0;
-
-            newState[roomIndex] = (isAdding ? newState[roomIndex] + 1 : newState[roomIndex] - 1);
-            if (newState[roomIndex] < 0)
-                newState[roomIndex] = 0;
-            else if (newState[roomIndex] > maxRooms)
-                newState[roomIndex] = maxRooms;
-
-            return newState;
-        })
-    }
-
     const getRoomCount = (roomIndex) => {
-        if (roomIndex in selectedRooms) {
-            return selectedRooms[roomIndex];
+        if (roomIndex in props.selectedRooms) {
+            return props.selectedRooms[roomIndex].count;
         }
         return 0;
     }
 
-
     const getFacilities = (facilitiesIds) => {
+        return roomFacilitiesData;
         return roomFacilitiesData.filter(facility => {
             return facilitiesIds.includes(facility.Id);
         })
     }
-
-    const onReserve = () => {
-        let selectedRoomList = Object.keys(selectedRooms).map(roomId => {
-            return {
-                Id: roomId,
-                Count: selectedRooms[roomId]
-            }
-
-        });
-
-        console.log(selectedRoomList);
-    }
-
 
     return (
         <div className={"availability-room-section"}>
@@ -61,7 +32,7 @@ function AvailabilityRooms(props) {
                 <tr>
                     <th>Room type</th>
                     <th>Sleeps</th>
-                    <th>Price for 1 night</th>
+                    <th>Price for 1 day</th>
                     <th>Select rooms</th>
                 </tr>
                 </thead>
@@ -110,7 +81,7 @@ function AvailabilityRooms(props) {
                             <td className={"td-room-count"}>
 
                                 <button className={"increment_button"}
-                                        onClick={onChangeSelectedRooms.bind(this, room.Id, false, room.NumOfRooms)}>
+                                        onClick={props.onChangeSelectedRooms.bind(this, room, false)}>
                                     <FaWindowMinimize size={12} style={{
                                         marginRight: "10px",
                                         marginTop: "-13px",
@@ -121,33 +92,9 @@ function AvailabilityRooms(props) {
                                 <span className={"title_3_sub bedroom_text"}>{getRoomCount(room.Id)}</span>
 
                                 <button className={"decrement_button"}
-                                        onClick={onChangeSelectedRooms.bind(this, room.Id, true, room.NumOfRooms)}>
+                                        onClick={props.onChangeSelectedRooms.bind(this, room, true)}>
                                     <FaPlus size={12} style={{marginRight: "10px", marginTop: "-7px"}}/>
                                 </button>
-                                {/*<Dropdown isOpen={selectedRoomCountDropdown === room.Id}*/}
-                                {/*          toggle={toggleRoomCountDropdown.bind(this, room.Id)}*/}
-                                {/*          className={"dropdown-container"}>*/}
-                                {/*    <DropdownToggle caret*/}
-                                {/*                    className={"dropdown-toggler"} color={"black"}*/}
-                                {/*    >*/}
-                                {/*        <span style={{textAlign: "left"}}*/}
-                                {/*              className={"title_3_sub"}>{getRoomCount(room.Id)}</span>*/}
-
-                                {/*    </DropdownToggle>*/}
-                                {/*    <DropdownMenu className={"dropdownMenu"}>*/}
-                                {/*        {*/}
-                                {/*            Array(room.NumOfRooms).fill(true).map((_, roomCountIndex) => {*/}
-                                {/*                    return (*/}
-                                {/*                        <DropdownItem className="dropdownItem" key={roomCountIndex}>*/}
-                                {/*                            <div*/}
-                                {/*                                onClick={changeSelectedRooms.bind(this, room.Id, roomCountIndex + 1)}>{roomCountIndex + 1}</div>*/}
-                                {/*                        </DropdownItem>*/}
-                                {/*                    );*/}
-                                {/*                }*/}
-                                {/*            )*/}
-                                {/*        }*/}
-                                {/*    </DropdownMenu>*/}
-                                {/*</Dropdown>*/}
                             </td>
                         </tr>
                     );
@@ -156,7 +103,7 @@ function AvailabilityRooms(props) {
             </table>
 
             <div className={"mb-3 mt-5 button_container"}>
-                <Button className="secondaryButton reserve-button" onClick={onReserve}>
+                <Button className="secondaryButton reserve-button" onClick={props.onReserve}>
                     I'll Reserve
                 </Button>
             </div>

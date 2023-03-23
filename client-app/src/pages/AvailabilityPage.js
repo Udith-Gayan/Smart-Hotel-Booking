@@ -6,7 +6,7 @@ import {FaPlusCircle} from "react-icons/fa";
 import HotelImages from "../components/HotelHomePage/HotelImages";
 import FacilitiesReadOnly from "../components/HotelHomePage/FacilitiesReadOnly";
 import React, {useRef, useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {createSearchParams, useLocation, useNavigate, useParams} from "react-router-dom";
 import CreateRoomModal from "../components/HotelHomePage/CreateRoomModal";
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap"
 import RoomDetails from "../components/HotelHomePage/RoomDetails";
@@ -15,9 +15,13 @@ import SharedStateService from "../services-domain/sharedState-service";
 import {toast} from 'react-hot-toast';
 import AvailabilitySearchBar from "../components/Availability/AvailabilitySearchBar";
 import AvailabilityRooms from "../components/AvailabiityRooms/AvailabilityRooms";
+import DateFunctions from "../helpers/DateFunctions";
 
+//http://localhost:3000/availability/1?fromDate=2023-03-17&toDate=2023-03-20
 function AvailabilityPage() {
-
+    const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
     const {id} = useParams();
 
     const [images, setImages] = useState([
@@ -33,8 +37,30 @@ function AvailabilityPage() {
     const [address2, setAddress2] = useState("Heritance Kandalama");
     const [city, setCity] = useState("Sigiriya");
     const [description, setDescription] = useState();
-    const [selectedFacilityIds, setSelectedFacilityIds] = useState([1, 3, 5, 6, 7, 10]);
+    const [selectedFacilityIds, setSelectedFacilityIds] = useState([]);
 
+    const [checkInCheckOutDates, setCheckInCheckOutDates] = useState({
+        checkIn: queryParams.get("fromDate"),
+        checkOut: queryParams.get("toDate")
+    });
+
+    const [selectedRooms, setSelectedRooms] = useState({});
+
+    const onChangeSelectedRooms = (room, isAdding) => {
+        setSelectedRooms(prevState => {
+            let newState = {...prevState};
+            if (!(room.Id in newState))
+                newState[room.Id] = {roomData: room, count: 0};
+
+            newState[room.Id].count = (isAdding ? newState[room.Id].count + 1 : newState[room.Id].count - 1);
+            if (newState[room.Id].count < 0)
+                newState[room.Id].count = 0;
+            else if (newState[room.Id].count > room.NumOfRooms)
+                newState[room.Id].count = room.NumOfRooms;
+
+            return newState;
+        })
+    }
 
     const infoSection = useRef(null);
     const facilitiesSection = useRef(null);
@@ -76,6 +102,68 @@ function AvailabilityPage() {
     }
 
 
+    const onChangeCheckInCheckOutDates = (
+        checkIn, checkOut) => {
+        let checkInDate = DateFunctions.convertDateObjectToDateOnlyString(new Date(checkIn));
+        let checkOutDate = DateFunctions.convertDateObjectToDateOnlyString(new Date(checkOut));
+
+        setCheckInCheckOutDates({checkIn: checkInDate, checkOut: checkOutDate})
+    }
+
+    const getFullAddress = () => {
+        let address = address1 ?? '';
+        address += address2 ? `, ${address2}` : '';
+        address += city ? `, ${city}` : '';
+
+        return address
+    }
+
+
+    const getTotalPrice = () => {
+        let pricePerNight = 0;
+        for (const [roomId, values] of Object.entries(selectedRooms)) {
+            pricePerNight += parseFloat(values.roomData.PricePerNight) * values.count;
+        }
+
+        let num_of_days = DateFunctions.getDaysCountInBetween(checkInCheckOutDates.checkIn, checkInCheckOutDates.checkOut);
+        console.log(pricePerNight * num_of_days);
+        return pricePerNight * num_of_days;
+
+    }
+
+
+    const onReserve = () => {
+
+        let selectedRoomList = [];
+        for (const [roomId, values] of Object.entries(selectedRooms)) {
+            let temp = {
+                roomId: roomId,
+                roomName: values.roomData.RoomName,
+                roomCount: values.roomData.NumOfRooms,
+                costPerRoom: values.roomData.PricePerNight,
+            }
+
+            selectedRoomList.push(temp);
+        }
+
+        let result = {selections: selectedRoomList}
+
+        console.log(result);
+
+        navigate({
+            pathname: "/reservations",
+            search: `?${createSearchParams({
+                fromDate: checkInCheckOutDates.checkIn,
+                toDate: checkInCheckOutDates.checkOut,
+                daysCount: DateFunctions.getDaysCountInBetween(checkInCheckOutDates.checkIn, checkInCheckOutDates.checkOut),
+                hotelName: hotelName,
+                address: getFullAddress(),
+                totalPrice: getTotalPrice(),
+                selectionDetails: result,
+            })}`
+        });
+    }
+
     return (
         <MainContainer>
             <section>
@@ -94,7 +182,8 @@ function AvailabilityPage() {
                         <FaMapMarkerAlt/>
                     </div>
                     <div className={"subtext pt-2 col"}>
-                        {address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}
+                        {/*{address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}*/}
+                        {getFullAddress()}
                     </div>
                 </div>
 
@@ -189,8 +278,10 @@ function AvailabilityPage() {
                 </div>
             </section>
 
-            <AvailabilitySearchBar/>
-            <AvailabilityRooms/>
+            <AvailabilitySearchBar onChangeCheckInCheckOutDates={onChangeCheckInCheckOutDates}
+                                   checkInCheckOutDates={checkInCheckOutDates}/>
+            <AvailabilityRooms onReserve={onReserve} selectedRooms={selectedRooms}
+                               onChangeSelectedRooms={onChangeSelectedRooms}/>
         </MainContainer>
     );
 }

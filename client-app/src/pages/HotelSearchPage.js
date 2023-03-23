@@ -10,6 +10,8 @@ import { bed_types } from "../constants/constants";
 import HotelList from "../components/HotelSearchPage/HotelList";
 import HotelService from "../services-domain/hotel-service copy";
 
+
+//http://localhost:3000/search-hotel?city=Galle&fromDate=2023-03-17&toDate=2023-03-20&people=2
 function HotelSearchPage(props) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -261,5 +263,4 @@ function HotelSearchPage(props) {
     )
 }
 
-//http://localhost:3000/search-hotel?city=Galle&check-in-date=2023/03/17&check-out-date=2023/03/20&people=2
 export default HotelSearchPage
