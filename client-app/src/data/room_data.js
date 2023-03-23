@@ -1,166 +1,50 @@
 export const roomData = [
     {
+        Id: 1,
         RoomName: "Double Room",
         Description: "",
         NumOfRooms: 3,
         PricePerNight: 50,
         BedType: "Single",
-        NumOfBeds: 3,
-        Sleeps: 2,
+        NumOfSleeps: 3,
         RoomFacilities: [
-            {
-                Id: 1,
-                Text: "Private Bathroom"
-            },
-            {
-                Id: 2,
-                Text: "Washing Machine"
-            },
-            {
-                Id: 3,
-                Text: "TV"
-            },
-            {
-                Id: 4,
-                Text: "Air Conditioning"
-            },
-            {
-                Id: 5,
-                Text: "Refrigerator"
-            },
-            {
-                Id: 6,
-                Text: "Balcony"
-            },
-            {
-                Id: 7,
-                Text: "Elevators available"
-            },
-            {
-                Id: 8,
-                Text: "Shower Chair"
-            }
+            1, 2, 4, 5, 6, 8, 11
         ]
     },
     {
+        Id: 2,
         RoomName: "Standard Twin City View",
         Description: "",
         NumOfRooms: 4,
         PricePerNight: 80.99,
         BedType: "Double",
-        NumOfBeds: 3,
-        Sleeps: 2,
+        NumOfSleeps: 3,
         RoomFacilities: [
-            {
-                Id: 1,
-                Text: "Private Bathroom"
-            },
-            {
-                Id: 2,
-                Text: "Washing Machine"
-            },
-            {
-                Id: 3,
-                Text: "TV"
-            },
-            {
-                Id: 4,
-                Text: "Air Conditioning"
-            },
-            {
-                Id: 5,
-                Text: "Refrigerator"
-            },
-            {
-                Id: 6,
-                Text: "Balcony"
-            },
+            1, 3, 4, 7, 9
         ]
     },
     {
+        Id: 3,
         RoomName: "Superior Twin City View",
         Description: "",
         NumOfRooms: 2,
         PricePerNight: 50,
         BedType: "King",
-        NumOfBeds:2,
-        Sleeps: 4,
+        NumOfSleeps: 2,
         RoomFacilities: [
-            {
-                Id: 1,
-                Text: "Private Bathroom"
-            },
-            {
-                Id: 2,
-                Text: "Washing Machine"
-            },
-            {
-                Id: 3,
-                Text: "TV"
-            },
-            {
-                Id: 4,
-                Text: "Air Conditioning"
-            },
-            {
-                Id: 5,
-                Text: "Refrigerator"
-            },
-            {
-                Id: 6,
-                Text: "Balcony"
-            },
-            {
-                Id: 7,
-                Text: "Elevators available"
-            },
-            {
-                Id: 8,
-                Text: "Shower Chair"
-            }
+            3, 5, 6, 7, 8
         ]
     },
     {
+        Id: 4,
         RoomName: "Superior Double with Terrace (Sea & City View)",
         Description: "",
         NumOfRooms: 5,
         PricePerNight: 100,
         BedType: "Queen",
-        NumOfBeds: 1,
-        Sleeps: 2,
+        NumOfSleeps: 1,
         RoomFacilities: [
-            {
-                Id: 1,
-                Text: "Private Bathroom"
-            },
-            {
-                Id: 2,
-                Text: "Washing Machine"
-            },
-            {
-                Id: 3,
-                Text: "TV"
-            },
-            {
-                Id: 4,
-                Text: "Air Conditioning"
-            },
-            {
-                Id: 5,
-                Text: "Refrigerator"
-            },
-            {
-                Id: 6,
-                Text: "Balcony"
-            },
-            {
-                Id: 7,
-                Text: "Elevators available"
-            },
-            {
-                Id: 8,
-                Text: "Shower Chair"
-            }
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10
         ]
     }
 ]
