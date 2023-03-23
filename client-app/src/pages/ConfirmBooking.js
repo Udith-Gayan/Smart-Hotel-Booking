@@ -9,6 +9,8 @@ import "../styles/layout_styles.scss";
 import HotelService from "../services-domain/hotel-service copy";
 import {useLocation, useNavigate} from "react-router-dom";
 import DateFunctions from "../helpers/DateFunctions";
+import XrplService from "../services-common/xrpl-service";
+import {toast} from "react-hot-toast";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
@@ -21,26 +23,65 @@ const ConfirmBooking = () => {
   let checkInDateStr = queryParams.get("fromDate");
   let checkOutDateStr = queryParams.get("toDate");
   let noOfDays = Number(queryParams.get("daysCount"));
-  let selectionDetails = JSON.parse(queryParams.get("selectionDetails"));  // { selections: [  {roomId: 1, roomCount: 3, costPerRoom: 25}, {roomId: 2, roomCount: 3, costPerRoom: 25} ]   }
+  let selectionDetails = JSON.parse(queryParams.get("selectionDetails"));  // { selections: [  {roomId: 1, roomCount: 3, costPerRoom: 25, roomName: "" }, {roomId: 2, roomCount: 3, costPerRoom: 25} ]   }
   let hotelName = queryParams.get("hotelName");
   let hotelAddress = queryParams.get("address");
   let totalPrice = Number(queryParams.get("totalPrice"));
 
 
-  const [checkinDate, setCheckinDate ]= useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [checkinDate, setCheckinDate ]= useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [selectionStrings, setSelectionStrings] = useState([]);
 
 
   useEffect(() => {
     setCheckinDate(DateFunctions.convertDateToMonthDateYear(checkInDateStr));
     setCheckOutDate(DateFunctions.convertDateToMonthDateYear(checkOutDateStr));
+    setSelectionStrings(createModifiedSelectionDetailsArray(selectionDetails?.selections));
 
   }, []);
 
-  const createReservation = async () => {};
+  const createReservation = async (body) => {
+    setIsDataLoading(true);
+    let walletAddress = body.walletAddress;
+    if(body.payNow){
+      walletAddress = XrplService.xrplInstance.generateWalletFromSeed(body.secret).address;
+    }
 
-  const createSelectionDetailsArrray = () => {
+    const data = {
+      CustomerId: 0,
+      FromDate: new Date(checkInDateStr),
+      ToDate: new Date(checkOutDateStr),
+      CustomerDetails: { Name: body.fullName, Email: body.email, ContactNumber: body.phoneNo, WalletAddress: walletAddress},
+      totalFee: totalPrice,
+      payNow: body.payNow,
+      secret: body.secret,
+      roomSelections: selectionDetails.selections
+    }
 
+    try{
+      const res = hotelService.makeReservation(data)
+      console.log(res);
+      navigate(`/`)
+    } catch (e) {
+      setIsDataLoading(false);
+      console.log(e);
+      toast.error(e);
+    }
+  };
+
+  /**
+   *  An array of Strings
+   * @param selectionArray
+   * @returns {*[]}
+   */
+  const createModifiedSelectionDetailsArray = (selectionArray = []) => {
+    const selection_str_arr = [];
+    for(const sel of selectionArray) {
+      const strr = `${sel.roomName}  x${sel.roomCount} rooms`;
+      selection_str_arr.push(strr);
+    }
+    return selection_str_arr;
   }
 
 
@@ -48,13 +89,13 @@ const ConfirmBooking = () => {
     <MainContainer>
       <Row>
         <Col md={4}>
-          <BookingDetails />
-          <BookedHotelPrice />
+          <BookingDetails checkindate={checkinDate} checkoutdate={checkOutDate} noOfDays={noOfDays} selections={selectionStrings} />
+          <BookedHotelPrice totalPrice={totalPrice} />
         </Col>
 
         <Col md={8}>
-          <BookedHotelDetails />
-          <CustomerRegistration />
+          <BookedHotelDetails hotelName={hotelName} hotelAddress={hotelAddress} />
+          <CustomerRegistration  createReservation={createReservation}/>
         </Col>
       </Row>
     </MainContainer>

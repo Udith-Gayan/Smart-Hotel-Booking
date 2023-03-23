@@ -3,6 +3,7 @@ const settings = require('../settings.json').settings;
 const businessConfigurations = require('../settings.json').businessConfigurations;
 const constants = require("./constants")
 const { SqliteDatabase } = require("../services.base/sqlite-handler")
+const {totalWeight} = require("../../dist");
 
 
 class ReservationService {
@@ -53,55 +54,90 @@ class ReservationService {
     // Create a Room
     async #createReservation() {
         let response = {};
-        if (!(this.#message.data && this.#message.data.RoomId && this.#message.data.CustomerId && this.#message.data.TransactionId))
+        if (!(this.#message.data))
             throw ("Invalid Request.");
 
         const data = this.#message.data;
         const noOfDays = this.countDaysInBetween(data.FromDate, data.ToDate);
 
-        let query = `SELECT * FROM Rooms WHERE Id=${data.RoomId}`;
-        const room = await this.#db.runNativeGetFirstQuery(query);
-        const expectedCost = noOfDays * room.CostPerNight * data.RoomCount; //
+        const roomSelections = data.RoomSelections;
+        let expectedCost = 0;
+        let roomIdList = [];
 
-        //Get transaction amount
-        const txList = (await this.#xrplApi.getAccountTrx(settings.contractWalletAddress)).filter(t => t.TransactionType == "Payment");
-        const paidTx = txList.find(tx => tx.hash == data.TransactionId);
+        roomSelections.forEach(rms => {
+            const costOFRoom = rms.roomCount * rms.costPerRoom * noOfDays;
+            expectedCost += costOFRoom;
+            roomIdList.push({roomId: rms.roomId, roomCost: costOFRoom});
+        });
 
-        if (!paidTx)
-            throw ("Invalid transaction hash.");
 
-        if (Number(paidTx.Amount) < expectedCost)
-            throw ("Insuffcient amount paid for room reservation.");
+        //Get transaction amount and do payments to the hotel ( if present)
+        if(data.TransactionId) {
+            const txList = (await this.#xrplApi.getAccountTrx(settings.contractWalletAddress)).filter(t => t.TransactionType == "Payment");
+            const paidTx = txList.find(tx => tx.hash == data.TransactionId);
 
-        // Pay the rest keeping the commision,  to the hotel address
-        query = `SELECT HotelWalletAddress FROM Hotels WHERE Id=${room.HotelId}`;
-        const hotelWalletAddress = await this.#db.runNativeGetFirstQuery(query);
-        if (hotelWalletAddress) {
-            const amountToSend = (Number(paidTx.Amount) / 1000000 ) * (100 - businessConfigurations.ROOM_COMMISSION_PERCENTAGE) / 100;
-            const res = await this.#contractAcc.makePayment(hotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null);
-            if(res.code !== "tesSUCCESS")
-                throw("Error in sending fee to the Hotel's wallet.")
+            if (!paidTx)
+                throw ("Invalid transaction hash.");
 
-        }
-        
-        const reservationEntity = {
-            RoomId: data.RoomId,
-            RoomCount: data.RoomCount,
-            CustomerId: data.CustomerId,
-            FromDate: data.FromDate,
-            ToDate: data.ToDate,
-            Cost: Number(paidTx.Amount),
-            TransactionId: data.TransactionId
-        }
+            if (Number(paidTx.Amount) < expectedCost)
+                throw ("Insuffcient amount paid for room reservation.");
 
-        let reservationId;
-        if(await this.#db.isTableExists('Reservations')) {
-            reservationId = (await this.#db.insertValue('Reservations', reservationEntity)).lastId;
-        } else {
-            throw("Reservation table not found.");
+            // Pay the rest keeping the commision,  to the hotel address
+            let query = `SELECT HotelWalletAddress FROM Hotels WHERE Id=(SELECT HotelId FROM Rooms WHERE Id= ${roomIdList[0].roomId})`;
+            const hotelWalletAddress = await this.#db.runNativeGetFirstQuery(query);
+            if (hotelWalletAddress) {
+                const amountToSend = (Number(paidTx.Amount) / 1000000 ) * (100 - businessConfigurations.ROOM_COMMISSION_PERCENTAGE) / 100;
+                const res = await this.#contractAcc.makePayment(hotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null);
+                if(res.code !== "tesSUCCESS")
+                    throw("Error in sending fee to the Hotel's wallet.")
+
+            }
         }
 
-        response.success = { reservationId: reservationId};
+        // Save the customer ( if customerId = 0 and CustomerDetails present
+        let nCustomerId = 0;
+        if(data.CustomerId == 0) {
+            const customerDetails = data.CustomerDetails;
+            let query = `SELECT * FROM Customers WHERE WalletAddress='${customerDetails.WalletAddress}'`;
+            const res = await this.#db.runNativeGetFirstQuery(query);
+            if(res) {
+                nCustomerId = res.Id;
+            } else {
+                // save the customer
+                const customerEntity = {
+                    Name: customerDetails.Name,
+                    Email: customerDetails.Email,
+                    ContactNumber: customerDetails.ContactNumber,
+                    WalletAddress: customerDetails.WalletAddress
+                }
+                nCustomerId = (await this.#db.insertValue('Customers', customerEntity)).lastId;
+            }
+        }
+
+        const reservationIdList = [];
+        for(const i in roomSelections) {
+            const reservationEntity = {
+                RoomId: roomSelections[i].roomId,
+                RoomCount: roomSelections[i].roomCount,
+                CustomerId: nCustomerId,
+                FromDate: data.FromDate,
+                ToDate: data.ToDate,
+                Cost: roomIdList[i].roomCost,
+                TransactionId: data.TransactionId ?? null
+            }
+
+            let reservationId;
+            if(await this.#db.isTableExists('Reservations')) {
+                reservationId = (await this.#db.insertValue('Reservations', reservationEntity)).lastId;
+            } else {
+                throw("Reservation table not found.");
+            }
+
+            reservationIdList.push(reservationId);
+
+        }
+
+        response.success = { reservationIds: reservationIdList};
         return response;
 
     }
@@ -114,7 +150,42 @@ class ReservationService {
     }
 
     async #getReservations() {
+        const response = {}
+        const filters = this.#message.data.Filters;
 
+        const walletAddress = filters.walletAddress;
+        let query;
+        if(filters.isCustomer){
+            query = `SELECT Id FROM Customers WHERE WalletAddress='${walletAddress}'`;
+            const customerId = await this.#db.runNativeGetFirstQuery(query);
+            if(customerId) {
+                query = `SELECT * FROM Reservations WHERE CustomerId=${customerId}`;
+                const reservations = await this.#db.runNativeGetAllQuery(query);
+                if(!reservations || reservations.length == 0){
+                    response.success = { reservationList: []}
+                    return response;
+                }
+                response.success = { reservationList: reservations}
+                return response;
+            } else {
+                throw("Invalid User");
+            }
+        } else {
+            query = `SELECT Id From Hotels WHERE HotelWalletAddress='${walletAddress}'`;
+            const hotelId = await this.#db.runNativeGetFirstQuery(query);
+            if(hotelId) {
+                query = `SELECT * FROM Reservations WHERE RoomId IN (SELECT Id FROM Rooms WHERE HotelId = ${hotelId})`;
+                const reservations = await this.#db.runNativeGetAllQuery(query);
+                if(!reservations || reservations.length == 0){
+                    response.success = { reservationList: []}
+                    return response;
+                }
+                response.success = { reservationList: reservations}
+                return response;
+            } else {
+                throw("Invalid User");
+            }
+        }
     }
 
 

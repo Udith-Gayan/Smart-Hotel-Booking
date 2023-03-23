@@ -257,6 +257,41 @@ export default class HotelService {
     }
   }
 
+  async makeReservation(data) {
+    let response;
+
+    const submitData =  {
+      CustomerId: data.CustomerId,
+      FromDate: data.FromDate,
+      ToDate: data.ToDate,
+      CustomerDetails: data.CustomerDetails,
+      RoomSelections: data.roomSelections  //  [  {roomId: 1, roomCount: 3, costPerRoom: 25, roomName: "" }, {roomId: 2, roomCount: 3, costPerRoom: 25} ]
+    }
+    if(data.payNow){
+      const res = await this.#xrplService.makePayment(data.secret, data.totalFee.toString(), contractWalletAddress);
+      if(res.code == "tesSUCCESS") {
+        submitData.TransactionId = res.id;
+      }
+    }
+
+    const submitObj = {
+      type: constants.RequestTypes.RESERVATION,
+      subType: constants.RequestSubTypes.CREATE_RESERVATION,
+      data: submitData
+    }
+
+    let result;
+    try {
+      result = await this.contractService.submitInputToContract(submitObj);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+
+
+
+  }
+
 
 
 

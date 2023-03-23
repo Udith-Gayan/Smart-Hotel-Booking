@@ -12,21 +12,27 @@ const BookHotelRoom = (props) => {
           <Col md={6}>
             <p>Check-in</p>
 
-            <p className="fontBold">Mon, Mar 20, 2023</p>
+            <p className="fontBold">{props.checkindate}</p>
             <small className={styles.checkinoutTime}>3.00 PM - 8.00 PM</small>
           </Col>
           <Col md={6}>
-            <p>Check-in</p>
-            <p className="fontBold">Tuesday, Mar 21, 2023</p>
+            <p>Check-out</p>
+            <p className="fontBold">{props.checkoutdate}</p>
             <small className={styles.checkinoutTime}>11.00 PM - 1.30 PM</small>
             <br />
           </Col>
-          <p>Total length of stay:</p>
-          <p className="fontBold">2 nights</p>
+          <p style={{ marginTop:'20px'}}>Total length of stay:</p>
+          <p className="fontBold">{`${props.noOfDays - 1} nights, ${props.noOfDays} days`}</p>
         </Row>
         <hr />
         <p>You selected</p>
-        <p className="fontBold">1 room for 2 adults</p>
+        {
+          props.selections.map((sl, idx) => {
+            return (
+                <p className="fontBold" key={idx}>{sl}</p>
+            );
+          })
+        }
       </Card>
     </div>
   );

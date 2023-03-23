@@ -15,8 +15,11 @@ import {
   show,
   hide,
 } from "../../features/registerCustomer/registerCustomerSlice";
+import XrplService from "../../services-common/xrpl-service";
 
-const CustomerRegistration = () => {
+const CustomerRegistration = (props) => {
+  const xrplService = XrplService.xrplInstance;
+
   const generatedSecretVisibility = useSelector(
     (state) => state.registerCustomer.generatedSecretVisibility
   );
@@ -25,12 +28,16 @@ const CustomerRegistration = () => {
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [secret, setSecret] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
   const [payNow, setPayNow] = useState(false);
   const [payAtDoor, setPayAtDoor] = useState(false);
   const [fullNameInvalid, setFullNameInvalid] = useState(false);
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [phoneNoInvalid, setPhoneNoInvalid] = useState(false);
   const [secretInvalid, setSecretInvalid] = useState(false);
+  const [walletAddressInvalid, setWalletAddressInvalid] = useState(false);
+
+  const[disableAll, setdisableAll] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -39,16 +46,20 @@ const CustomerRegistration = () => {
     if (
       fullName.length !== 0 &&
       email.length !== 0 &&
-      phoneNo.length === 10 &&
-      ((payNow && secret.length !== 0) || payAtDoor)
+      phoneNo.length === 10 && walletAddress.length !== 0 &&
+      ((payNow && secret.length !== 0 && xrplService.isValidSecret(secret)) || payAtDoor)
     ) {
       console.log("body", body);
+      return true;
     }
+
+    return false;
   };
 
-  const registerCustomer = (e) => {
+  const registerCustomer = async (e) => {
     e.preventDefault();
-    const body = { fullName, email, phoneNo, secret };
+    setdisableAll(true);
+    const body = { fullName, email, phoneNo, secret, payNow, walletAddress  };
 
     if (fullName.length === 0) {
       setFullNameInvalid(true);
@@ -67,13 +78,21 @@ const CustomerRegistration = () => {
       setPhoneNoInvalid(false);
     }
 
+    if (walletAddress.length === 0)
+      setWalletAddressInvalid(true);
+    else
+      setWalletAddressInvalid(false);
+
     if (secret.length === 0) {
       setSecretInvalid(true);
     } else {
       setSecretInvalid(false);
     }
-
-    validation(body);
+    if(validation(body)) {
+      await props.createReservation(body)
+    }
+    setdisableAll(false);
+    return;
   };
 
   const payNowHandler = (e) => {
@@ -82,6 +101,7 @@ const CustomerRegistration = () => {
   };
   const payAtDoorHandler = (e) => {
     setPayNow(false);
+    setSecret("");
     setPayAtDoor(e.target.checked);
   };
   return (
@@ -138,6 +158,22 @@ const CustomerRegistration = () => {
               </FormFeedback>
             </FormGroup>
           </Col>
+          <Col md={6}>
+            <FormGroup>
+              <Label for="phoneNo">Wallet Address</Label>
+              <Input
+                  id="walletAddress"
+                  name="walletAddress"
+                  type="text"
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  invalid={walletAddressInvalid}
+              />
+              <FormFeedback invalid={walletAddressInvalid.toString()}>
+                Wallet address is required.
+              </FormFeedback>
+            </FormGroup>
+          </Col>
         </Row>
         <div>
           <FormGroup tag="fieldset">
@@ -185,7 +221,7 @@ const CustomerRegistration = () => {
         ) : null}
 
         <div>
-          <Button className="secondaryButton smallMarginTopBottom">
+          <Button className="secondaryButton smallMarginTopBottom" >
             Confirm Booking
           </Button>
         </div>

@@ -95501,7 +95501,6 @@ class HotelService {
     }
 
     async #getHotelsWithRoomSearch() {
-        console.log(0);
         const response = {};
         if (!this.#message.filters) {
             throw ("Invalid request.");
