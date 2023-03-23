@@ -10,6 +10,7 @@ import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
 import ConfirmBooking from "./pages/ConfirmBooking";
 import { useEffect, useState } from "react";
+import { Spinner } from 'reactstrap'
 
 function App() {
     const [isContractInitiated, setIsContractInitiated] = useState(false);
@@ -53,6 +54,20 @@ function App() {
                     <Route path="/search-hotel" element={<HotelSearchPage exact />} />
                     <Route path="/confirm-booking" element={<ConfirmBooking exact />} />
                 </Routes>
+            )}
+            {!isContractInitiated && (
+                <div className="spinnerWrapper">
+                    <Spinner
+                        color="primary"
+                        style={{
+                            height: "3rem",
+                            width: "3rem",
+                        }}
+                        type="grow"
+                    >
+                        Loading...
+                    </Spinner>
+                </div>
             )}
         </>
     );
