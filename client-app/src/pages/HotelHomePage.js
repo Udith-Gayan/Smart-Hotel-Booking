@@ -8,11 +8,12 @@ import FacilitiesReadOnly from "../components/HotelHomePage/FacilitiesReadOnly";
 import React, { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CreateRoomModal from "../components/HotelHomePage/CreateRoomModal";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap"
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap"
 import RoomDetails from "../components/HotelHomePage/RoomDetails";
 import HotelService from "../services-domain/hotel-service copy";
 import SharedStateService from "../services-domain/sharedState-service";
 import { toast } from 'react-hot-toast';
+import ContractService from "../services-common/contract-service";
 
 function HotelHomePage() {
 
@@ -20,8 +21,11 @@ function HotelHomePage() {
     const sharedInstance = SharedStateService.instance;
     const hotelService = HotelService.instance;
 
+    const [isDataLoading, setIsDataLoading] = useState(true);
+
     // Load hotel details
     async function getHotelDetails() {
+        setIsDataLoading(true);
         if (id && id > 0) {
             try {
                 const res = await hotelService.getMyHotel(id);
@@ -37,10 +41,14 @@ function HotelHomePage() {
                 setImages(res.Images);
                 setSelectedFacilityIds(res.Facilities);
 
+                setIsDataLoading(false);
+
             } catch (error) {
+                setIsDataLoading(false);
                 toast.error(`Error occured: ${error} `);
             }
         }
+        setIsDataLoading(false);
     }
 
     // Load room details
@@ -54,8 +62,12 @@ function HotelHomePage() {
 
     }
 
+    async function innnit() {
+        await ContractService.instance.init();
+    }
     // Init function 
     useEffect(() => {
+        innnit();
         getHotelDetails();
         getRooms();
     }, []);
@@ -175,113 +187,131 @@ function HotelHomePage() {
 
 
             <MainContainer>
-                <section>
-                    <div className={"row"}>
-                        <div className={"title_1"} style={{ width: "80%" }}>
-                            {hotelName}
-                        </div>
-
-                        <div className={"col"} style={{ paddingTop: "10px" }}>
-                            <StarRating ratings={3} reviews={726} />
-                        </div>
+                {isDataLoading ? (
+                    <div className="spinnerWrapper" >
+                        <Spinner
+                            color="primary"
+                            style={{
+                                height: '3rem',
+                                width: '3rem'
+                            }}
+                            type="grow"
+                        >
+                            Loading...
+                        </Spinner>
                     </div>
+                ) : (
+                    <>
+                        <section>
+                            <div className={"row"}>
+                                <div className={"title_1"} style={{ width: "80%" }}>
+                                    {hotelName}
+                                </div>
 
-                    <div className={"row left_div"}>
-                        <div style={{ width: "20px" }}>
-                            <FaMapMarkerAlt />
-                        </div>
-                        <div className={"subtext pt-2 col"}>
-                            {address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}
-                        </div>
-                    </div>
+                                <div className={"col"} style={{ paddingTop: "10px" }}>
+                                    <StarRating ratings={3} reviews={726} />
+                                </div>
+                            </div>
 
-                    <div className={"pt-4 pb-4 center_div"}>
-                        <button
-                            className={"navigation_button " + (activeTab === "info" ? "navigation_button_active" : "")}
-                            onClick={onClickInfoSectionButton}>Info
-                        </button>
-                        <button
-                            className={"navigation_button " + (activeTab === "facilities" ? "navigation_button_active" : "")}
-                            onClick={onClickFacilitiesSectionButton}>Facilities
-                        </button>
-                        <button
-                            className={"navigation_button " + (activeTab === "house_rules" ? "navigation_button_active" : "")}
-                            onClick={onClickHouseRulesSectionButton}>House rules
-                        </button>
-                        <button
-                            className={"navigation_button " + (activeTab === "room_layout" ? "navigation_button_active" : "")}
-                            onClick={onClickRoomLayoutSectionButton}>Room Layout
-                        </button>
+                            <div className={"row left_div"}>
+                                <div style={{ width: "20px" }}>
+                                    <FaMapMarkerAlt />
+                                </div>
+                                <div className={"subtext pt-2 col"}>
+                                    {address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}
+                                </div>
+                            </div>
 
-                    </div>
+                            <div className={"pt-4 pb-4 center_div"}>
+                                <button
+                                    className={"navigation_button " + (activeTab === "info" ? "navigation_button_active" : "")}
+                                    onClick={onClickInfoSectionButton}>Info
+                                </button>
+                                <button
+                                    className={"navigation_button " + (activeTab === "facilities" ? "navigation_button_active" : "")}
+                                    onClick={onClickFacilitiesSectionButton}>Facilities
+                                </button>
+                                <button
+                                    className={"navigation_button " + (activeTab === "house_rules" ? "navigation_button_active" : "")}
+                                    onClick={onClickHouseRulesSectionButton}>House rules
+                                </button>
+                                <button
+                                    className={"navigation_button " + (activeTab === "room_layout" ? "navigation_button_active" : "")}
+                                    onClick={onClickRoomLayoutSectionButton}>Room Layout
+                                </button>
 
-                    <HotelImages images={(images.slice(0, 6)).map(i => i.Url)} />
-                </section>
+                            </div>
 
-                <section ref={infoSection} id="info_section" className={"pt-2"}>
-                    <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify", padding: "0 10px" }}>
+                            <HotelImages images={(images.slice(0, 6)).map(i => i.Url)} />
+                        </section>
 
-                        {description}
-                    </div>
+                        <section ref={infoSection} id="info_section" className={"pt-2"}>
+                            <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify", padding: "0 10px" }}>
 
-                </section>
+                                {description}
+                            </div>
 
-                <FacilitiesReadOnly facilitiesSection={facilitiesSection} selectedFacilityIds={selectedFacilityIds} />
+                        </section>
 
-                <section id={"house_rules_section"} ref={houseRulesSection}>
-                    <div className="title_2 pt-2 pb-2">House Rules</div>
+                        <FacilitiesReadOnly facilitiesSection={facilitiesSection} selectedFacilityIds={selectedFacilityIds} />
 
-                    <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify" }}>
-                        You are liable for any damage howsoever caused (whether by deliberate, negligent, or reckless
-                        act)
-                        to the room(s), hotel's premises or property caused by you or any person in your party, whether
-                        or
-                        not staying at the hotel during your stay. Crest Wave Boutique Hotel reserves the right to
-                        retain
-                        your credit card and/or debit card details, or forfeit your security deposit of MYR50.00 as
-                        presented at registration and charge or debit the credit/debit card such amounts as it shall, at
-                        its
-                        sole discretion, deem necessary to compensate or make good the cost or expenses incurred or
-                        suffered
-                        by Crest Wave Boutique Hotel as a result of the aforesaid. Should this damage come to light
-                        after
-                        the guest has departed, we reserve the right, and you hereby authorize us, to charge your credit
-                        or
-                        debit card for any damage incurred to your room or the Hotel property during your stay,
-                        including
-                        and without limitation for all property damage, missing or damaged items, smoking fee, cleaning
-                        fee,
-                        guest compensation, etc. We will make every effort to rectify any damage internally prior to
-                        contracting specialist to make the repairs, and therefore will make every effort to keep any
-                        costs
-                        that the guest would incur to a minimum.
+                        <section id={"house_rules_section"} ref={houseRulesSection}>
+                            <div className="title_2 pt-2 pb-2">House Rules</div>
 
-                        <br />
-                        <br />
-                        Damage to rooms, fixtures, furnishing and equipment including the removal of electronic
-                        equipment,
-                        towels, artwork, etc. will be charged at 150% of full and new replacement value plus any
-                        shipping
-                        and handling charges. Any damage to hotel property, whether accidental or wilful, is the
-                        responsibility of the registered guest for each particular room. Any costs associated with
-                        repairs
-                        and/or replacement will be charged to the credit card of the registered guest. In extreme cases,
-                        criminal charges will be pursued.
-                    </div>
-                </section>
+                            <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify" }}>
+                                You are liable for any damage howsoever caused (whether by deliberate, negligent, or reckless
+                                act)
+                                to the room(s), hotel's premises or property caused by you or any person in your party, whether
+                                or
+                                not staying at the hotel during your stay. Crest Wave Boutique Hotel reserves the right to
+                                retain
+                                your credit card and/or debit card details, or forfeit your security deposit of MYR50.00 as
+                                presented at registration and charge or debit the credit/debit card such amounts as it shall, at
+                                its
+                                sole discretion, deem necessary to compensate or make good the cost or expenses incurred or
+                                suffered
+                                by Crest Wave Boutique Hotel as a result of the aforesaid. Should this damage come to light
+                                after
+                                the guest has departed, we reserve the right, and you hereby authorize us, to charge your credit
+                                or
+                                debit card for any damage incurred to your room or the Hotel property during your stay,
+                                including
+                                and without limitation for all property damage, missing or damaged items, smoking fee, cleaning
+                                fee,
+                                guest compensation, etc. We will make every effort to rectify any damage internally prior to
+                                contracting specialist to make the repairs, and therefore will make every effort to keep any
+                                costs
+                                that the guest would incur to a minimum.
 
-                <section id={"room_layout_section"} ref={roomLayoutSection}>
-                    <div className="title_2 pt-2 pb-2">Room Layout</div>
-                    <div className={"subtext"}>Details about your rooms.</div>
+                                <br />
+                                <br />
+                                Damage to rooms, fixtures, furnishing and equipment including the removal of electronic
+                                equipment,
+                                towels, artwork, etc. will be charged at 150% of full and new replacement value plus any
+                                shipping
+                                and handling charges. Any damage to hotel property, whether accidental or wilful, is the
+                                responsibility of the registered guest for each particular room. Any costs associated with
+                                repairs
+                                and/or replacement will be charged to the credit card of the registered guest. In extreme cases,
+                                criminal charges will be pursued.
+                            </div>
+                        </section>
 
-                    <button className={"create_room_button mt-5"} style={{ width: "200px" }}
-                        onClick={onOpenCreateRoomModal}>
-                        <FaPlusCircle size={26} /> <span>&nbsp;Add Room</span>
-                    </button>
+                        <section id={"room_layout_section"} ref={roomLayoutSection}>
+                            <div className="title_2 pt-2 pb-2">Room Layout</div>
+                            <div className={"subtext"}>Details about your rooms.</div>
 
-                    {rooms.length !== 0 && <RoomDetails rooms={rooms} onOpenDeleteRoomModal={onOpenDeleteRoomModal} />}
+                            <button className={"create_room_button mt-5"} style={{ width: "200px" }}
+                                onClick={onOpenCreateRoomModal}>
+                                <FaPlusCircle size={26} /> <span>&nbsp;Add Room</span>
+                            </button>
 
-                </section>
+                            {rooms.length !== 0 && <RoomDetails rooms={rooms} onOpenDeleteRoomModal={onOpenDeleteRoomModal} />}
+
+                        </section>
+                    </>
+                )}
+
 
 
             </MainContainer>

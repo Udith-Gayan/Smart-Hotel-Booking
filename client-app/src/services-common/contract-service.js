@@ -43,9 +43,9 @@ export default class ContractService {
                 // console.log(`Output (ledger:${r.ledgerSeqNo})>> ${outputLog}`);
                 const pId = o.promiseId;
                 if (o.error) {
-                    this.promiseMap.get(pId).rejecter(o.error);
+                    this.promiseMap.get(pId)?.rejecter(o.error);
                 } else {
-                    this.promiseMap.get(pId).resolver(o.success);
+                    this.promiseMap.get(pId)?.resolver(o.success);
                 }
 
                 this.promiseMap.delete(pId);

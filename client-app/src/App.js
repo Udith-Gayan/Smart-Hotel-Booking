@@ -11,22 +11,69 @@ import HotelSearchPage from "./pages/HotelSearchPage";
 import Reservations from "./pages/Reservations";
 import ConfirmBooking from "./pages/ConfirmBooking";
 import AvailabilityPage from "./pages/AvailabilityPage";
+import { useEffect, useState } from "react";
+import { Spinner } from 'reactstrap'
 
 function App() {
-    ContractService.instance.init();
+    const [isContractInitiated, setIsContractInitiated] = useState(false);
+
+
+    useEffect(() => {
+        ContractService.instance.init().then(res => {
+            setIsContractInitiated(true);
+        });
+
+        const handleBackButton = () => {
+            console.log("bACK IS CLALED")
+            // Do something when the back button is clicked
+            ContractService.instance.init().then(res => {
+                setIsContractInitiated(true);
+            });
+        };
+
+        window.addEventListener("popstate", handleBackButton);
+
+        return () => {
+            window.removeEventListener("popstate", handleBackButton);
+        };
+
+
+    }, []);
+
+
+
 
     return (
-        <Routes>
-            <Route path="/" element={<CustomerDashboard/>}/>
-            <Route path="/listProperty" element={<LandingPageForHotelOwner/>} exact/>
-            <Route path="/register-hotel" element={<RegisterHotel/>} exact/>
-            <Route path="/register-customer" element={<RegisterCustomer/>} exact/>
-            <Route path="/hotel/:id" element={<HotelHomePage/>} exact/>
-            <Route path="/reservations" element={<Reservations/>} exact/>
-            <Route path="/search-hotel" element={<HotelSearchPage exact/>}/>
-            <Route path="/confirm-booking" element={<ConfirmBooking/>}/>
-            <Route path="/availability" element={<AvailabilityPage/>}/>
-        </Routes>
+        <>
+            {isContractInitiated && (
+                <Routes>
+                    <Route path="/" element={<CustomerDashboard />} />
+                    <Route path="/list-property" element={<LandingPageForHotelOwner />} exact />
+                    <Route path="/register-hotel" element={<RegisterHotel />} exact />
+                    <Route path="/register-customer" element={<RegisterCustomer />} exact />
+                    <Route path="/hotel/:id" element={<HotelHomePage />} exact />
+                    <Route path="/reservations" element={<Reservations />} exact />
+                    <Route path="/search-hotel" element={<HotelSearchPage exact />} />
+                    <Route path="/confirm-booking" element={<ConfirmBooking exact />} />
+                    <Route path="/availability" element={<AvailabilityPage/>} exact />
+
+                </Routes>
+            )}
+            {!isContractInitiated && (
+                <div className="spinnerWrapper">
+                    <Spinner
+                        color="primary"
+                        style={{
+                            height: "3rem",
+                            width: "3rem",
+                        }}
+                        type="grow"
+                    >
+                        Loading...
+                    </Spinner>
+                </div>
+            )}
+        </>
     );
 }
 
