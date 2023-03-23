@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const registerCustomerinitialState = {
-    accountGeneratorVisibility: false,
+    generatedSecretVisibility: false,
     registerCustomerVisibility: false
 }
 
@@ -16,10 +16,10 @@ export const registerCustomerSlice = createSlice({
             state.registerCustomerVisibility = false
         },
         show: (state) => {
-            state.accountGeneratorVisibility = true
+            state.generatedSecretVisibility = true
         },
         hide: (state) => {
-            state.accountGeneratorVisibility = false
+            state.generatedSecretVisibility = false
         },
     },
 })
