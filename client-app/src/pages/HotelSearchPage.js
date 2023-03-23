@@ -1,29 +1,34 @@
 import MainContainer from "../layout/MainContainer";
-import {useNavigate, useLocation} from "react-router-dom";
-import hotelsData from "../data/hotels"
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
-import React, {useEffect, useState} from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Spinner } from "reactstrap";
+import React, { useEffect, useState } from "react";
 import SearchBar from "../components/HotelSearchPage/SearchBar";
 import Filters from "../components/HotelSearchPage/Filters";
 import facilitiesData from "../data/facilities"
 import roomFacilitiesData from "../data/room_facilities";
-import RoomFacilitiesSearch from "../components/HotelSearchPage/RoomFacilitiesSearch";
-import {bed_types} from "../constants/constants";
-import hotelData from "../data/hotels"
+import { bed_types } from "../constants/constants";
 import HotelList from "../components/HotelSearchPage/HotelList";
+import HotelService from "../services-domain/hotel-service copy";
 
 function HotelSearchPage(props) {
-    const history = useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
+    const hotelService = HotelService.instance;
+
+    const [isDataLoading, setIsDataLoading] = useState(false);
+
 
     const queryParams = new URLSearchParams(location.search);
-    const city = queryParams.get("city");
-    const checkInDate = queryParams.get("check-in-date");
-    const checkOutDate = queryParams.get("check-out-date");
-    const numOfPeople = queryParams.get("people");
+    const [city, setCity] = useState(queryParams.get("city"));
+    let checkInDate = queryParams.get("fromDate");
+    let checkOutDate = queryParams.get("toDate");
+    let numOfPeople = queryParams.get("peopleCount");
 
     const [bedRooms, setBedRooms] = useState(1);
     const [searchText, setSearchText] = useState("");
+    const [searchCity, setSearchCity] = useState("");
+
+
 
     const [budget, setBudget] = useState("");
     const [distance, setDistance] = useState("");
@@ -34,6 +39,50 @@ function HotelSearchPage(props) {
     const [bedTypes, setBedTypes] = useState([]);
 
     const isFilerDisable = true;
+
+    const [hotelResultList, setHotelResultList] = useState(null);
+    const [hotelResultListCopy, setHotelResultListCopy] = useState(null);
+
+    async function getRoomHotelList(city, checkInDate, checkOutDate, numOfPeople) {
+        setIsDataLoading(true);
+        if (!(city && checkInDate && checkOutDate && numOfPeople)) {
+            setIsDataLoading(false);
+            return;
+        }
+
+        const obj = {
+            City: city,
+            CheckInDate: checkInDate,
+            CheckOutDate: checkOutDate,
+            PeopleCount: numOfPeople
+        }
+
+        try {
+            const res = await hotelService.getRoomHotelList(obj);
+            if (res && res.length > 0) {
+                const newHotellist = res.map(hh => {
+                    return {
+                        Id: hh.Id,
+                        Name: hh.Name,
+                        City: hh.City,
+                        roomDetails: hh.roomDetails,
+                        imageUrl: hh.ImageUrl,
+                        noOfDays: hh.noOfDays
+                    };
+                });
+
+                setCity(city);
+                setHotelResultList(newHotellist);
+                setHotelResultListCopy(newHotellist);
+
+                setIsDataLoading(false)
+            }
+        } catch (error) {
+            setIsDataLoading(false)
+            console.log(error);
+            return;
+        }
+    }
 
     useEffect(() => {
         let convenienceWithAvailability = facilitiesData.map(facility => {
@@ -67,9 +116,11 @@ function HotelSearchPage(props) {
         setConveniences(convenienceWithAvailability);
         setRoomFacilities(roomFacilityAvailability);
         setBedTypes(bedTypeAvailability);
+        setSearchCity(city);
+        getRoomHotelList(city, checkInDate, checkOutDate, numOfPeople);
     }, []);
 
-    const onClickSearch = () => {
+    const onClickSearch = async () => {
         let selected_conveniences = conveniences.filter(convenience => convenience.status);
         let selected_bed_types = bedTypes.filter(bed_type => bed_type.status);
         let selected_room_facilities = roomFacilities.filter(facility => facility.status);
@@ -85,6 +136,18 @@ function HotelSearchPage(props) {
                 "Room Facilities": selected_room_facilities,
             }
         );
+
+        if (searchCity !== city) {
+            setCity(searchCity);
+            await getRoomHotelList(searchCity, checkInDate, checkOutDate, numOfPeople);
+        }
+
+        if (searchText && searchText.length > 0) {
+            setHotelResultListCopy(hotelResultList);
+            setHotelResultListCopy(hotelResultListCopy.filter(hh => hh.Name.includes(searchText)));
+        }
+
+
     }
 
     const resetFilters = () => {
@@ -112,6 +175,7 @@ function HotelSearchPage(props) {
         setBedTypes(bed_types);
         setRoomFacilities(room_facilities);
     }
+
     const onChangeConvenience = (Id) => {
         let temp_data = [...conveniences];
         let index = temp_data.findIndex(cur_facility => Id === cur_facility.Id)
@@ -137,29 +201,60 @@ function HotelSearchPage(props) {
         setRoomFacilities(temp_data);
     }
 
+    function onViewAvailableClicked(hotelId) {
+        navigate(`/customer-hotel/${hotelId}`);
+    }
+
+    function onCitySearchChanged(newCity) {
+        setSearchCity(newCity);
+    }
+
+    const onClearSearchText = () => {
+        setSearchText("");
+        console.log(hotelResultList)
+        setHotelResultListCopy(hotelResultList);
+    }
+
 
     return (
         <MainContainer>
 
-            <SearchBar city={city} checkInDate={checkInDate} checkOutDate={checkOutDate} numOfPeople={numOfPeople}
-                       bedRooms={bedRooms} setBedRooms={setBedRooms}
-                       searchText={searchText} setSearchText={setSearchText}
-                       onClickSearch={onClickSearch}/>
+            <SearchBar searchCity={searchCity} city={city} checkInDate={checkInDate} checkOutDate={checkOutDate} numOfPeople={numOfPeople} hotelsData={hotelResultListCopy}
+                bedRooms={bedRooms} setBedRooms={setBedRooms} onCitySearchChanged={onCitySearchChanged}
+                searchText={searchText} setSearchText={setSearchText} onClearSearchText={onClearSearchText}
+                onClickSearch={onClickSearch} />
 
-            <div className={"row_fit"} style={{width: "100%"}}>
-                <div style={{paddingRight: "30px", paddingBottom: "20px"}}>
+            <div className={"row_fit"} style={{ width: "100%" }}>
+                <div style={{ paddingRight: "30px", paddingBottom: "20px" }}>
                     <Filters city={city} budget={budget} setBudget={setBudget}
-                             distance={distance} setDistance={setDistance}
-                             conveniences={conveniences} onChangeConvenience={onChangeConvenience}
-                             cancellationPolicy={cancellationPolicy} setCancellationPolicy={setCancellationPolicy}
-                             bedTypes={bedTypes} onChangeBedType={onChangeBedType}
-                             roomFacilities={roomFacilities} onChangeRoomFacility={onChangeRoomFacility}
-                             resetFilters={resetFilters} isDisable={isFilerDisable}
+                        distance={distance} setDistance={setDistance}
+                        conveniences={conveniences} onChangeConvenience={onChangeConvenience}
+                        cancellationPolicy={cancellationPolicy} setCancellationPolicy={setCancellationPolicy}
+                        bedTypes={bedTypes} onChangeBedType={onChangeBedType}
+                        roomFacilities={roomFacilities} onChangeRoomFacility={onChangeRoomFacility}
+                        resetFilters={resetFilters} isDisable={isFilerDisable}
                     />
                 </div>
-                <div className={"col"}>
-                    <HotelList data={hotelData} numOfPeople={numOfPeople}/>
-                </div>
+                {isDataLoading ? (
+                    <div className="spinnerWrapper" >
+                        <Spinner
+                            color="primary"
+                            style={{
+                                height: '3rem',
+                                width: '3rem'
+                            }}
+                            type="grow"
+                        >
+                            Loading...
+                        </Spinner>
+                    </div>
+                ) : (
+                    <div className={"col"}>
+                        {(hotelResultListCopy && hotelResultListCopy.length > 0) ? <HotelList data={hotelResultListCopy} numOfPeople={numOfPeople} onViewAvailableClicked={onViewAvailableClicked} /> : ''}
+                        {/* <HotelList data={hotelResultList} numOfPeople={numOfPeople}/> */}
+                    </div>
+                )}
+
             </div>
 
         </MainContainer>

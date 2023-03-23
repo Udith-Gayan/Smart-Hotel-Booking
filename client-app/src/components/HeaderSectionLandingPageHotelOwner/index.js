@@ -25,7 +25,8 @@ const HeaderSectionLandingPageHotelOwner = () => {
     navigate("/register-hotel");
   };
 
-  const submit = async () => {
+  const submit = async (e) => { 
+    e.preventDefault();
     setDisableSubmitBtn(true);
     if (!xrplService.isValidSecret(secret)) {
       //setErrorMessage("Invalid secret.");
@@ -89,7 +90,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
               <p style={{ color: "red" }}>{errorMessage}</p>
               <Button
                 className="secondaryButton smallMarginTopBottom"
-                onClick={() => submit()}
+                onClick={(e) => submit(e)}
                 disabled={disableSubmitBtn}
               >
                 Let's Go

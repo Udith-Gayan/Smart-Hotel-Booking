@@ -2,7 +2,7 @@ import React from "react";
 import {FaMapMarkerAlt} from "react-icons/fa";
 import StarRating from "../HotelHomePage/StarRating";
 
-function Hotel({hotel, numOfPeople}) {
+function SearchHotelResult({hotel, numOfPeople, onViewAvailableClicked}) {
     const styles = {
         image: {
             width: "284px",
@@ -17,7 +17,7 @@ function Hotel({hotel, numOfPeople}) {
             <div className={"row_fit p-3"}>
                 <img
                     key={hotel.Id}
-                    src={hotel.URL}
+                    src={hotel.imageUrl}
                     alt={"Hotel image"}
                     style={styles.image}
                 />
@@ -34,22 +34,22 @@ function Hotel({hotel, numOfPeople}) {
                         </div>
                     </div>
 
-                    <div className={"pt-3"}>
+                    {/* <div className={"pt-3"}>
                         <StarRating ratings={3} reviews={726}/>
-                    </div>
+                    </div> */}
 
                     <div className={"pt-3 subtext row_right"} style={{}}>
-                        1 night, {numOfPeople} people
+                        {hotel.noOfDays - 1} night, {numOfPeople} Rooms
                     </div>
                     <div className={"pt-1 title_3 row_right"} style={{fontSize: "25px"}}>
-                        $105
+                        $ {(hotel.roomDetails[0]).CostPerNight * hotel.noOfDays}
                     </div>
                     <div className={"pt-1 subtext row_right"}>
                         include taxes and charges
                     </div>
 
                     <div className={"pt-3 row_right"} style={{}}>
-                        <button className={"view_availability_button"} style={{width: "200px"}}>
+                        <button className={"view_availability_button"} style={{width: "200px"}} onClick={() => onViewAvailableClicked(hotel.Id)} >
                             View availability
                         </button>
                     </div>
@@ -61,4 +61,4 @@ function Hotel({hotel, numOfPeople}) {
     );
 }
 
-export default Hotel
+export default SearchHotelResult;

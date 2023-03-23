@@ -16,6 +16,20 @@ class DateFunctions {
 
         return `${this.monthNames[monthIndex]} ${day}`;
     }
+
+    static getDaysCountInBetween(fromDate_string, toDate_string) {
+        const fromDate = new Date(fromDate_string);
+        const toDate = new Date(toDate_string);
+
+        // Calculate the difference in milliseconds
+        const diffInMs = Math.abs(toDate.getTime() - fromDate.getTime());
+
+        const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)) + 1;
+
+        return diffInDays;
+    }
+
+    
 }
 
 export default DateFunctions
