@@ -59,22 +59,38 @@
     }
 
     .calendar__head {
-      background:  $purple-color;
+      background: $purple-color;
     }
   }
 }
 
 div.best_offers {
-  
   padding-top: 50px;
   padding-left: 60px;
   padding-right: 60px;
   padding-bottom: 60px;
-  text-align: center;
+  text-align: left;
 
   .offer_items_flexbox {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+  }
+  h1 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 58px;
+
+    color: #000000;
+  }
+  .titleParagraph {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #000000;
   }
 }
 

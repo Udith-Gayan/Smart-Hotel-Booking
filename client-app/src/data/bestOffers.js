@@ -1,0 +1,43 @@
+const bestOffers = [
+  {
+    name: "Jetwing Blue",
+    location: "Negombo,Gampaha",
+    fromDate: "2023-01-17",
+    toDate: "2023-01-18",
+    nights: 1,
+    adults: 3,
+    roomType: "Family",
+    image: "/Assets/Images/dashboard/explore/Sigiriya.png",
+    rating: 3,
+    originalPrice: 145,
+    discountedPrice: 105,
+  },
+  {
+    name: "Jetwing Blue",
+    location: "Negombo,Gampaha",
+    fromDate: "2023-01-17",
+    toDate: "2023-01-18",
+    nights: 1,
+    adults: 3,
+    roomType: "Family",
+    image: "/Assets/Images/dashboard/explore/Sigiriya.png",
+    rating: 3,
+    originalPrice: 145,
+    discountedPrice: 105,
+  },
+  {
+    name: "Jetwing Blue",
+    location: "Negombo,Gampaha",
+    fromDate: "2023-01-17",
+    toDate: "2023-01-18",
+    nights: 1,
+    adults: 3,
+    roomType: "Family",
+    image: "/Assets/Images/dashboard/explore/Sigiriya.png",
+    rating: 3,
+    originalPrice: 145,
+    discountedPrice: 105,
+  },
+];
+
+export default bestOffers;

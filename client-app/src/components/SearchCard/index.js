@@ -22,7 +22,7 @@ function SearchCard(props) {
           </div>
 
           <div className={`${style.searchDetails} col-8`}>
-            <CardTitle tag="h5" className={`${style.title} `}>
+            <CardTitle tag="h5" className={`${style.titles} `}>
               {props.search.location}
             </CardTitle>
 

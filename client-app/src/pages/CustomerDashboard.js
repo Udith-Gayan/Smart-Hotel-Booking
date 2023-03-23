@@ -22,14 +22,11 @@ import QuickPlanner from "../components/QuickPlanner";
 import searches from "../data/searches";
 import SearchCard from "../components/SearchCard";
 import SearchMenu from "../components/SearchMenu";
+import bestOffers from "../data/bestOffers";
 
 function CustomerDashboard() {
   const navigate = useNavigate();
-  const bestOffers = [
-    "Jetwing blue",
-    "Koggala Miracles",
-    " Heritance Rambukkana",
-  ];
+
   const [open, setOpen] = useState(false);
 
   const [dateRange, setDateRange] = useState(null);
@@ -137,8 +134,8 @@ function CustomerDashboard() {
             <h1 style={{ margin: 0 }}>Best Offers</h1>
             <p>Promotions, deals and special offers for you</p>
             <div className="offer_items_flexbox">
-              {bestOffers.map((offer, index) => (
-                <OfferCard key={index} />
+              {bestOffers.slice(0, 3).map((offer, index) => (
+                <OfferCard key={index} offer={offer} />
               ))}
             </div>
           </div>
