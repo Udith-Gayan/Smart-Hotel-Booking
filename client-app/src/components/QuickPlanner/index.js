@@ -8,7 +8,6 @@ import { ReactComponent as City } from "../../Assets/Icons/QuickPlanner/city.svg
 import { ReactComponent as Romance } from "../../Assets/Icons/QuickPlanner/romance.svg";
 
 import {} from "reactstrap";
-import ExploreCard from "../ExploreCard";
 import plannerProperties from "../../data/plannerProperties";
 import PlannerCard from "../PlannerCard";
 

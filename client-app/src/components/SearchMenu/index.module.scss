@@ -1,0 +1,42 @@
+@import "../../index.scss";
+.searchButtons{ 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+      margin-bottom: 5px;
+}
+.searchButtonGroup{
+    width:968px ;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+.plannerbutton{
+    margin-right: 10px;
+    background-color: $purple-color!important;
+    width: max-content;
+    font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+
+    .svg_img{
+
+    }
+}
+
+.buttonNotSelected{
+    margin-right: 10px;
+    background-color: white!important;
+    border-color:  $purple-color!important;
+    color:  $purple-color!important;
+    font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+
+    width: max-content;
+    .svg_img{
+        fill: $purple-color;
+        stroke: $purple-color;
+    }
+    
+}

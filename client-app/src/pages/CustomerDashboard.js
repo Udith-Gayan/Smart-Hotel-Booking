@@ -21,6 +21,7 @@ import ExploreCard from "../components/ExploreCard";
 import QuickPlanner from "../components/QuickPlanner";
 import searches from "../data/searches";
 import SearchCard from "../components/SearchCard";
+import SearchMenu from "../components/SearchMenu";
 
 function CustomerDashboard() {
   const navigate = useNavigate();
@@ -73,7 +74,9 @@ function CustomerDashboard() {
       </div>
       <Container>
         <div className="search_section">
-          <div className="tab-area"></div>
+          <div className="tab-area">
+            <SearchMenu />
+          </div>
           <div className="search-area">
             <Row className="search-wrapper-row">
               <Col style={{ flex: "1 0" }}>
