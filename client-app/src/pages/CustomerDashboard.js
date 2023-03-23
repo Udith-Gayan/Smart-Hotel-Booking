@@ -3,11 +3,11 @@ import {
   Col,
   Container,
   Row,
+  InputGroupAddon,
   InputGroup,
   Input,
   Button,
   Label,
-  Card,
 } from "reactstrap";
 import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from "@y0c/react-datepicker";
@@ -19,7 +19,8 @@ import properties from "../data/properties";
 import TopHotelCard from "../components/TopHotelCard";
 import Ellipse from "../Assets/Icons/ellipse.svg";
 import ExploreCard from "../components/ExploreCard";
-// import 'moment/locale/ko';
+import { IoLocationOutline } from "react-icons/io5";
+import QuickPlanner from "../components/QuickPlanner";
 
 function CustomerDashboard() {
   const navigate = useNavigate();
@@ -152,7 +153,7 @@ function CustomerDashboard() {
           </div>
         </section>
         <section className="explore">
-          <div className="row">
+          <div className="row ">
             <div className="col-3 exploreTitle">
               <div className="row-9 title">
                 Explore
@@ -169,7 +170,7 @@ function CustomerDashboard() {
             <div className="col-9 exploreCards">
               <div className="row ">
                 <div className="col-1 ellipse">
-                  <img src={Ellipse} />
+                  <img src={Ellipse} alt="" />
                 </div>
                 <div className="col-10">
                   <div className="row">
@@ -181,10 +182,26 @@ function CustomerDashboard() {
                   </div>
                 </div>
                 <div className="col-1 ellipse">
-                  <img src={Ellipse} />
+                  <img src={Ellipse} alt="" />
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+        <section>
+          <div className="planner">
+            <h1 className="headline">Easy & Quick Planner</h1>
+            <div className="row">
+              <div className="col-9"></div>
+              <div className="col-3 searchDestination">
+                <Input
+                  placeholder="Search your destination"
+                  className="input"
+                ></Input>
+              </div>
+            </div>
+
+            <QuickPlanner className="quickPlanner" />
           </div>
         </section>
       </Container>
