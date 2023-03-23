@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import {
-  Col,
-  Container,
-  Row,
-  InputGroup,
-  Input,
-  Button,
-  Label,
+    Col,
+    Container,
+    Row,
+    InputGroup,
+    Input,
+    Button,
+    Label,
 } from "reactstrap";
 import "./../styles/customer_dashboard_styles.scss";
 import { RangeDatePicker } from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
 import OfferCard from "../components/OfferCard/OfferCard";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 // import 'moment/locale/ko';
 
 function CustomerDashboard() {
@@ -35,19 +36,22 @@ function CustomerDashboard() {
     };
 
     function onSearchSubmit() {
-        if(!city || city.length < 3) {
-            setErrorMessge("Requires a valid city.");
+        if (!city || city.length < 3) {
+            toast.error("Requires a valid city.");
+            //setErrorMessge("Requires a valid city.");
             return;
         }
 
-        if( !dateRange || !dateRange[0] || !dateRange[1]) {
+        if (!dateRange || !dateRange[0] || !dateRange[1]) {
             console.log("Invalid date range.")
-            setErrorMessge("Invalid date range.");
+            toast.error("Invalid date range.");
+            //setErrorMessge("Invalid date range.");
             return;
         }
 
-        if(peopleCount < 1) {
-            setErrorMessge("Invalid people count.");
+        if (peopleCount < 1) {
+            toast.error("Invalid people count.");
+            //setErrorMessge("Invalid people count.");
             return;
         }
 
@@ -94,7 +98,7 @@ function CustomerDashboard() {
                                 <Button className="secondaryButton overrideSearchButton" onClick={onSearchSubmit}>
                                     Search your stay
                                 </Button>
-                                { errorMessage ? <p style={{ margin: '0px', marginBottom: '-23px', color: 'red'}}>{errorMessage}</p> : ''}
+                                {errorMessage ? <p style={{ margin: '0px', marginBottom: '-23px', color: 'red' }}>{errorMessage}</p> : ''}
                             </Col>
                         </Row>
                     </div>

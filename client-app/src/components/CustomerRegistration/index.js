@@ -134,7 +134,7 @@ const CustomerRegistration = () => {
                 invalid={phoneNoInvalid}
               />
               <FormFeedback invalid={phoneNoInvalid.toString()}>
-                Phone No should be a 10 digit number
+                Phone Number should be a 10 digit number
               </FormFeedback>
             </FormGroup>
           </Col>
