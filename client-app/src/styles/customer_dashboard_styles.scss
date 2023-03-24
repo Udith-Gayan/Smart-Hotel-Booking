@@ -1,8 +1,10 @@
 @import "../index.scss";
 .main-image-div {
-  background: url("./../../public/Assets/Images/dashboard/beach.webp");
+  background: url("./../../public/Assets/Images/dashboard/Sigiriya.webp");
   height: 575px;
   background-size: cover;
+  background-position: center -100px;
+
 
   .main-txt {
     padding-top: 100px;
@@ -25,7 +27,7 @@
   z-index: 2;
 
   .search-area {
-    background-color: #ececf2;
+    background-color: $light-purple-color;
     height: 140px;
     padding: 30px;
     display: flex;
