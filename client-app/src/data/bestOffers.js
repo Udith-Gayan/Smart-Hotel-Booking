@@ -1,0 +1,43 @@
+const bestOffers = [
+  {
+    name: "The Galle Face Hotel",
+    location: "Colombo",
+    fromDate: "2023-02-01",
+    toDate: "2023-02-03",
+    nights: 2,
+    adults: 1,
+    roomType: "Single",
+    image: "/Assets/Images/dashboard/BestOffers/GalleFace.webp",
+    rating: 4.5,
+    originalPrice: 125,
+    discountedPrice: 100,
+  },
+  {
+    name: "Jetwing Blue",
+    location: "Negombo, Gampaha",
+    fromDate: "2023-01-17",
+    toDate: "2023-01-18",
+    nights: 1,
+    adults: 3,
+    roomType: "Family",
+    image: "/Assets/Images/dashboard/BestOffers/JetwingBlue.webp",
+    rating: 3,
+    originalPrice: 145,
+    discountedPrice: 105,
+  },
+  {
+    name: "Heritance Kandalama",
+    location: "Dambulla",
+    fromDate: "2023-03-10",
+    toDate: "2023-03-12",
+    nights: 2,
+    adults: 2,
+    roomType: "Double",
+    image: "/Assets/Images/dashboard/BestOffers/Kandalama.webp",
+    rating: 4,
+    originalPrice: 150,
+    discountedPrice: 135,
+  },
+];
+
+export default bestOffers;

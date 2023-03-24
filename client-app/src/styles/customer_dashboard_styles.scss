@@ -1,7 +1,10 @@
+@import "../index.scss";
 .main-image-div {
-  background: url("./../../public/Assets/Images/dashboard/beach.jpg");
+  background: url("./../../public/Assets/Images/dashboard/Sigiriya.webp");
   height: 575px;
   background-size: cover;
+  background-position: center -100px;
+
 
   .main-txt {
     padding-top: 100px;
@@ -24,7 +27,7 @@
   z-index: 2;
 
   .search-area {
-    background-color: #ececf2;
+    background-color: $light-purple-color;
     height: 140px;
     padding: 30px;
     display: flex;
@@ -58,22 +61,38 @@
     }
 
     .calendar__head {
-      background: #2c2c76;
+      background: $purple-color;
     }
   }
 }
 
 div.best_offers {
-  background-color: aliceblue;
   padding-top: 50px;
   padding-left: 60px;
   padding-right: 60px;
   padding-bottom: 60px;
-  text-align: center;
+  text-align: left;
 
   .offer_items_flexbox {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+  }
+  h1 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 58px;
+
+    color: #000000;
+  }
+  .titleParagraph {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #000000;
   }
 }
 
@@ -84,4 +103,121 @@ div.best_offers {
 
 .search-wrapper-row {
   height: 20px;
+}
+
+div.top_rated_hotels {
+  clear: inherit;
+  padding-top: 50px;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 60px;
+  text-align: left;
+  width: 100%;
+
+  .headline {
+    padding-bottom: 30px;
+  }
+  .hotel_items_flexbox {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .hotel_card {
+    margin: 20px;
+    flex: 1 0 21%;
+  }
+}
+
+.explore {
+  height: 414px;
+  background-color: #e6e6fa;
+  .ellipse {
+    margin-top: 152px;
+  }
+}
+
+.exploreTitle {
+  .title {
+    padding-top: 94px;
+    padding-left: 48px;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 58px;
+  }
+  .exploreBtn {
+    margin-top: 92px;
+    margin-left: 48px;
+  }
+}
+.exploreCards {
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center; /* centers vertically */
+  .explorecd {
+  }
+}
+
+div.planner {
+  clear: inherit;
+  padding-top: 50px;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 60px;
+  text-align: left;
+  width: 100%;
+}
+
+div.searchDestination {
+  .input {
+    display: flex;
+    margin-right: 0;
+    width: 258px;
+  }
+}
+
+div.quickPlanner {
+}
+
+.connect {
+  height: 364px;
+  background: url("../Assets/Images/ariel-beach.webp");
+
+  background-size: cover;
+}
+
+.wrapper {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.connectTitle {
+  padding-left: 42px;
+  padding-top: 40px;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 50px;
+  color: white;
+}
+
+.connectDesc {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: white;
+  padding-left: 42px;
+  padding-top: 23px;
+}
+
+.connectButton {
+  padding-left: 42px;
+  padding-top: 23px;
+  .connectButtonInside {
+    background-color: white;
+    color: black;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+  }
 }
