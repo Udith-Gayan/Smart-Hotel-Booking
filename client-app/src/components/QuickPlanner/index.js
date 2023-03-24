@@ -103,7 +103,7 @@ function QuickPlanner(props) {
         {selectedButton === "historical" && (
           <div className="row">
             {plannerProperties[1].slice(0, 4).map((property, index) => (
-              <div className={`col-md-3 ${style.explorecd}`}>
+              <div className={`col-md-3 ${style.explorecd}`} key={index}>
                 <PlannerCard property={property} />
               </div>
             ))}

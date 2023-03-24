@@ -183,7 +183,7 @@ function CustomerDashboard() {
                   <div className="row">
                     {properties.slice(0, 3).map((property, index) => (
                       <div className="col-md-4 explorecd">
-                        <ExploreCard property={property} />
+                        <ExploreCard property={property} key={index} />
                       </div>
                     ))}
                   </div>
