@@ -12,17 +12,14 @@ function ImageUploader() {
 
     // Handles input change event and updates state
     function handleChange(event) {
-        console.log(event.target.files);
         setFile(event.target.files);
     }
 
     const onClickUpload = () => {
         setStatus("Uploading");
         FirebaseService.uploadFiles("1", file).then((url) => {
-            console.log(url);
             setStatus("Upload success");
         }).catch(err => {
-            console.log(err);
             setStatus("Upload failed");
         })
     }

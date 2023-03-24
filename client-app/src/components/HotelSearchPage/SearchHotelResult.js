@@ -29,7 +29,7 @@ function SearchHotelResult({hotel, numOfPeople, onViewAvailableClicked}) {
                         <div style={{width: "20px"}}>
                             <FaMapMarkerAlt color={"#908F8F"}/>
                         </div>
-                        <div className={"subtext col"} style={{paddingTop: "9px"}}>
+                        <div className={"subtext col"} style={{paddingTop: "4px"}}>
                             {hotel.City}
                         </div>
                     </div>
@@ -42,7 +42,7 @@ function SearchHotelResult({hotel, numOfPeople, onViewAvailableClicked}) {
                         {hotel.noOfDays - 1} night, {numOfPeople} Rooms
                     </div>
                     <div className={"pt-1 title_3 row_right"} style={{fontSize: "25px"}}>
-                        $ {(hotel.roomDetails[0]).CostPerNight * hotel.noOfDays}
+                        $ {(hotel.roomDetails[0]).CostPerNight * hotel.noOfDays * numOfPeople}
                     </div>
                     <div className={"pt-1 subtext row_right"}>
                         include taxes and charges

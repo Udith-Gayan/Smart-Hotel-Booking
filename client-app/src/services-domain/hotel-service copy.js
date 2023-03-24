@@ -1,6 +1,7 @@
 import ContractService from "../services-common/contract-service";
 import XrplService from "../services-common/xrpl-service";
 import SharedStateService from "./sharedState-service";
+import {nativeTouchData} from "react-dom/test-utils";
 
 
 const constants = require('./../constants');
@@ -196,6 +197,29 @@ export default class HotelService {
     return result;
   }
 
+  async getSingleHotelWithRooms(hotelId, fromDateStr, toDateStr, roomCount) {
+    const submitObject = {
+      type: constants.RequestTypes.HOTEL,
+      subType: constants.RequestSubTypes.GET_SINGLE_HOTEL_WITH_ROOMS,
+      filters: {
+        HotelId: hotelId,
+        CheckInDate: fromDateStr,
+        CheckOutDate: toDateStr,
+        RoomCount: roomCount
+      }
+    };
+
+    let result;
+    try {
+      result = await this.contractService.submitReadRequest(submitObject);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+    return result.searchResult;
+
+  }
+
   /**
    * 
    * @param {number} roomId |  roomId
@@ -258,7 +282,6 @@ export default class HotelService {
   }
 
   async makeReservation(data) {
-    let response;
 
     const submitData =  {
       CustomerId: data.CustomerId,
@@ -269,8 +292,8 @@ export default class HotelService {
     }
     if(data.payNow){
       const res = await this.#xrplService.makePayment(data.secret, data.totalFee.toString(), contractWalletAddress);
-      if(res.code == "tesSUCCESS") {
-        submitData.TransactionId = res.id;
+      if(res.meta.TransactionResult == "tesSUCCESS") {
+        submitData.TransactionId = res.hash;
       }
     }
 
@@ -279,6 +302,8 @@ export default class HotelService {
       subType: constants.RequestSubTypes.CREATE_RESERVATION,
       data: submitData
     }
+
+    console.log(submitObj)
 
     let result;
     try {

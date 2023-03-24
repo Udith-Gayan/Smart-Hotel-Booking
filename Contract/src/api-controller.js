@@ -1,5 +1,6 @@
 import { RoomService } from "./services.domain/RoomService";
 import { CustomerService } from "./services.domain/CustomerService";
+import {ReservationService} from "./services.domain/ReservationService";
 
 const { SqliteDatabase } = require("./services.base/sqlite-handler")
 // const { TransactionService } = require('./transaction-service');

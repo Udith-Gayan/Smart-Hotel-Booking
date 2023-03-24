@@ -66,7 +66,7 @@ function HotelSearchPage(props) {
                     return {
                         Id: hh.Id,
                         Name: hh.Name,
-                        City: hh.City,
+                        City: hh.city,
                         roomDetails: hh.roomDetails,
                         imageUrl: hh.ImageUrl,
                         noOfDays: hh.noOfDays
@@ -204,7 +204,7 @@ function HotelSearchPage(props) {
     }
 
     function onViewAvailableClicked(hotelId) {
-        navigate(`/customer-hotel/${hotelId}`);
+        navigate(`/availability/${hotelId}?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&rooms=${numOfPeople}`);
     }
 
     function onCitySearchChanged(newCity) {

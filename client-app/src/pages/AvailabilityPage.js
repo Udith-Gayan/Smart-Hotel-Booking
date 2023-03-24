@@ -2,27 +2,27 @@ import MainContainer from "../layout/MainContainer";
 import "../components/HotelHomePage/StarRating"
 import StarRating from "../components/HotelHomePage/StarRating";
 import {FaMapMarkerAlt} from "react-icons/fa";
-import {FaPlusCircle} from "react-icons/fa";
 import HotelImages from "../components/HotelHomePage/HotelImages";
 import FacilitiesReadOnly from "../components/HotelHomePage/FacilitiesReadOnly";
 import React, {useRef, useState, useEffect} from "react";
 import {createSearchParams, useLocation, useNavigate, useParams} from "react-router-dom";
-import CreateRoomModal from "../components/HotelHomePage/CreateRoomModal";
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap"
-import RoomDetails from "../components/HotelHomePage/RoomDetails";
-import HotelService from "../services-domain/hotel-service copy";
-import SharedStateService from "../services-domain/sharedState-service";
-import {toast} from 'react-hot-toast';
 import AvailabilitySearchBar from "../components/Availability/AvailabilitySearchBar";
 import AvailabilityRooms from "../components/AvailabiityRooms/AvailabilityRooms";
 import DateFunctions from "../helpers/DateFunctions";
+import HotelService from "../services-domain/hotel-service copy";
+import {toast} from "react-hot-toast";
 
 //http://localhost:3000/availability/1?fromDate=2023-03-17&toDate=2023-03-20
 function AvailabilityPage() {
+    const hotelService = HotelService.instance;
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const {id} = useParams();
+    let checkInDate = queryParams.get("checkInDate");
+    let checkOutDate = queryParams.get("checkOutDate");
+    let roomCount = Number(queryParams.get("rooms"));
+
 
     const [images, setImages] = useState([
         {Url: "https://firebasestorage.googleapis.com/v0/b/hotel-management-system-134e8.appspot.com/o/hotel_images%2FHotel%20Kingsberry%2FHotel%20Kingsberry_6dcdd295-12cf-4e01-b4d8-59ab28175e04.png?alt=media&token=0ea7538d-4921-41d9-bb17-e89f6758d465"},
@@ -39,12 +39,53 @@ function AvailabilityPage() {
     const [description, setDescription] = useState();
     const [selectedFacilityIds, setSelectedFacilityIds] = useState([]);
 
+    const [roomData, setRoomData] = useState([]);
+
     const [checkInCheckOutDates, setCheckInCheckOutDates] = useState({
-        checkIn: queryParams.get("fromDate"),
-        checkOut: queryParams.get("toDate")
+        checkIn: checkInDate,
+        checkOut: checkOutDate
     });
 
     const [selectedRooms, setSelectedRooms] = useState({});
+
+    const [reserveBtnDisabled,setReserveBtnDisabled] = useState(true);
+
+    useEffect(() => {
+        getMyHotelRoomDetails();
+    }, [])
+
+    async function getMyHotelRoomDetails() {
+        try {
+             const resObj = await hotelService.getSingleHotelWithRooms(id, checkInDate, checkOutDate, roomCount);
+             if(resObj) {
+                 // set images
+                 if(resObj.ImageUrls && resObj.ImageUrls.length > 0) {
+                     setImages(resObj.ImageUrls.map(im => ({Url: im.Url})));
+                 }
+                 setHotelName(resObj.Name);
+                 setAddress1(resObj.AddressLine1 ?? '');
+                 setAddress2(resObj.AddressLine2 ?? '');
+                 setCity(resObj.City);
+                 setDescription(resObj.Description);
+                 setSelectedFacilityIds(resObj.facilityIds?.map(f => f.HFacilityId));
+
+                 setRoomData(resObj.RoomDetails.map(rm => { return {
+                     Id: Number(rm.Id),
+                     RoomName: rm.Name,
+                     Description: rm.Description,
+                     NumOfRooms: rm.avaialableRoomCount,
+                     PricePerNight: rm.CostPerNight,
+                     BedType: rm.BedType,
+                     NumOfSleeps: rm.NoOfBeds,
+                     RoomFacilities: rm.facilityIds?.map(f => f.RFacilityId)
+                 }}));
+
+
+             }
+        } catch (err) {
+            toast.error(err);
+        }
+    }
 
     const onChangeSelectedRooms = (room, isAdding) => {
         setSelectedRooms(prevState => {
@@ -58,8 +99,20 @@ function AvailabilityPage() {
             else if (newState[room.Id].count > room.NumOfRooms)
                 newState[room.Id].count = room.NumOfRooms;
 
+            // For disabling the reserve button
+            let countTotal = 0;
+            for(const kk in newState) {
+                countTotal += newState[kk].count;
+            }
+            if(countTotal > 0)
+                setReserveBtnDisabled(false);
+            else
+                setReserveBtnDisabled(true)
+
             return newState;
         })
+
+
     }
 
     const infoSection = useRef(null);
@@ -131,27 +184,27 @@ function AvailabilityPage() {
 
     }
 
-
     const onReserve = () => {
 
         let selectedRoomList = [];
         for (const [roomId, values] of Object.entries(selectedRooms)) {
+            console.log(roomId, values);
             let temp = {
                 roomId: roomId,
                 roomName: values.roomData.RoomName,
-                roomCount: values.roomData.NumOfRooms,
+                roomCount: values.count,
                 costPerRoom: values.roomData.PricePerNight,
             }
 
             selectedRoomList.push(temp);
         }
-
         let result = {selections: selectedRoomList}
+
 
         console.log(result);
 
         navigate({
-            pathname: "/reservations",
+            pathname: "/confirm-booking",
             search: `?${createSearchParams({
                 fromDate: checkInCheckOutDates.checkIn,
                 toDate: checkInCheckOutDates.checkOut,
@@ -159,7 +212,7 @@ function AvailabilityPage() {
                 hotelName: hotelName,
                 address: getFullAddress(),
                 totalPrice: getTotalPrice(),
-                selectionDetails: result,
+                selectionDetails: JSON.stringify(result),
             })}`
         });
     }
@@ -212,24 +265,7 @@ function AvailabilityPage() {
 
             <section ref={infoSection} id="info_section" className={"pt-2"}>
                 <div className={"subtext"} style={{lineHeight: "25px", textAlign: "justify", padding: "0 10px"}}>
-
-                    A tranquil retreat perched on hills, Heritance Kandalama offers panoramic views of the Sigiriya
-                    Rocks. Boasting a spectacular architecture, this unique design hotel provides 3 impressive pools and
-                    exotic activities like bird watching.
-
-                    Kandalama Heritance is a 20-minute drive from UNESCO World Heritage Sites, the 2,000-year-old cave
-                    temple at Dambulla and the Sigiriya rock fortress. The 5-star hotel is a 3.5-hour drive from the
-                    airport.
-                    The spacious rooms are fitted with rattan furniture and timber panels. Each comes with a private
-                    bathroom featuring oversized glass walls that allow much natural light in.
-
-                    The hotel features tennis courts, a well-equipped gym and the well-known Coco Spa. To enjoy Sri
-                    Lanka’s breathtaking natural landscapes, the hotel offers various excursions like mountain cycling
-                    excursions and lake safaris.
-
-                    Start the day with breakfast on the lake or enjoy a memorable dining experience in the nearby cave.
-                    The Kanchana Restaurant offers daily themed nights with international cuisine. Views of the Sigiriya
-                    citadel and the Kandalama Lake accompany meals.
+                    {description}
                 </div>
 
             </section>
@@ -280,7 +316,7 @@ function AvailabilityPage() {
 
             <AvailabilitySearchBar onChangeCheckInCheckOutDates={onChangeCheckInCheckOutDates}
                                    checkInCheckOutDates={checkInCheckOutDates}/>
-            <AvailabilityRooms onReserve={onReserve} selectedRooms={selectedRooms}
+            <AvailabilityRooms roomData={roomData} onReserve={onReserve} selectedRooms={selectedRooms} reserveBtnDisabled={reserveBtnDisabled}
                                onChangeSelectedRooms={onChangeSelectedRooms}/>
         </MainContainer>
     );
