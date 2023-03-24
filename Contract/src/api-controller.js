@@ -11,7 +11,6 @@ const constants = require("./services.domain/constants")
 export class ApiService {
 
     dbPath = settings.dbPath;
-    #transactionService = null;
 
     constructor() {
         this.db = new SqliteDatabase(this.dbPath);
