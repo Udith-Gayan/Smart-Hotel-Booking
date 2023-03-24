@@ -56,38 +56,47 @@ class ReservationService {
             throw ("Invalid Request.");
 
         const data = this.#message.data;
+        console.log(JSON.stringify(data));
         const noOfDays = this.countDaysInBetween(data.FromDate, data.ToDate);
 
         const roomSelections = data.RoomSelections;
         let expectedCost = 0;
         let roomIdList = [];
-
+        console.log(1)
         roomSelections.forEach(rms => {
             const costOFRoom = rms.roomCount * rms.costPerRoom * noOfDays;
+            console.log("Cost of room: ", costOFRoom);
             expectedCost += costOFRoom;
+            console.log("expected of room: ", expectedCost);
             roomIdList.push({roomId: rms.roomId, roomCost: costOFRoom});
         });
 
+        console.log(2)
+
 
         //Get transaction amount and do payments to the hotel ( if present)
-        if (data.TransactionId) {
-            const txList = (await this.#xrplApi.getAccountTrx(settings.contractWalletAddress)).filter(t => t.TransactionType == "Payment");
-            const paidTx = txList.find(tx => tx.hash == data.TransactionId);
-
+        if(data.TransactionId) {
+            const txList = (await this.#xrplApi.getAccountTrx(settings.contractWalletAddress)).filter(t => t.tx.TransactionType == "Payment");
+            const paidTx = txList.find(tx => tx.tx.hash == data.TransactionId);
+            console.log(3)
             if (!paidTx)
                 throw ("Invalid transaction hash.");
 
-            if (Number(paidTx.Amount) < expectedCost)
+            if (Number(paidTx.tx.Amount) < expectedCost)
                 throw ("Insuffcient amount paid for room reservation.");
+            console.log(paidTx.tx.Amount);
 
             // Pay the rest keeping the commision,  to the hotel address
             let query = `SELECT HotelWalletAddress FROM Hotels WHERE Id=(SELECT HotelId FROM Rooms WHERE Id= ${roomIdList[0].roomId})`;
-            const hotelWalletAddress = await this.#db.runNativeGetFirstQuery(query);
-            if (hotelWalletAddress) {
-                const amountToSend = (Number(paidTx.Amount) / 1000000) * (100 - businessConfigurations.ROOM_COMMISSION_PERCENTAGE) / 100;
-                const res = await this.#contractAcc.makePayment(hotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null);
-                if (res.code !== "tesSUCCESS")
+            const {HotelWalletAddress} = await this.#db.runNativeGetFirstQuery(query);
+            console.log("HOtelWallet: ",HotelWalletAddress )
+            if (HotelWalletAddress) {
+                const amountToSend = (Number(paidTx.tx.Amount) / 1000000 ) * (100 - businessConfigurations.ROOM_COMMISSION_PERCENTAGE) / 100;
+                const res = await this.#contractAcc.makePayment(HotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null);
+                console.log(res)
+                if(res.code !== "tesSUCCESS"){
                     throw("Error in sending fee to the Hotel's wallet.")
+                }
 
             }
         }
@@ -112,14 +121,15 @@ class ReservationService {
             }
         }
 
+
         const reservationIdList = [];
         for (const i in roomSelections) {
             const reservationEntity = {
                 RoomId: roomSelections[i].roomId,
                 RoomCount: roomSelections[i].roomCount,
                 CustomerId: nCustomerId,
-                FromDate: data.FromDate,
-                ToDate: data.ToDate,
+                FromDate: data.FromDate.substr(0,10),
+                ToDate: data.ToDate.substr(0,10),
                 Cost: roomIdList[i].roomCost,
                 TransactionId: data.TransactionId ?? null
             }

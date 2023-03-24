@@ -66,7 +66,7 @@ const ConfirmBooking = () => {
         }
 
         try {
-            const res = hotelService.makeReservation(data)
+            const res = await hotelService.makeReservation(data)
             console.log(res);
             navigate(`/`)
         } catch (e) {

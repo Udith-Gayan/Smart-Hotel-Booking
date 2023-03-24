@@ -1,0 +1,39 @@
+.offer_card {
+    
+    
+    
+}
+.hotelImage{
+    object-fit: cover;
+    padding: 0%;
+}
+.offer_details {
+    font-size: 13px;
+    color: rgb(176, 11, 11);
+    font-weight: 450;
+}
+.price{
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 19px;
+        color: black;
+    } 
+.stars{
+    float: left;
+}
+.rating_count{
+    float: left;
+    bottom: 0;
+padding-left: 5px;
+padding-top: 4px;
+font-weight: 400;
+font-size: 14px;
+line-height: 26px;
+}
+
+.dealButton{
+    float: right;
+}
+
+.rating{margin-bottom: 0px;}
