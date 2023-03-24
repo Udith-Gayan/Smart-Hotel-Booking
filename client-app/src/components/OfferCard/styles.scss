@@ -4,8 +4,13 @@
     color: grey;
     font-weight: 450;
   }
+  img{
+    object-fit: cover;
+  }
   margin-right: 50px;
 }
+
+
 
 .room_type {
   font-weight: 500;

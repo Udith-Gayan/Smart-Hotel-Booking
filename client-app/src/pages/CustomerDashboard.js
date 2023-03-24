@@ -132,7 +132,9 @@ function CustomerDashboard() {
         <section className="best_offers">
           <div className="best_offers">
             <h1 style={{ margin: 0 }}>Best Offers</h1>
-            <p>Promotions, deals and special offers for you</p>
+            <p className="titleParagraph">
+              Promotions, deals and special offers for you
+            </p>
             <div className="offer_items_flexbox">
               {bestOffers.slice(0, 3).map((offer, index) => (
                 <OfferCard key={index} offer={offer} />

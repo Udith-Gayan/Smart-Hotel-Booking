@@ -1,7 +1,7 @@
 const searches = [
   {
     location: "Ella",
-    image: "/Assets/Images/dashboard/explore/Ella.png",
+    image: "/Assets/Images/dashboard/explore/Ella.webp",
     roomType: "Single",
     fromDate: "2023-03-17",
     toDate: "2023-03-18",
@@ -10,7 +10,7 @@ const searches = [
   },
   {
     location: "Sigiriya",
-    image: "/Assets/Images/dashboard/explore/Sigiriya.png",
+    image: "/Assets/Images/dashboard/explore/Sigiriya.webp",
     roomType: "Family",
     fromDate: "2023-01-17",
     toDate: "2023-01-18",
@@ -19,7 +19,7 @@ const searches = [
   },
   {
     location: "Kandy",
-    image: "/Assets/Images/dashboard/explore/kandy.png",
+    image: "/Assets/Images/dashboard/explore/kandy.webp",
     roomType: "Double",
     fromDate: "2023-02-17",
     toDate: "2023-02-19",

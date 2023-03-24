@@ -10,7 +10,13 @@ function OfferCard(props) {
   return (
     <Card className="offer_card">
       <div style={{ padding: "10px" }} className="row">
-        <img src={props.offer.image} alt="offer" width="300" height="200"></img>
+        <img
+          src={props.offer.image}
+          alt="offer"
+          width="300"
+          height="200"
+          className="offerImage"
+        ></img>
         <div className="col-6 cardDetails">
           <CardBody style={{ paddingLeft: "0px", paddingRight: "0px" }}>
             <CardTitle tag="h5">{props.offer.name}</CardTitle>
