@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import XrplService from "../../services-common/xrpl-service";
 import HotelService from "../../services-domain/hotel-service copy";
 import toast from "react-hot-toast";
+import ToastInnerElement from "../ToastInnerElement/ToastInnerElement";
 
 const HeaderSectionLandingPageHotelOwner = () => {
   const navigate = useNavigate();
