@@ -154,64 +154,28 @@ class ReservationService {
         const walletAddress = filters.walletAddress;
         let query;
         if (filters.isCustomer) {
-            // query = `SELECT Id FROM Customers WHERE WalletAddress='${walletAddress}'`;
-            // const customerId = await this.#db.runNativeGetFirstQuery(query);
-            const customerId = 1;
-
-            if (customerId) {
-                let result = [
-                    {
-                        Id: 1,
-                        HotelName: "Grandbell Hotel Colombo",
-                        RoomId: 1,
-                        RoomName: "Deluxe",
-                        RoomCount: 5,
-                        FromDate: "2023-03-24",
-                        ToDate: "2023-03-26",
-                        TransactionId: 10,
-                    },
-                    {
-                        Id: 1,
-                        HotelName: "Grandbell Hotel Colombo",
-                        RoomId: 2,
-                        RoomName: "Deluxe",
-                        RoomCount: ``,
-                        FromDate: "2023-03-27",
-                        ToDate: "2023-03-27",
-                        TransactionId: null,
-                    },
-                    {
-                        Id: 1,
-                        HotelName: "Heritage",
-                        RoomId: 5,
-                        RoomName: "Deluxe",
-                        RoomCount: 8,
-                        FromDate: "2023-03-28",
-                        ToDate: "2023-03-28",
-                        TransactionId: null,
-                    },
-                ];
-
-                // query = `
-                //     SELECT
-                //         Reservations.Id AS Id,
-                //         Hotels.Name AS HotelName,
-                //         Reservations.RoomId AS RoomId,
-                //         Rooms.Name AS RoomName,
-                //         Reservations.RoomCount AS RoomCount,
-                //         Reservations.FromDate AS FromDate,
-                //         Reservations.ToDate AS ToDate,
-                //         Reservations.TransactionId AS TransactionId
-                //     FROM
-                //         Reservations
-                //     JOIN Rooms ON Reservations.RoomId = Rooms.Id
-                //     JOIN Hotels ON Rooms.HotelId = Hotels.Id
-                //     WHERE
-                //         Reservations.CustomerId = ${customerId};
-                // `;
-                // const reservations = await this.#db.runNativeGetAllQuery(query);
-                const reservations = result;
-                if (!reservations || reservations.length == 0) {
+            query = `SELECT Id FROM Customers WHERE WalletAddress='${walletAddress}'`;
+            const {Id} = await this.#db.runNativeGetFirstQuery(query);
+            if (Id) {
+                query = `
+                    SELECT
+                        Reservations.Id AS Id,
+                        Hotels.Name AS HotelName,
+                        Reservations.RoomId AS RoomId,
+                        Rooms.Name AS RoomName,
+                        Reservations.RoomCount AS RoomCount,
+                        Reservations.FromDate AS FromDate,
+                        Reservations.ToDate AS ToDate,
+                        Reservations.TransactionId AS TransactionId
+                    FROM
+                        Reservations
+                    JOIN Rooms ON Reservations.RoomId = Rooms.Id
+                    JOIN Hotels ON Rooms.HotelId = Hotels.Id
+                    WHERE
+                        Reservations.CustomerId = ${Id};
+                `;
+                const reservations = await this.#db.runNativeGetAllQuery(query);
+                if (!reservations || reservations.length === 0) {
                     response.success = {reservationList: []}
                     return response;
                 }
@@ -221,73 +185,32 @@ class ReservationService {
                 throw("Invalid User");
             }
         } else {
-            console.log("Owner Executing");
-            let result = [
-                {
-                    Id: 1,
-                    CustomerId: 1,
-                    CustomerName: "Jack Holland",
-                    CustomerEmail: "jack@gmail.com",
-                    CustomerContactNo: "0766821877",
-                    FromDate: "2023-03-24",
-                    ToDate: "2023-03-26",
-                    RoomName: "Deluxe",
-                    RoomCount: 2,
-                    TransactionId: 10,
-                },
-                {
-                    Id: 2,
-                    CustomerId: 2,
-                    CustomerName: "Peter Smith",
-                    CustomerEmail: "peter@gmail.com",
-                    CustomerContactNo: "0766431877",
-                    FromDate: "2023-03-24",
-                    ToDate: "2023-03-26",
-                    RoomName: "Deluxe",
-                    RoomCount: 3,
-                    TransactionId: null,
-                },
-                {
-                    Id: 3,
-                    CustomerId: 3,
-                    CustomerName: "Mary Rich",
-                    CustomerEmail: "jack@gmail.com",
-                    CustomerContactNo: "0766821877",
-                    FromDate: "2023-03-24",
-                    ToDate: "2023-03-26",
-                    RoomName: "Deluxe",
-                    RoomCount: 2,
-                    TransactionId: 10,
-                }
-            ];
 
-            // query = `SELECT Id From Hotels WHERE HotelWalletAddress='${walletAddress}'`;
-            // const hotelId = await this.#db.runNativeGetFirstQuery(query);
-            const hotelId = 1;
-            if (hotelId) {
-                // query = `
-                //     SELECT
-                //         Reservations.Id AS Id,
-                //         Customers.Id AS CustomerId,
-                //         Customers.Name AS CustomerName,
-                //         Customers.Email AS CustomerEmail,
-                //         Customers.ContactNumber AS CustomerContactNo,
-                //         Reservations.FromDate AS FromDate,
-                //         Reservations.ToDate AS ToDate,
-                //         Rooms.Name AS RoomName,
-                //         Reservations.RoomCount AS RoomCount,
-                //         Reservations.TransactionId AS TransactionId
-                //     FROM
-                //         Reservations
-                //     JOIN Customers ON Reservations.CustomerId = Customers.Id
-                //     JOIN Rooms ON Reservations.RoomId = Rooms.Id
-                //     JOIN Hotels ON Rooms.HotelId = Hotels.Id
-                //     WHERE
-                //         Hotels.Id = ${hotelId};
-                // `;
-                // const reservations = await this.#db.runNativeGetAllQuery(query);
-                const reservations = result;
-                if (!reservations || reservations.length == 0) {
+            query = `SELECT Id From Hotels WHERE HotelWalletAddress='${walletAddress}'`;
+            const {Id} = await this.#db.runNativeGetFirstQuery(query);
+            if (Id) {
+                query = `
+                    SELECT
+                        Reservations.Id AS Id,
+                        Customers.Id AS CustomerId,
+                        Customers.Name AS CustomerName,
+                        Customers.Email AS CustomerEmail,
+                        Customers.ContactNumber AS CustomerContactNo,
+                        Reservations.FromDate AS FromDate,
+                        Reservations.ToDate AS ToDate,
+                        Rooms.Name AS RoomName,
+                        Reservations.RoomCount AS RoomCount,
+                        Reservations.TransactionId AS TransactionId
+                    FROM
+                        Reservations
+                    JOIN Customers ON Reservations.CustomerId = Customers.Id
+                    JOIN Rooms ON Reservations.RoomId = Rooms.Id
+                    JOIN Hotels ON Rooms.HotelId = Hotels.Id
+                    WHERE
+                        Hotels.Id = ${Id};
+                `;
+                const reservations = await this.#db.runNativeGetAllQuery(query);
+                if (!reservations || reservations.length === 0) {
                     response.success = {reservationList: []}
                     return response;
                 }

@@ -290,7 +290,6 @@ export default class HotelService {
      * @returns An array of objects || []
      */
     async getReservations(isCustomer, walletAddress) {
-        console.log("Sending From UI Middleware");
         const submitObject = {
             type: constants.RequestTypes.RESERVATION,
             subType: constants.RequestSubTypes.GET_RESERVATIONS,

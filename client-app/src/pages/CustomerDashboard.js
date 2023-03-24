@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
     Col,
     Container,
@@ -9,11 +9,13 @@ import {
     Label,
 } from "reactstrap";
 import "./../styles/customer_dashboard_styles.scss";
-import { RangeDatePicker } from "@y0c/react-datepicker";
+import {RangeDatePicker} from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
 import OfferCard from "../components/OfferCard/OfferCard";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import toast from 'react-hot-toast';
+import ToastInnerElement from "../components/ToastInnerElement/ToastInnerElement";
+
 // import 'moment/locale/ko';
 
 function CustomerDashboard() {
@@ -37,20 +39,41 @@ function CustomerDashboard() {
 
     function onSearchSubmit() {
         if (!city || city.length < 3) {
-            toast.error("Requires a valid city.");
+            toast(
+                (element) => (
+                    <ToastInnerElement message={"Requires a valid city."} id={element.id}/>
+                ),
+                {
+                    duration: Infinity,
+                }
+            );
             //setErrorMessge("Requires a valid city.");
             return;
         }
 
         if (!dateRange || !dateRange[0] || !dateRange[1]) {
             console.log("Invalid date range.")
-            toast.error("Invalid date range.");
+            toast(
+                (element) => (
+                    <ToastInnerElement message={"Invalid date range."} id={element.id}/>
+                ),
+                {
+                    duration: Infinity,
+                }
+            );
             //setErrorMessge("Invalid date range.");
             return;
         }
 
         if (peopleCount < 1) {
-            toast.error("Invalid people count.");
+            toast(
+                (element) => (
+                    <ToastInnerElement message={"Invalid people count."} id={element.id}/>
+                ),
+                {
+                    duration: Infinity,
+                }
+            );
             //setErrorMessge("Invalid people count.");
             return;
         }
@@ -72,15 +95,15 @@ function CustomerDashboard() {
                     <div className="tab-area"></div>
                     <div className="search-area">
                         <Row className="search-wrapper-row">
-                            <Col style={{ flex: "1 0" }}>
+                            <Col style={{flex: "1 0"}}>
                                 <Label>Where ?</Label>
                                 <InputGroup>
-                                    <Input placeholder="City" onChange={e => setCity(e.target.value)} />
+                                    <Input placeholder="City" onChange={e => setCity(e.target.value)}/>
                                 </InputGroup>
                             </Col>
-                            <Col style={{ flex: "3 0" }}>
+                            <Col style={{flex: "3 0"}}>
                                 <Label>Check in - Check out</Label>
-                                <br />
+                                <br/>
                                 <RangeDatePicker
                                     onChange={onDateChange}
                                     startPlaceholder="From date"
@@ -91,25 +114,30 @@ function CustomerDashboard() {
                             <Col>
                                 <Label>No. of rooms</Label>
                                 <InputGroup>
-                                    <Input placeholder="0" type="number" onChange={e => setPeopleCount(e.target.value)} />
+                                    <Input placeholder="0" type="number"
+                                           onChange={e => setPeopleCount(e.target.value)}/>
                                 </InputGroup>
                             </Col>
                             <Col>
                                 <Button className="secondaryButton overrideSearchButton" onClick={onSearchSubmit}>
                                     Search your stay
                                 </Button>
-                                {errorMessage ? <p style={{ margin: '0px', marginBottom: '-23px', color: 'red' }}>{errorMessage}</p> : ''}
+                                {errorMessage ? <p style={{
+                                    margin: '0px',
+                                    marginBottom: '-23px',
+                                    color: 'red'
+                                }}>{errorMessage}</p> : ''}
                             </Col>
                         </Row>
                     </div>
                 </div>
                 <section className="best_offers">
                     <div className="best_offers">
-                        <h1 style={{ margin: 0 }}>Best Offers</h1>
+                        <h1 style={{margin: 0}}>Best Offers</h1>
                         <p>Promotions, deals and special offers for you</p>
                         <div className="offer_items_flexbox">
                             {bestOffers.map((offer, index) => (
-                                <OfferCard key={index} />
+                                <OfferCard key={index}/>
                             ))}
                         </div>
                     </div>
