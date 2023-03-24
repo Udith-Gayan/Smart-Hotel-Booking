@@ -9,7 +9,7 @@ import {createSearchParams, useNavigate, useParams} from "react-router-dom";
 
 function AvailabilityRooms(props) {
 
-    const [roomDetails, setRoomDetails] = useState(roomData);
+    const [roomDetails, setRoomDetails] = useState(props.roomData);
 
     const getRoomCount = (roomIndex) => {
         if (roomIndex in props.selectedRooms) {
@@ -39,7 +39,7 @@ function AvailabilityRooms(props) {
 
                 <tbody>
 
-                {roomDetails.map(room => {
+                {props.roomData.map(room => {
                     return (
                         <tr key={room.Id}>
                             <td className={"td-room"}>

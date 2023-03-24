@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {RangeDatePicker} from "@y0c/react-datepicker";
 import {FaCalendarAlt, FaPlus, FaWindowMinimize} from "react-icons/fa";
 import {Button, Dropdown, DropdownToggle, Input, InputGroup} from "reactstrap";
@@ -14,8 +14,8 @@ function AvailabilitySearchBar(props) {
 
     const queryParams = new URLSearchParams(location.search);
 
-    const [checkInDate, setCheckInDate] = useState(queryParams.get("check-in-date"));
-    const [checkOutDate, setCheckOutDate] = useState(queryParams.get("check-out-date"));
+    const [checkInDate, setCheckInDate] = useState(queryParams.get("checkInDate"));
+    const [checkOutDate, setCheckOutDate] = useState(queryParams.get("checkOutDate"));
     const [numOfRooms, setNumOfRooms] = useState(queryParams.get("rooms") ? queryParams.get("rooms") : 0);
 
 
@@ -24,6 +24,10 @@ function AvailabilitySearchBar(props) {
             return (isAdding ? prevState + 1 : prevState - 1) >= 0 ? (isAdding ? prevState + 1 : prevState - 1) : 0;
         })
     }
+
+    useEffect(() => {
+        console.log(checkInDate)
+    })
     return (
         <>
             <div className="title_2 pt-2 pb-2">Availability</div>
@@ -33,10 +37,12 @@ function AvailabilitySearchBar(props) {
                 <RangeDatePicker
                     startPlaceholder="From date"
                     endPlaceholder="To date"
-                    dateFormat="ddd DD MMM"
+                    dateFormat="DD/MMM/YYYY"
                     onChange={props.onChangeCheckInCheckOutDates}
                     hide={true}
                     value={props.checkInCheckOutDates}
+                    initialStartDate={new Date(checkInDate)}
+                    initialEndDate={new Date(checkOutDate)}
 
                 />
 

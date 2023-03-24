@@ -45,6 +45,8 @@ class HotelService {
                     return await this.#isRegisteredHotel();
                 case constants.RequestSubTypes.SEARCH_HOTELS_WITH_ROOM:
                     return await this.#getHotelsWithRoomSearch();
+                case constants.RequestSubTypes.GET_SINGLE_HOTEL_WITH_ROOMS:
+                    return await this.#getSingleHotelWithRoomsAvaialable();
                 default:
                     throw ("Invalid Request");
             }
@@ -342,8 +344,7 @@ class HotelService {
 
         const fromDateFilter = new Date(filters.CheckInDate);
         const toDateFilter = new Date(filters.CheckOutDate);
-        console.log('InDate', fromDateFilter)
-        console.log('toDate', toDateFilter)
+
         const filteringDateRange = DateHelper.getDatesArrayInBewtween(fromDateFilter, toDateFilter);
         console.log("DateRange", filteringDateRange, " length: ", filteringDateRange.length);
 
@@ -369,13 +370,11 @@ class HotelService {
         hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
         let roomIdList = roomsList.map(rl => rl.Id);
 
-        console.log(3);
         query = `SELECT * from Reservations WHERE RoomId IN (${roomIdList})`;
         const reservationList = await this.#db.runNativeGetAllQuery(query);
         console.log('Reservationlist: ' ,reservationList)
 
         if (!reservationList || reservationList.length < 1) {  // No reservation means, all the rooms are free for new reservations
-            console.log(43)
             roomsList = roomsList.filter(r => r.MaxRoomCount >= necessaryRoomCount);
             hotelIdList = [...new Set(roomsList.map(rl => rl.HotelId))];
             hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
@@ -426,7 +425,7 @@ class HotelService {
                 }
 
                 if ((reservedRoomCount + necessaryRoomCount) > roomObj.maxRoomCount) {
-                    removingRoomIds.push(roomId);
+                    removingRoomIds.push(roomObj.roomId);
                 }
             }
         }
@@ -441,6 +440,146 @@ class HotelService {
         console.log(resultList)
         response.success = { searchResult: resultList };
         return response;
+    }
+
+    async #getSingleHotelWithRoomsAvaialable() {
+        const response = {};
+        if (!this.#message.filters) {
+            throw ("Invalid request.");
+        }
+        const filters = this.#message.filters;
+
+        // Assumption : ( no of  people = no of rooms required)
+        const necessaryRoomCount = this.#message.filters.RoomCount;
+        const fromDateFilter = new Date(filters.CheckInDate);
+        const toDateFilter = new Date(filters.CheckOutDate);
+        const hotelId = filters.HotelId;
+
+        const filteringDateRange = DateHelper.getDatesArrayInBewtween(fromDateFilter, toDateFilter);
+        console.log("DateRange", filteringDateRange, " length: ", filteringDateRange.length);
+
+        let query = `SELECT * FROM Hotels WHERE ID=${hotelId}`;
+        let hotel = await this.#db.runNativeGetFirstQuery(query);
+        if(!hotel) {
+            throw("No hotel Found");
+        }
+        query = `SELECT * FROM Rooms WHERE HotelId IN (${hotelId})`;
+        let roomsList = await this.#db.runNativeGetAllQuery(query);
+        if (!roomsList || roomsList.length < 1) {
+            throw("No rooms found.")
+        }
+        let roomIdList = roomsList.map(rl => rl.Id);
+        query = `SELECT * from Reservations WHERE RoomId IN (${roomIdList})`;
+        const reservationList = await this.#db.runNativeGetAllQuery(query);
+
+        if (!reservationList || reservationList.length < 1) {  // No reservation means, all the rooms are free for new reservations
+            roomsList = roomsList.filter(r => r.MaxRoomCount >= necessaryRoomCount);
+            roomsList.forEach(r => r.avaialableRoomCount = r.MaxRoomCount);
+            const resultList = await this.#prepareSearchResultPhase3(hotel, roomsList, filteringDateRange.length);
+            response.success = { searchResult: resultList };
+            return response;
+        }
+
+        // Filter avaialble roomList by checking the avaialble reservation dates
+
+        // First, create an array of rooms  with their reservedDates and count as arrays.
+        let availableRoomList = [];
+        console.log(5);
+        for (let room of roomsList) {
+            let roomObj1 = { roomId: room.Id, maxRoomCount: room.MaxRoomCount, ...room, checkedDates: [], roomCounts: [] }
+            const reservedDates = [];
+            const reservedRoomCounts = [];
+            reservationList.forEach(rv => {
+                if (rv.RoomId == room.Id) {
+                    reservedDates.push({ checkInDate: rv.FromDate, checkOutDate: rv.ToDate })
+                    reservedRoomCounts.push(rv.RoomCount);
+                }
+            });
+            roomObj1.checkedDates = reservedDates;
+            roomObj1.roomCounts = reservedRoomCounts;
+            availableRoomList.push(roomObj1);
+        }
+
+        // Second, loop the room objects and their reserved dates for availability check.
+        // If
+        console.log(6);
+        const removingRoomIds = [];
+        for (const idx in availableRoomList) {
+            console.log(61)
+            const roomObj = availableRoomList[idx];
+
+            if (roomObj.checkedDates.length == 0) {
+                console.log(62)
+                continue;
+            }
+
+            availableRoomList[idx].avaialableRoomCount = 0;
+            for (let filterDate of filteringDateRange) {
+                console.log(63)
+                let reservedRoomCount = 0;
+                for (const dateIdx in roomObj.checkedDates) {
+                    console.log(631)
+                    const reservedRange = (roomObj.checkedDates)[dateIdx];
+                    if (DateHelper.isDateInRange(filterDate, reservedRange.checkInDate, reservedRange.checkOutDate)) {
+                        console.log(632)
+                        reservedRoomCount += (roomObj.roomCounts)[dateIdx];
+                    }
+                }
+
+                if ((reservedRoomCount + necessaryRoomCount) > roomObj.maxRoomCount) {
+                    console.log(633)
+                    removingRoomIds.push(roomId);
+                }
+
+                if(availableRoomList[idx].avaialableRoomCount == 0) {
+                    console.log(634)
+                    availableRoomList[idx].avaialableRoomCount = availableRoomList[idx].maxRoomCount - reservedRoomCount;
+                } else if(availableRoomList[idx].avaialableRoomCount > (availableRoomList[idx].maxRoomCount - reservedRoomCount)) {
+                    console.log(635)
+                    availableRoomList[idx].avaialableRoomCount = availableRoomList[idx].maxRoomCount - reservedRoomCount;
+                }
+
+            }
+        }
+
+        availableRoomList = availableRoomList.filter(ar => !removingRoomIds.includes(ar.roomId));
+        console.log(JSON.stringify(availableRoomList))
+
+        const resultList = await this.#prepareSearchResultPhase3(hotel, availableRoomList, filteringDateRange.length);
+        console.log(8);
+        console.log(resultList)
+        response.success = { searchResult: resultList };
+        return response;
+    }
+
+    async #prepareSearchResultPhase3(hotel, roomList, noOfDays = 0) {
+        const resultList = {...hotel};
+        let query = `SELECT Id, Url FROM Images WHERE HotelId = ${hotel.Id}`;
+        const imgs = await this.#db.runNativeGetAllQuery(query);
+        if (imgs) {
+            resultList.ImageUrls = imgs;
+        }
+
+        resultList.RoomDetails = [];
+        for(const ri of roomList) {
+            query = `SELECT RFacilityId FROM RoomFacilities WHERE RoomId=${ri.Id}`;
+            const ress = await this.#db.runNativeGetAllQuery(query);
+            if(ress && ress.length > 0) {
+                ri.facilityIds = ress;
+            }
+            resultList.RoomDetails.push(ri);
+        }
+
+        //Get hotelFacilities
+        query = `SELECT HFacilityId FROM HotelHFacilities  WHERE HotelId=${hotel.Id}`;
+        const ress = await this.#db.runNativeGetAllQuery(query);
+        if(ress && ress.length > 0) {
+            resultList.facilityIds = ress;
+        }
+
+        return resultList;
+
+
     }
 
     async #prepareSearchResultPhase2(hotelList, roomList, noOfDays = 0) {
