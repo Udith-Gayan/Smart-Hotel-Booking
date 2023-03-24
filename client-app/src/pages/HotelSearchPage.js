@@ -226,7 +226,7 @@ function HotelSearchPage(props) {
                 searchText={searchText} setSearchText={setSearchText} onClearSearchText={onClearSearchText}
                 onClickSearch={onClickSearch} />
 
-            {true ? (<Alert color="warning" style={{ marginBottom: "40vh" }}>
+            {isDataLoading ? (<Alert color="warning" style={{ marginBottom: "40vh" }}>
                 No Hotels Found!
             </Alert>) :
 
