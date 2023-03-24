@@ -112,7 +112,7 @@ function QuickPlanner(props) {
         {selectedButton === "adventure" && (
           <div className="row">
             {plannerProperties[2].slice(0, 4).map((property, index) => (
-              <div className={`col-md-3 ${style.explorecd}`}>
+              <div className={`col-md-3 ${style.explorecd}`} key={index}>
                 <PlannerCard property={property} />
               </div>
             ))}
@@ -121,7 +121,7 @@ function QuickPlanner(props) {
         {selectedButton === "city" && (
           <div className="row">
             {plannerProperties[3].slice(0, 4).map((property, index) => (
-              <div className={`col-md-3 ${style.explorecd}`}>
+              <div className={`col-md-3 ${style.explorecd}`} key={index}>
                 <PlannerCard property={property} />
               </div>
             ))}
@@ -130,7 +130,7 @@ function QuickPlanner(props) {
         {selectedButton === "romance" && (
           <div className="row">
             {plannerProperties[4].slice(0, 4).map((property, index) => (
-              <div className={`col-md-3 ${style.explorecd}`}>
+              <div className={`col-md-3 ${style.explorecd}`} key={index}>
                 <PlannerCard property={property} />
               </div>
             ))}

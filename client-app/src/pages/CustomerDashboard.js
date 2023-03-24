@@ -152,8 +152,8 @@ function CustomerDashboard() {
             <h1 className="headline">Top Rated in Sri Lanka</h1>
             <div className="hotel_items_flexbox">
               {topRatedHotels.slice(0, 8).map((topRatedHotel, index) => (
-                <div className="hotel_card">
-                  <TopHotelCard key={index} hotel={topRatedHotel} />
+                <div className="hotel_card" key={index}>
+                  <TopHotelCard hotel={topRatedHotel} />
                 </div>
               ))}
             </div>
@@ -182,8 +182,8 @@ function CustomerDashboard() {
                 <div className="col-10">
                   <div className="row">
                     {properties.slice(0, 3).map((property, index) => (
-                      <div className="col-md-4 explorecd">
-                        <ExploreCard property={property} key={index} />
+                      <div className="col-md-4 explorecd" key={index}>
+                        <ExploreCard property={property} />
                       </div>
                     ))}
                   </div>

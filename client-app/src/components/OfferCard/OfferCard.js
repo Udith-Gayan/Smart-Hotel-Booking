@@ -1,5 +1,5 @@
 import { Card, CardBody, CardTitle, CardSubtitle, Button } from "reactstrap";
-import { IoCalendarOutline, FaBed } from "react-icons/io5";
+import { IoCalendarOutline } from "react-icons/io5";
 import { IoMdBed } from "react-icons/io";
 import "./styles.scss";
 import dateFormat from "dateformat";

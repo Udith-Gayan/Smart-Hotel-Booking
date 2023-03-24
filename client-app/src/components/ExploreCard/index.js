@@ -1,17 +1,7 @@
 import React from "react";
 import style from "./index.module.scss";
 
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardImg,
-  Button,
-} from "reactstrap";
-import { IoCalendarOutline, FaBed } from "react-icons/io5";
-import { IoMdBed } from "react-icons/io";
-import StarRatings from "react-star-ratings";
+import { CardTitle, CardSubtitle } from "reactstrap";
 
 function ExploreCard(props) {
   return (

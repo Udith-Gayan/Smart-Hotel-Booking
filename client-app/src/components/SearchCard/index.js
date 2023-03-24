@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./index.module.scss";
-import { CardTitle, Card, CardImg } from "reactstrap";
+import { CardTitle, Card } from "reactstrap";
 import { IoCalendarOutline } from "react-icons/io5";
 import dateFormat from "dateformat";
 
