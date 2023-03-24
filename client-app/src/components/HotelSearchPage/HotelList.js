@@ -4,7 +4,7 @@ function HotelList(props) {
     return (
         <>
             {props.data.map(hotel => {
-                return <SearchHotelResult hotel={hotel} numOfPeople={props.numOfPeople} onViewAvailableClicked={props.onViewAvailableClicked} />
+                return <SearchHotelResult hotel={hotel} numOfPeople={props.numOfPeople} onViewAvailableClicked={props.onViewAvailableClicked} key={hotel.Id} />
             })}
         </>
     );

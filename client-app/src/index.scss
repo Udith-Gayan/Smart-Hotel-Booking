@@ -1,5 +1,5 @@
 $purple-color: #2c2c76;
-$light-purple-color: aliceblue;
+$light-purple-color: #ECECF2;
 
 body {
   margin: 0;
@@ -65,4 +65,15 @@ code {
 
 .fontBold {
   font-weight: 800;
+}
+
+.spinnerWrapper {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noPadding {
+  padding: 0 !important;
 }

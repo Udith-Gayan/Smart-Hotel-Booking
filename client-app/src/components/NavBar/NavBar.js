@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Button, Navbar, NavbarBrand, NavbarText, Card, Dropdown,
+  Button, Navbar, NavbarBrand, NavbarText, Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem
@@ -11,7 +11,7 @@ import { RiFileSettingsFill } from 'react-icons/ri'
 
 function NavBar(props) {
   const navigate = useNavigate();
-  const  walletAddress = process.env.REACT_APP_CONTRACT_WALLET_ADDRESS;
+  const walletAddress = process.env.REACT_APP_CONTRACT_WALLET_ADDRESS;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
@@ -63,10 +63,10 @@ function NavBar(props) {
           My Reservations
         </Button>
         <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={'down'} className="primaryButton setting-button">
-        <DropdownToggle  className="primaryButton setting-button" style={{ height: '100%'}} > <RiFileSettingsFill style={{ fontSize: "1.5rem"}} /> </DropdownToggle>
-        <DropdownMenu  style={{ marginTop:" 15px"}}>
-        <DropdownItem text><span className="fontBold">Wallet Address: </span>{walletAddress}</DropdownItem>
-        </DropdownMenu>
+          <DropdownToggle className="primaryButton setting-button" style={{ height: '100%' }} > <RiFileSettingsFill style={{ fontSize: "1.5rem" }} /> </DropdownToggle>
+          <DropdownMenu style={{ marginTop: " 15px" }}>
+            <DropdownItem text><span className="fontBold">Wallet Address: </span>{walletAddress}</DropdownItem>
+          </DropdownMenu>
         </Dropdown>
       </Navbar>
     </>

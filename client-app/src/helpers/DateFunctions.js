@@ -5,15 +5,12 @@ class DateFunctions {
     ];
 
     /*
-     Convert 2023/03/17 => March 17
+     Convert 2023-03-17 => March 17
     */
     static convertDateMonthDate = (date_string) => {
         const date = new Date(date_string);
-
-
         const monthIndex = date.getMonth();
         const day = date.getDate();
-
         return `${this.monthNames[monthIndex]} ${day}`;
     }
 
@@ -29,7 +26,30 @@ class DateFunctions {
         return diffInDays;
     }
 
-    
+    /**
+     *  Convert date  --->  March 24, 2023
+     * @param {string} date_string
+     * @returns {`${string} ${number}, ${number}`}
+     */
+    static convertDateToMonthDateYear = (date_string) => {
+        const date = new Date(date_string);
+        const monthIndex = date.getMonth();
+        const day = date.getDate();
+        const year = date.getFullYear();
+
+        return `${this.monthNames[monthIndex]} ${day}, ${year}`;
+    }
+
+
+    static convertDateObjectToDateOnlyString = (dateObject) => {
+        let year = dateObject.getFullYear();
+        let month = dateObject.getMonth() + 1;
+        let day = dateObject.getDate();
+
+        return `${year}-${month}-${day}`
+    }
+
+
 }
 
 export default DateFunctions

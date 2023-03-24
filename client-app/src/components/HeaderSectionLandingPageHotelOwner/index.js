@@ -7,6 +7,7 @@ import { show, hide } from "../../features/visibility/visibleSlice";
 import { useNavigate } from "react-router-dom";
 import XrplService from "../../services-common/xrpl-service";
 import HotelService from "../../services-domain/hotel-service copy";
+import toast from 'react-hot-toast';
 
 const HeaderSectionLandingPageHotelOwner = () => {
   const navigate = useNavigate();
@@ -24,10 +25,12 @@ const HeaderSectionLandingPageHotelOwner = () => {
     navigate("/register-hotel");
   };
 
-  const submit = async () => {
+  const submit = async (e) => { 
+    e.preventDefault();
     setDisableSubmitBtn(true);
     if (!xrplService.isValidSecret(secret)) {
-      setErrorMessage("Invalid secret.");
+      //setErrorMessage("Invalid secret.");
+      toast.error("Invalid secret.")
       setDisableSubmitBtn(false);
       return;
     }
@@ -87,7 +90,7 @@ const HeaderSectionLandingPageHotelOwner = () => {
               <p style={{ color: "red" }}>{errorMessage}</p>
               <Button
                 className="secondaryButton smallMarginTopBottom"
-                onClick={() => submit()}
+                onClick={(e) => submit(e)}
                 disabled={disableSubmitBtn}
               >
                 Let's Go

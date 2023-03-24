@@ -14,6 +14,7 @@ import {
   Button,
   Col,
   Row,
+  FormFeedback,
 } from "reactstrap";
 import Facilities from "../components/RegisterHotelComponents/Facilities";
 import ContactDetails from "../components/RegisterHotelComponents/ContactDetails";
@@ -22,9 +23,12 @@ import HotelService from "./../services-domain/hotel-service copy";
 import { FirebaseService } from "../services-common/firebase-service";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewSection from "../components/RegisterHotelComponents/ImagePreviewSection";
+import { toast } from "react-hot-toast";
 
 function RegisterHotel() {
   const hotelService = HotelService.instance;
+  let emailRegex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+  let phoneNoRegex = new RegExp("^[0-9 ]*$");
   const navigate = useNavigate();
 
   let user = "User";
@@ -49,6 +53,19 @@ function RegisterHotel() {
   const [isCondition1Checked, setIsCondition1Checked] = useState(false);
   const [isCondition2Checked, setIsCondition2Checked] = useState(false);
 
+  const [propertyNameInvaid, setPropertyNameInvaid] = useState(false);
+  const [propertyDescriptionInvaid, setPropertyDescriptionInvaid] =
+    useState(false);
+  const [ownerNameInvaid, setOwnerNameInvaid] = useState(false);
+  const [emailInvaid, setEmailInvaid] = useState(false);
+  const [contactNumber1Invaid, setContactNumber1Invaid] = useState(false);
+  const [addressLine1Invaid, setAddressLine1Invaid] = useState(false);
+  const [cityInvaid, setCityInvaid] = useState(false);
+  const [distanceFromCenterInvaid, setDistanceFromCenterInvaid] =
+    useState(false);
+  const [hotelFacilitiesInvaid, setHotelFacilitiesInvaid] = useState(false);
+  const [uploadedImagesInvaid, setUploadedImagesInvaid] = useState(false);
+
   const toggleDropDown = () => {
     setDropDownOpen((prevState) => !prevState);
   };
@@ -57,18 +74,79 @@ function RegisterHotel() {
     setUploadedImages((prevState) => [...prevState, ...images]);
   };
 
+  const validationForm = () => {
+    setPropertyNameInvaid(false);
+    setPropertyDescriptionInvaid(false);
+    setOwnerNameInvaid(false);
+    setEmailInvaid(false);
+    setContactNumber1Invaid(false);
+    setAddressLine1Invaid(false);
+    setCityInvaid(false);
+    setDistanceFromCenterInvaid(false);
+    setHotelFacilitiesInvaid(false);
+    setUploadedImagesInvaid(false);
+
+    if (!Name) {
+      setPropertyNameInvaid(true);
+    }
+    if (!Description) {
+      setPropertyDescriptionInvaid(true);
+    }
+    if (!OwnerName) {
+      setOwnerNameInvaid(true);
+    }
+    if (!emailRegex.test(Email)) {
+      setEmailInvaid(true);
+    }
+
+    if (!phoneNoRegex.test(ContactNumber1)) {
+      setContactNumber1Invaid(true);
+    }
+
+    if (!(ContactNumber1.length === 10 || ContactNumber1.length === 11)) {
+      setContactNumber1Invaid(true);
+    }
+    if (!AddressLine1) {
+      setAddressLine1Invaid(true);
+    }
+    if (!City) {
+      setCityInvaid(true);
+    }
+    if (!DistanceFromCenter) {
+      setDistanceFromCenterInvaid(true);
+    }
+
+    if (HotelFacilities.length <= 0) {
+      setHotelFacilitiesInvaid(true);
+    }
+    if (uploadedImages.length < 3) {
+      setUploadedImagesInvaid(true);
+    }
+  };
+
   // Form submit
   const submitForm = useCallback(async () => {
     setRegisterButtonDisable(true);
 
+    validationForm();
+
+    if (!propertyNameInvaid) {
+      console.log("submit");
+    }
+
     try {
       // 1 - Upload Images
       let imageUrls = [];
+      let res;
+
       if (uploadedImages.length > 0)
         imageUrls = await FirebaseService.uploadFiles(Name, uploadedImages);
 
       // 2 - Generate a wallet Address
       const newWallet = await hotelService.createNewHotelWallet();
+      localStorage.setItem("isCustomer", "false");
+      localStorage.setItem("seed", newWallet.seed);
+
       console.log(newWallet);
 
       // 3 - Create request object
@@ -86,26 +164,45 @@ function RegisterHotel() {
         DistanceFromCenter: DistanceFromCenter,
       };
 
-      console.log("first", submissionData);
-
       if (imageUrls.length > 0) submissionData.ImageUrls = imageUrls;
 
       if (HotelFacilities.length > 0)
         submissionData.Facilities = HotelFacilities;
 
-      // 4 - Submit for registration
-      const res = await hotelService.registerHotel(submissionData);
-
-      if (res.hotelId > 0) {
-        alert("Successful");
-        navigate(`/hotel/${res.hotelId}`);
+      // only if the required validations are met, form will submit
+      if (
+        Name &&
+        Description &&
+        OwnerName &&
+        emailRegex.test(Email) &&
+        AddressLine1 &&
+        City &&
+        (ContactNumber1.length === 10 || ContactNumber1.length === 11) &&
+        phoneNoRegex.test(ContactNumber1) &&
+        DistanceFromCenter &&
+        HotelFacilities.length > 0 &&
+        uploadedImages.length > 2
+      ) {
+        // 4 - Submit for registration
+        res = await hotelService.registerHotel(submissionData);
+        console.log("res", res);
+        if (res.hotelId > 0) {
+          //alert("Successful");
+          toast.success("Registered successfully!");
+          navigate(`/hotel/${res.hotelId}`);
+        } else {
+          toast.error("Registration failed!");
+          //alert("Registration failed!");
+        }
       } else {
-        alert("Registration failed!");
+        setRegisterButtonDisable(false);
+        toast.error("Check the details again!");
       }
     } catch (err) {
       setRegisterButtonDisable(false);
       console.log(err);
-      alert("Error occurred in Registration.!");
+      toast.error("Error occurred in Registration.!");
+      //alert("Error occurred in Registration.!");
     }
   }, [
     Name,
@@ -126,23 +223,42 @@ function RegisterHotel() {
   return (
     <>
       <MainContainer>
+        {/* {!newWallet ? <div className="spinnerWrapper">
+          <Spinner
+            color="primary"
+            style={{
+              height: "3rem",
+              width: "3rem",
+            }}
+            type="grow"
+          >
+            Loading...
+          </Spinner>
+        </div>: null} */}
+
         <section>
           <div className="title_1">Welcome {user}!</div>
           <Card1>
             <Row>
               <Col md={6}>
-                <Label for="property_name" className="noMargin">
-                  Name of Your Property
-                </Label>
-                <div className="subtext">
-                  Guests will see this name when they search for a place to
-                  stay.
-                </div>
-                <Input
-                  type="text"
-                  id="property_name"
-                  onChange={(e) => setName(e.target.value)}
-                />
+                <FormGroup>
+                  <Label for="property_name" className="noMargin">
+                    Name of Your Property
+                  </Label>
+                  <div className="subtext">
+                    Guests will see this name when they search for a place to
+                    stay.
+                  </div>
+                  <Input
+                    type="text"
+                    id="property_name"
+                    onChange={(e) => setName(e.target.value)}
+                    invalid={propertyNameInvaid}
+                  />
+                  <FormFeedback>
+                    Name of your property is required!
+                  </FormFeedback>
+                </FormGroup>
               </Col>
               <Col md={6}>
                 <Label className="noMargin"> Star Rating</Label>
@@ -189,14 +305,18 @@ function RegisterHotel() {
                 </div>
               </Col>
             </Row>
-            <Label style={{ marginTop: "10px" }}>Description</Label>
-            <Input
-              type="textarea"
-              className={"text_area"}
-              name="postContent"
-              rows={5}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <FormGroup>
+              <Label style={{ marginTop: "10px" }}>Description</Label>
+              <Input
+                type="textarea"
+                className={"text_area"}
+                name="postContent"
+                rows={5}
+                invalid={propertyDescriptionInvaid}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <FormFeedback>Hotel description is required!</FormFeedback>
+            </FormGroup>
           </Card1>
         </section>
 
@@ -209,12 +329,24 @@ function RegisterHotel() {
           setaddressLine2={setaddressLine2}
           setCity={setCity}
           setDistanceFromCenter={setDistanceFromCenter}
+          ownerNameInvaid={ownerNameInvaid}
+          emailInvaid={emailInvaid}
+          contactNumber1Invaid={contactNumber1Invaid}
+          addressLine1Invaid={addressLine1Invaid}
+          cityInvaid={cityInvaid}
+          distanceFromCenterInvaid={distanceFromCenterInvaid}
         />
 
-        <Facilities setHotelFacilities={setHotelFacilities} />
+        <Facilities
+          setHotelFacilities={setHotelFacilities}
+          hotelFacilitiesInvaid={hotelFacilitiesInvaid}
+        />
 
         {/* <PropertyPhotos setImages={setImages} /> */}
-        <PropertyPhotos onChangeUploadImages={onChangeUploadImages} />
+        <PropertyPhotos
+          onChangeUploadImages={onChangeUploadImages}
+          uploadedImagesInvaid={uploadedImagesInvaid}
+        />
         {uploadedImages.length !== 0 && (
           <ImagePreviewSection images={uploadedImages} />
         )}

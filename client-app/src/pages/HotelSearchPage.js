@@ -1,26 +1,27 @@
 import MainContainer from "../layout/MainContainer";
 import { useNavigate, useLocation } from "react-router-dom";
-import hotelsData from "../data/hotels"
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Toast } from "reactstrap";
+import { Spinner } from "reactstrap";
 import React, { useEffect, useState } from "react";
 import SearchBar from "../components/HotelSearchPage/SearchBar";
 import Filters from "../components/HotelSearchPage/Filters";
 import facilitiesData from "../data/facilities"
 import roomFacilitiesData from "../data/room_facilities";
-// import RoomFacilitiesSearch from "../components/HotelSearchPage/RoomFacilitiesSearch";
 import { bed_types } from "../constants/constants";
-// import hotelData from "../data/hotels"
 import HotelList from "../components/HotelSearchPage/HotelList";
 import HotelService from "../services-domain/hotel-service copy";
 
+
+//http://localhost:3000/search-hotel?city=Galle&fromDate=2023-03-17&toDate=2023-03-20&people=2
 function HotelSearchPage(props) {
     const navigate = useNavigate();
     const location = useLocation();
     const hotelService = HotelService.instance;
 
+    const [isDataLoading, setIsDataLoading] = useState(false);
+
 
     const queryParams = new URLSearchParams(location.search);
-    const[city, setCity] = useState(queryParams.get("city")) ;
+    const [city, setCity] = useState(queryParams.get("city"));
     let checkInDate = queryParams.get("fromDate");
     let checkOutDate = queryParams.get("toDate");
     let numOfPeople = queryParams.get("peopleCount");
@@ -28,7 +29,7 @@ function HotelSearchPage(props) {
     const [bedRooms, setBedRooms] = useState(1);
     const [searchText, setSearchText] = useState("");
     const [searchCity, setSearchCity] = useState("");
-    
+
 
 
     const [budget, setBudget] = useState("");
@@ -45,7 +46,9 @@ function HotelSearchPage(props) {
     const [hotelResultListCopy, setHotelResultListCopy] = useState(null);
 
     async function getRoomHotelList(city, checkInDate, checkOutDate, numOfPeople) {
+        setIsDataLoading(true);
         if (!(city && checkInDate && checkOutDate && numOfPeople)) {
+            setIsDataLoading(false);
             return;
         }
 
@@ -69,12 +72,15 @@ function HotelSearchPage(props) {
                         noOfDays: hh.noOfDays
                     };
                 });
+
                 setCity(city);
                 setHotelResultList(newHotellist);
-                setHotelResultListCopy(Object.assign({}, hotelResultList));
-                
+                setHotelResultListCopy(newHotellist);
+
+                setIsDataLoading(false)
             }
         } catch (error) {
+            setIsDataLoading(false)
             console.log(error);
             return;
         }
@@ -113,8 +119,6 @@ function HotelSearchPage(props) {
         setRoomFacilities(roomFacilityAvailability);
         setBedTypes(bedTypeAvailability);
         setSearchCity(city);
-
-
         getRoomHotelList(city, checkInDate, checkOutDate, numOfPeople);
     }, []);
 
@@ -135,13 +139,13 @@ function HotelSearchPage(props) {
             }
         );
 
-        if (searchCity !== city){
+        if (searchCity !== city) {
             setCity(searchCity);
-            await getRoomHotelList(searchCity, checkInDate, checkOutDate, numOfPeople );
+            await getRoomHotelList(searchCity, checkInDate, checkOutDate, numOfPeople);
         }
 
-        if(searchText && searchText.length > 0) {
-            setHotelResultListCopy(Object.assign({}, hotelResultList));
+        if (searchText && searchText.length > 0) {
+            setHotelResultListCopy(hotelResultList);
             setHotelResultListCopy(hotelResultListCopy.filter(hh => hh.Name.includes(searchText)));
         }
 
@@ -209,14 +213,15 @@ function HotelSearchPage(props) {
 
     const onClearSearchText = () => {
         setSearchText("");
-        setHotelResultListCopy(Object.assign({}, hotelResultList));
+        console.log(hotelResultList)
+        setHotelResultListCopy(hotelResultList);
     }
 
 
     return (
         <MainContainer>
 
-            <SearchBar searchCity={searchCity} checkInDate={checkInDate} checkOutDate={checkOutDate} numOfPeople={numOfPeople} hotelsData={hotelResultListCopy}
+            <SearchBar searchCity={searchCity} city={city} checkInDate={checkInDate} checkOutDate={checkOutDate} numOfPeople={numOfPeople} hotelsData={hotelResultListCopy}
                 bedRooms={bedRooms} setBedRooms={setBedRooms} onCitySearchChanged={onCitySearchChanged}
                 searchText={searchText} setSearchText={setSearchText} onClearSearchText={onClearSearchText}
                 onClickSearch={onClickSearch} />
@@ -232,15 +237,30 @@ function HotelSearchPage(props) {
                         resetFilters={resetFilters} isDisable={isFilerDisable}
                     />
                 </div>
-                <div className={"col"}>
-                    {(hotelResultListCopy && hotelResultListCopy.length > 0) ? <HotelList data={hotelResultListCopy} numOfPeople={numOfPeople} onViewAvailableClicked={onViewAvailableClicked} /> : ''}
-                    {/* <HotelList data={hotelResultList} numOfPeople={numOfPeople}/> */}
-                </div>
+                {isDataLoading ? (
+                    <div className="spinnerWrapper" >
+                        <Spinner
+                            color="primary"
+                            style={{
+                                height: '3rem',
+                                width: '3rem'
+                            }}
+                            type="grow"
+                        >
+                            Loading...
+                        </Spinner>
+                    </div>
+                ) : (
+                    <div className={"col"}>
+                        {(hotelResultListCopy && hotelResultListCopy.length > 0) ? <HotelList data={hotelResultListCopy} numOfPeople={numOfPeople} onViewAvailableClicked={onViewAvailableClicked} /> : ''}
+                        {/* <HotelList data={hotelResultList} numOfPeople={numOfPeople}/> */}
+                    </div>
+                )}
+
             </div>
 
         </MainContainer>
     )
 }
 
-//http://localhost:3000/search-hotel?city=Galle&check-in-date=2023/03/17&check-out-date=2023/03/20&people=2
 export default HotelSearchPage

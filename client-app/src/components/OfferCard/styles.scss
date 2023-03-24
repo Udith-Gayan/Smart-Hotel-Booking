@@ -1,7 +1,65 @@
 .offer_card {
-    .offer-details {
-        font-size: 13px;
-        color: grey;
-        font-weight: 450;
-    }
+  .offer-details {
+    font-size: 13px;
+    color: grey;
+    font-weight: 450;
+  }
+  img{
+    object-fit: cover;
+  }
+  margin-right: 50px;
+}
+
+
+
+.room_type {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  margin: 0px !important;
+}
+.room_details {
+  margin-bottom: 0;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.cardDetails {
+  text-align: left;
+}
+
+.bedIcon {
+  padding: 0px !important;
+}
+
+.room_wrapper {
+  padding: 0px !important;
+  padding-left: 5px !important;
+}
+
+.card-body-right {
+  text-align: right;
+}
+
+.original_price {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+    margin-top: 30px;
+  text-decoration-line: line-through;
+
+  color: #a9a6a6;
+}
+
+.discounted_price{
+    font-weight: 500;
+font-size: 30px;
+line-height: 36px;
+
+color: #000000;
+}
+
+.dealButton{
+    margin-top: 10px;
 }
