@@ -1,23 +1,24 @@
 import MainContainer from "../layout/MainContainer";
 import "../components/HotelHomePage/StarRating"
 import StarRating from "../components/HotelHomePage/StarRating";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { FaPlusCircle } from "react-icons/fa";
+import {FaMapMarkerAlt} from "react-icons/fa";
+import {FaPlusCircle} from "react-icons/fa";
 import HotelImages from "../components/HotelHomePage/HotelImages";
 import FacilitiesReadOnly from "../components/HotelHomePage/FacilitiesReadOnly";
-import React, { useRef, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, {useRef, useState, useEffect} from "react";
+import {useParams} from "react-router-dom";
 import CreateRoomModal from "../components/HotelHomePage/CreateRoomModal";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap"
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Spinner} from "reactstrap"
 import RoomDetails from "../components/HotelHomePage/RoomDetails";
 import HotelService from "../services-domain/hotel-service copy";
 import SharedStateService from "../services-domain/sharedState-service";
-import { toast } from 'react-hot-toast';
+import {toast} from 'react-hot-toast';
 import ContractService from "../services-common/contract-service";
+import ToastInnerElement from "../components/ToastInnerElement/ToastInnerElement";
 
 function HotelHomePage() {
 
-    const { id } = useParams();  // hotel id
+    const {id} = useParams();  // hotel id
     const sharedInstance = SharedStateService.instance;
     const hotelService = HotelService.instance;
 
@@ -30,7 +31,14 @@ function HotelHomePage() {
             try {
                 const res = await hotelService.getMyHotel(id);
                 if (!res) {
-                    toast.error("Error occured !");
+                    toast(
+                        (element) => (
+                            <ToastInnerElement message={"Error occured !"} id={element.id}/>
+                        ),
+                        {
+                            duration: Infinity,
+                        }
+                    );
                 }
 
                 setHotelName(res.Name);
@@ -45,7 +53,14 @@ function HotelHomePage() {
 
             } catch (error) {
                 setIsDataLoading(false);
-                toast.error(`Error occured: ${error} `);
+                toast(
+                    (element) => (
+                        <ToastInnerElement message={`Error occured: ${error} `} id={element.id}/>
+                    ),
+                    {
+                        duration: Infinity,
+                    }
+                );
             }
         }
         setIsDataLoading(false);
@@ -65,7 +80,8 @@ function HotelHomePage() {
     async function innnit() {
         await ContractService.instance.init();
     }
-    // Init function 
+
+    // Init function
     useEffect(() => {
         innnit();
         getHotelDetails();
@@ -81,7 +97,6 @@ function HotelHomePage() {
     const [selectedFacilityIds, setSelectedFacilityIds] = useState([]);
 
 
-
     const infoSection = useRef(null);
     const facilitiesSection = useRef(null);
     const houseRulesSection = useRef(null);
@@ -92,22 +107,22 @@ function HotelHomePage() {
     const [activeTab, setActiveTab] = useState(null);
     const onClickInfoSectionButton = () => {
         setActiveTab("info")
-        infoSection.current.scrollIntoView({ behavior: 'smooth' });
+        infoSection.current.scrollIntoView({behavior: 'smooth'});
     };
 
     const onClickFacilitiesSectionButton = () => {
         setActiveTab("facilities")
-        facilitiesSection.current.scrollIntoView({ behavior: 'smooth' });
+        facilitiesSection.current.scrollIntoView({behavior: 'smooth'});
     };
 
     const onClickHouseRulesSectionButton = () => {
         setActiveTab("house_rules")
-        houseRulesSection.current.scrollIntoView({ behavior: 'smooth' });
+        houseRulesSection.current.scrollIntoView({behavior: 'smooth'});
     };
 
     const onClickRoomLayoutSectionButton = () => {
         setActiveTab("room_layout")
-        roomLayoutSection.current.scrollIntoView({ behavior: 'smooth' });
+        roomLayoutSection.current.scrollIntoView({behavior: 'smooth'});
     };
     const [creatingRoom, setCreatingRoom] = useState(false);
     const [deletingRoom, setDeletingRoom] = useState(false);
@@ -169,9 +184,9 @@ function HotelHomePage() {
 
         <>
             <Modal isOpen={creatingRoom} toggle={onCloseCreateRoomModal} size="lg" centered
-                className={""}
-                style={{ maxWidth: '850px', width: '100%' }}>
-                <CreateRoomModal onSubmitRoom={onSubmitRoom} />
+                   className={""}
+                   style={{maxWidth: '850px', width: '100%'}}>
+                <CreateRoomModal onSubmitRoom={onSubmitRoom}/>
             </Modal>
 
             {deletingRoom && <Modal isOpen={deletingRoom} toggle={onCloseDeleteRoomModal}>
@@ -188,7 +203,7 @@ function HotelHomePage() {
 
             <MainContainer>
                 {isDataLoading ? (
-                    <div className="spinnerWrapper" >
+                    <div className="spinnerWrapper">
                         <Spinner
                             color="primary"
                             style={{
@@ -204,18 +219,18 @@ function HotelHomePage() {
                     <>
                         <section>
                             <div className={"row"}>
-                                <div className={"title_1"} style={{ width: "80%" }}>
+                                <div className={"title_1"} style={{width: "80%"}}>
                                     {hotelName}
                                 </div>
 
-                                <div className={"col"} style={{ paddingTop: "10px" }}>
-                                    <StarRating ratings={3} reviews={726} />
+                                <div className={"col"} style={{paddingTop: "10px"}}>
+                                    <StarRating ratings={3} reviews={726}/>
                                 </div>
                             </div>
 
                             <div className={"row left_div"}>
-                                <div style={{ width: "20px" }}>
-                                    <FaMapMarkerAlt />
+                                <div style={{width: "20px"}}>
+                                    <FaMapMarkerAlt/>
                                 </div>
                                 <div className={"subtext pt-2 col"}>
                                     {address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}
@@ -242,57 +257,72 @@ function HotelHomePage() {
 
                             </div>
 
-                            <HotelImages images={(images.slice(0, 6)).map(i => i.Url)} />
+                            <HotelImages images={(images.slice(0, 6)).map(i => i.Url)}/>
                         </section>
 
                         <section ref={infoSection} id="info_section" className={"pt-2"}>
-                            <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify", padding: "0 10px" }}>
+                            <div className={"subtext"}
+                                 style={{lineHeight: "25px", textAlign: "justify", padding: "0 10px"}}>
 
                                 {description}
                             </div>
 
                         </section>
 
-                        <FacilitiesReadOnly facilitiesSection={facilitiesSection} selectedFacilityIds={selectedFacilityIds} />
+                        <FacilitiesReadOnly facilitiesSection={facilitiesSection}
+                                            selectedFacilityIds={selectedFacilityIds}/>
 
                         <section id={"house_rules_section"} ref={houseRulesSection}>
                             <div className="title_2 pt-2 pb-2">House Rules</div>
 
-                            <div className={"subtext"} style={{ lineHeight: "25px", textAlign: "justify" }}>
-                                You are liable for any damage howsoever caused (whether by deliberate, negligent, or reckless
+                            <div className={"subtext"} style={{lineHeight: "25px", textAlign: "justify"}}>
+                                You are liable for any damage howsoever caused (whether by deliberate, negligent, or
+                                reckless
                                 act)
-                                to the room(s), hotel's premises or property caused by you or any person in your party, whether
+                                to the room(s), hotel's premises or property caused by you or any person in your party,
+                                whether
                                 or
-                                not staying at the hotel during your stay. Crest Wave Boutique Hotel reserves the right to
+                                not staying at the hotel during your stay. Crest Wave Boutique Hotel reserves the right
+                                to
                                 retain
-                                your credit card and/or debit card details, or forfeit your security deposit of MYR50.00 as
-                                presented at registration and charge or debit the credit/debit card such amounts as it shall, at
+                                your credit card and/or debit card details, or forfeit your security deposit of MYR50.00
+                                as
+                                presented at registration and charge or debit the credit/debit card such amounts as it
+                                shall, at
                                 its
-                                sole discretion, deem necessary to compensate or make good the cost or expenses incurred or
+                                sole discretion, deem necessary to compensate or make good the cost or expenses incurred
+                                or
                                 suffered
-                                by Crest Wave Boutique Hotel as a result of the aforesaid. Should this damage come to light
+                                by Crest Wave Boutique Hotel as a result of the aforesaid. Should this damage come to
+                                light
                                 after
-                                the guest has departed, we reserve the right, and you hereby authorize us, to charge your credit
+                                the guest has departed, we reserve the right, and you hereby authorize us, to charge
+                                your credit
                                 or
                                 debit card for any damage incurred to your room or the Hotel property during your stay,
                                 including
-                                and without limitation for all property damage, missing or damaged items, smoking fee, cleaning
+                                and without limitation for all property damage, missing or damaged items, smoking fee,
+                                cleaning
                                 fee,
-                                guest compensation, etc. We will make every effort to rectify any damage internally prior to
-                                contracting specialist to make the repairs, and therefore will make every effort to keep any
+                                guest compensation, etc. We will make every effort to rectify any damage internally
+                                prior to
+                                contracting specialist to make the repairs, and therefore will make every effort to keep
+                                any
                                 costs
                                 that the guest would incur to a minimum.
 
-                                <br />
-                                <br />
+                                <br/>
+                                <br/>
                                 Damage to rooms, fixtures, furnishing and equipment including the removal of electronic
                                 equipment,
                                 towels, artwork, etc. will be charged at 150% of full and new replacement value plus any
                                 shipping
                                 and handling charges. Any damage to hotel property, whether accidental or wilful, is the
-                                responsibility of the registered guest for each particular room. Any costs associated with
+                                responsibility of the registered guest for each particular room. Any costs associated
+                                with
                                 repairs
-                                and/or replacement will be charged to the credit card of the registered guest. In extreme cases,
+                                and/or replacement will be charged to the credit card of the registered guest. In
+                                extreme cases,
                                 criminal charges will be pursued.
                             </div>
                         </section>
@@ -301,17 +331,17 @@ function HotelHomePage() {
                             <div className="title_2 pt-2 pb-2">Room Layout</div>
                             <div className={"subtext"}>Details about your rooms.</div>
 
-                            <button className={"create_room_button mt-5"} style={{ width: "200px" }}
-                                onClick={onOpenCreateRoomModal}>
-                                <FaPlusCircle size={26} /> <span>&nbsp;Add Room</span>
+                            <button className={"create_room_button mt-5"} style={{width: "200px"}}
+                                    onClick={onOpenCreateRoomModal}>
+                                <FaPlusCircle size={26}/> <span>&nbsp;Add Room</span>
                             </button>
 
-                            {rooms.length !== 0 && <RoomDetails rooms={rooms} onOpenDeleteRoomModal={onOpenDeleteRoomModal} />}
+                            {rooms.length !== 0 &&
+                            <RoomDetails rooms={rooms} onOpenDeleteRoomModal={onOpenDeleteRoomModal}/>}
 
                         </section>
                     </>
                 )}
-
 
 
             </MainContainer>

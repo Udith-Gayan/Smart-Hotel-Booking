@@ -24,6 +24,7 @@ import { FirebaseService } from "../services-common/firebase-service";
 import { useNavigate } from "react-router-dom";
 import ImagePreviewSection from "../components/RegisterHotelComponents/ImagePreviewSection";
 import { toast } from "react-hot-toast";
+import ToastInnerElement from "../components/ToastInnerElement/ToastInnerElement";
 
 function RegisterHotel() {
   const hotelService = HotelService.instance;
@@ -191,17 +192,38 @@ function RegisterHotel() {
           toast.success("Registered successfully!");
           navigate(`/hotel/${res.hotelId}`);
         } else {
-          toast.error("Registration failed!");
+          toast(
+              (element) => (
+                  <ToastInnerElement message={"Registration failed!"} id={element.id}/>
+              ),
+              {
+                  duration: Infinity,
+              }
+          );
           //alert("Registration failed!");
         }
       } else {
         setRegisterButtonDisable(false);
-        toast.error("Check the details again!");
+        toast(
+            (element) => (
+                <ToastInnerElement message={"Check the details again!"} id={element.id}/>
+            ),
+            {
+                duration: Infinity,
+            }
+        );
       }
     } catch (err) {
       setRegisterButtonDisable(false);
       console.log(err);
-      toast.error("Error occurred in Registration.!");
+      toast(
+          (element) => (
+              <ToastInnerElement message={"Error occurred in Registration.!"} id={element.id}/>
+          ),
+          {
+              duration: Infinity,
+          }
+      );
       //alert("Error occurred in Registration.!");
     }
   }, [

@@ -30,7 +30,14 @@ const HeaderSectionLandingPageHotelOwner = () => {
     setDisableSubmitBtn(true);
     if (!xrplService.isValidSecret(secret)) {
       //setErrorMessage("Invalid secret.");
-      toast.error("Invalid secret.");
+      toast(
+          (element) => (
+              <ToastInnerElement message={"Invalid secret."} id={element.id}/>
+          ),
+          {
+              duration: Infinity,
+          }
+      );
       setDisableSubmitBtn(false);
       return;
     }
