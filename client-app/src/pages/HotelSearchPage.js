@@ -1,6 +1,5 @@
 import MainContainer from "../layout/MainContainer";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Spinner } from "reactstrap";
 import React, { useEffect, useState } from "react";
 import SearchBar from "../components/HotelSearchPage/SearchBar";
 import Filters from "../components/HotelSearchPage/Filters";
@@ -9,6 +8,7 @@ import roomFacilitiesData from "../data/room_facilities";
 import { bed_types } from "../constants/constants";
 import HotelList from "../components/HotelSearchPage/HotelList";
 import HotelService from "../services-domain/hotel-service copy";
+import { Alert } from 'reactstrap'
 
 
 //http://localhost:3000/search-hotel?city=Galle&fromDate=2023-03-17&toDate=2023-03-20&people=2
@@ -226,39 +226,30 @@ function HotelSearchPage(props) {
                 searchText={searchText} setSearchText={setSearchText} onClearSearchText={onClearSearchText}
                 onClickSearch={onClickSearch} />
 
-            <div className={"row_fit"} style={{ width: "100%" }}>
-                <div style={{ paddingRight: "30px", paddingBottom: "20px" }}>
-                    <Filters city={city} budget={budget} setBudget={setBudget}
-                        distance={distance} setDistance={setDistance}
-                        conveniences={conveniences} onChangeConvenience={onChangeConvenience}
-                        cancellationPolicy={cancellationPolicy} setCancellationPolicy={setCancellationPolicy}
-                        bedTypes={bedTypes} onChangeBedType={onChangeBedType}
-                        roomFacilities={roomFacilities} onChangeRoomFacility={onChangeRoomFacility}
-                        resetFilters={resetFilters} isDisable={isFilerDisable}
-                    />
-                </div>
-                {isDataLoading ? (
-                    <div className="spinnerWrapper" >
-                        <Spinner
-                            color="primary"
-                            style={{
-                                height: '3rem',
-                                width: '3rem'
-                            }}
-                            type="grow"
-                        >
-                            Loading...
-                        </Spinner>
+            {true ? (<Alert color="warning" style={{ marginBottom: "40vh" }}>
+                No Hotels Found!
+            </Alert>) :
+
+                <div className={"row_fit"} style={{ width: "100%" }}>
+                    <div style={{ paddingRight: "30px", paddingBottom: "20px" }}>
+                        <Filters city={city} budget={budget} setBudget={setBudget}
+                            distance={distance} setDistance={setDistance}
+                            conveniences={conveniences} onChangeConvenience={onChangeConvenience}
+                            cancellationPolicy={cancellationPolicy} setCancellationPolicy={setCancellationPolicy}
+                            bedTypes={bedTypes} onChangeBedType={onChangeBedType}
+                            roomFacilities={roomFacilities} onChangeRoomFacility={onChangeRoomFacility}
+                            resetFilters={resetFilters} isDisable={isFilerDisable}
+                        />
                     </div>
-                ) : (
+
                     <div className={"col"}>
                         {(hotelResultListCopy && hotelResultListCopy.length > 0) ? <HotelList data={hotelResultListCopy} numOfPeople={numOfPeople} onViewAvailableClicked={onViewAvailableClicked} /> : ''}
                         {/* <HotelList data={hotelResultList} numOfPeople={numOfPeople}/> */}
                     </div>
-                )}
 
-            </div>
 
+                </div>
+            }
         </MainContainer>
     )
 }
