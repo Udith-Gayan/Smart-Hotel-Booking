@@ -48,6 +48,8 @@ function AvailabilityPage() {
 
     const [selectedRooms, setSelectedRooms] = useState({});
 
+    const [reserveBtnDisabled,setReserveBtnDisabled] = useState(true);
+
     useEffect(() => {
         getMyHotelRoomDetails();
     }, [])
@@ -55,7 +57,6 @@ function AvailabilityPage() {
     async function getMyHotelRoomDetails() {
         try {
              const resObj = await hotelService.getSingleHotelWithRooms(id, checkInDate, checkOutDate, roomCount);
-             console.log(resObj)
              if(resObj) {
                  // set images
                  if(resObj.ImageUrls && resObj.ImageUrls.length > 0) {
@@ -98,8 +99,20 @@ function AvailabilityPage() {
             else if (newState[room.Id].count > room.NumOfRooms)
                 newState[room.Id].count = room.NumOfRooms;
 
+            // For disabling the reserve button
+            let countTotal = 0;
+            for(const kk in newState) {
+                countTotal += newState[kk].count;
+            }
+            if(countTotal > 0)
+                setReserveBtnDisabled(false);
+            else
+                setReserveBtnDisabled(true)
+
             return newState;
         })
+
+
     }
 
     const infoSection = useRef(null);
@@ -303,7 +316,7 @@ function AvailabilityPage() {
 
             <AvailabilitySearchBar onChangeCheckInCheckOutDates={onChangeCheckInCheckOutDates}
                                    checkInCheckOutDates={checkInCheckOutDates}/>
-            <AvailabilityRooms roomData={roomData} onReserve={onReserve} selectedRooms={selectedRooms}
+            <AvailabilityRooms roomData={roomData} onReserve={onReserve} selectedRooms={selectedRooms} reserveBtnDisabled={reserveBtnDisabled}
                                onChangeSelectedRooms={onChangeSelectedRooms}/>
         </MainContainer>
     );

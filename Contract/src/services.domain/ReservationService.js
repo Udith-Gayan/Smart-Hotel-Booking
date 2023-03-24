@@ -123,14 +123,15 @@ class ReservationService {
             }
         }
 
+
         const reservationIdList = [];
         for(const i in roomSelections) {
             const reservationEntity = {
                 RoomId: roomSelections[i].roomId,
                 RoomCount: roomSelections[i].roomCount,
                 CustomerId: nCustomerId,
-                FromDate: data.FromDate,
-                ToDate: data.ToDate,
+                FromDate: data.FromDate.substr(0,10),
+                ToDate: data.ToDate.substr(0,10),
                 Cost: roomIdList[i].roomCost,
                 TransactionId: data.TransactionId ?? null
             }

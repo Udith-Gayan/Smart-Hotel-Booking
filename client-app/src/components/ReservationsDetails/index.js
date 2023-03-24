@@ -63,7 +63,6 @@ const ReservationsForCustomer = () => {
     const address = await xrplService.generateWalletFromSeed(secret);
     setWalletAddress(address?.classicAddress);
     const body = { walletAddress: address, customer: customer, hotelOwner: hotelOwner }
-    console.log(body)
   }
   return (
     <div className={styles.containerOverride}>

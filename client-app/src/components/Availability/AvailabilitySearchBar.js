@@ -25,9 +25,6 @@ function AvailabilitySearchBar(props) {
         })
     }
 
-    useEffect(() => {
-        console.log(checkInDate)
-    })
     return (
         <>
             <div className="title_2 pt-2 pb-2">Availability</div>

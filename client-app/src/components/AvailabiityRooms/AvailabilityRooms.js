@@ -11,6 +11,7 @@ function AvailabilityRooms(props) {
 
     const [roomDetails, setRoomDetails] = useState(props.roomData);
 
+
     const getRoomCount = (roomIndex) => {
         if (roomIndex in props.selectedRooms) {
             return props.selectedRooms[roomIndex].count;
@@ -81,7 +82,7 @@ function AvailabilityRooms(props) {
                             <td className={"td-room-count"}>
 
                                 <button className={"increment_button"}
-                                        onClick={props.onChangeSelectedRooms.bind(this, room, false)}>
+                                        onClick={ props.onChangeSelectedRooms.bind(this, room, false) }>
                                     <FaWindowMinimize size={12} style={{
                                         marginRight: "10px",
                                         marginTop: "-13px",
@@ -92,7 +93,7 @@ function AvailabilityRooms(props) {
                                 <span className={"title_3_sub bedroom_text"}>{getRoomCount(room.Id)}</span>
 
                                 <button className={"decrement_button"}
-                                        onClick={props.onChangeSelectedRooms.bind(this, room, true)}>
+                                        onClick={ props.onChangeSelectedRooms.bind(this, room, true)}>
                                     <FaPlus size={12} style={{marginRight: "10px", marginTop: "-7px"}}/>
                                 </button>
                             </td>
@@ -103,7 +104,7 @@ function AvailabilityRooms(props) {
             </table>
 
             <div className={"mb-3 mt-5 button_container"}>
-                <Button className="secondaryButton reserve-button" onClick={props.onReserve}>
+                <Button className="secondaryButton reserve-button" onClick={props.onReserve} disabled={props.reserveBtnDisabled}>
                     I'll Reserve
                 </Button>
             </div>

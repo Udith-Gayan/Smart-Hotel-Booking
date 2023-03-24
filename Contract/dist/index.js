@@ -95542,6 +95542,7 @@ class HotelService {
         hotelIdList = [...new Set(roomsList.map(rl => rl.HotelId))];
         hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
         let roomIdList = roomsList.map(rl => rl.Id);
+        console.log("HotelRawssSS: ", hotelRows )
 
         query = `SELECT * from Reservations WHERE RoomId IN (${roomIdList})`;
         const reservationList = await this.#db.runNativeGetAllQuery(query);
@@ -95577,13 +95578,15 @@ class HotelService {
             availableRoomList.push(roomObj1);
         }
 
+        console.log("RoomList111: ", roomsList);
+
         // Second, loop the room objects and their reserved dates for availability check. 
         // If 
         console.log(6);
         const removingRoomIds = [];
         for (const idx in availableRoomList) {
             const roomObj = availableRoomList[idx];
-
+            console.log("Room obj:", idx,  roomObj);
             if (roomObj.checkedDates.length == 0) {
                 continue;
             }
@@ -95597,17 +95600,22 @@ class HotelService {
                     }
                 }
 
-                if ((reservedRoomCount + necessaryRoomCount) > roomObj.maxRoomCount) {
+                console.log("Date: ", filterDate, "RoomId: ", roomObj.roomId, "reservedRoomCount: ", reservedRoomCount, "necessaryRoomCount: ", necessaryRoomCount, "maxRoomCount: ", roomObj.maxRoomCount );
+                if ((Number(reservedRoomCount) + Number(necessaryRoomCount)) > Number(roomObj.maxRoomCount)) {
                     removingRoomIds.push(roomObj.roomId);
                 }
             }
         }
 
+        console.log("Removing Id List: ", removingRoomIds);
+
         console.log(7);
         availableRoomList = availableRoomList.filter(ar => !removingRoomIds.includes(ar.roomId));
+        console.log("Avaialble room list: ", availableRoomList);
 
         hotelIdList = [...new Set(availableRoomList.map(rl => rl.HotelId))];
         hotelRows = hotelRows.filter(hr => hotelIdList.includes(hr.Id));
+
         const resultList = await this.#prepareSearchResultPhase2(hotelRows, availableRoomList, filteringDateRange.length);
         console.log(8);
         console.log(resultList)
@@ -95680,13 +95688,13 @@ class HotelService {
         for (const idx in availableRoomList) {
             console.log(61)
             const roomObj = availableRoomList[idx];
+            availableRoomList[idx].avaialableRoomCount = roomObj.MaxRoomCount;
 
             if (roomObj.checkedDates.length == 0) {
                 console.log(62)
                 continue;
             }
 
-            availableRoomList[idx].avaialableRoomCount = 0;
             for (let filterDate of filteringDateRange) {
                 console.log(63)
                 let reservedRoomCount = 0;
@@ -95699,9 +95707,9 @@ class HotelService {
                     }
                 }
 
-                if ((reservedRoomCount + necessaryRoomCount) > roomObj.maxRoomCount) {
+                if ((Number(reservedRoomCount) + Number(necessaryRoomCount)) > Number(roomObj.maxRoomCount)) {
                     console.log(633)
-                    removingRoomIds.push(roomId);
+                    removingRoomIds.push(roomObj.roomId);
                 }
 
                 if(availableRoomList[idx].avaialableRoomCount == 0) {
@@ -95963,14 +95971,15 @@ class ReservationService {
             }
         }
 
+
         const reservationIdList = [];
         for(const i in roomSelections) {
             const reservationEntity = {
                 RoomId: roomSelections[i].roomId,
                 RoomCount: roomSelections[i].roomCount,
                 CustomerId: nCustomerId,
-                FromDate: data.FromDate,
-                ToDate: data.ToDate,
+                FromDate: data.FromDate.substr(0,10),
+                ToDate: data.ToDate.substr(0,10),
                 Cost: roomIdList[i].roomCost,
                 TransactionId: data.TransactionId ?? null
             }
@@ -96381,6 +96390,8 @@ class DateHelper {
     static getDatesArrayInBewtween(startDate, endDate) {
         const dates = [];
         let currentDate = new Date(startDate);
+        currentDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0,0,0,0);
 
         while (currentDate <= endDate) {
             dates.push(new Date(currentDate));

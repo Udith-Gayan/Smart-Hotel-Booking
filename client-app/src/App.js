@@ -24,7 +24,6 @@ function App() {
         });
 
         const handleBackButton = () => {
-            console.log("bACK IS CLALED")
             // Do something when the back button is clicked
             ContractService.instance.init().then(res => {
                 setIsContractInitiated(true);
