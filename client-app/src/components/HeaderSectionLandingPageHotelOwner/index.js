@@ -7,7 +7,7 @@ import { show, hide } from "../../features/visibility/visibleSlice";
 import { useNavigate } from "react-router-dom";
 import XrplService from "../../services-common/xrpl-service";
 import HotelService from "../../services-domain/hotel-service copy";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const HeaderSectionLandingPageHotelOwner = () => {
   const navigate = useNavigate();
@@ -25,12 +25,12 @@ const HeaderSectionLandingPageHotelOwner = () => {
     navigate("/register-hotel");
   };
 
-  const submit = async (e) => { 
+  const submit = async (e) => {
     e.preventDefault();
     setDisableSubmitBtn(true);
     if (!xrplService.isValidSecret(secret)) {
       //setErrorMessage("Invalid secret.");
-      toast.error("Invalid secret.")
+      toast.error("Invalid secret.");
       setDisableSubmitBtn(false);
       return;
     }
@@ -55,15 +55,26 @@ const HeaderSectionLandingPageHotelOwner = () => {
           <hr className="noMargin" />
           <span className={styles.heading}>worth sharing!</span>
           <br />
+          <div className={styles.breaker}></div>
           <span className={styles.description}>
-            type littile description about the hotel booking system for hotel
-            owners - Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            dummy text ever since the 1500s, when an unknown printer took a
-            galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic
-            typesetting, remaining essentially unchanged.
+            Are you a hotel owner looking to increase your bookings and reach a
+            wider audience? Look no further than our hotel booking website! With
+            our highly secure platform and state-of-the-art cryptographic
+            wallet, you can be sure that your information and transactions are
+            always safe and protected.
+            <br />
+            <br /> By listing your property on our platform, you'll have access
+            to a vast network of potential guests, allowing you to expand your
+            reach and increase your bookings. Our user-friendly interface makes
+            it easy to manage your listings and keep track of your reservations,
+            saving you time and hassle.
+            <br />
+            <br /> Plus, with our advanced booking and payment systems, you can
+            rest easy knowing that your payments will always be processed
+            quickly and securely. So why wait? Sign up today and start reaping
+            the benefits of our trusted and secure hotel booking platform.
           </span>
+          <hr className="" />
           <div>
             <Button
               className={`primaryButton smallMarginTopBottom ${styles.buttonOverride}`}
