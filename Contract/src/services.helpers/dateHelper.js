@@ -10,6 +10,8 @@ class DateHelper {
     static getDatesArrayInBewtween(startDate, endDate) {
         const dates = [];
         let currentDate = new Date(startDate);
+        currentDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0,0,0,0);
 
         while (currentDate <= endDate) {
             dates.push(new Date(currentDate));

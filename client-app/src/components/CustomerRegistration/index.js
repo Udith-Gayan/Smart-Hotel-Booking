@@ -24,6 +24,7 @@ const CustomerRegistration = (props) => {
     (state) => state.registerCustomer.generatedSecretVisibility
   );
 
+  const [disableConfirm, setDisableConfirm] = useState(true);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
@@ -37,10 +38,20 @@ const CustomerRegistration = (props) => {
   const [secretInvalid, setSecretInvalid] = useState(false);
   const [walletAddressInvalid, setWalletAddressInvalid] = useState(false);
 
-  const[disableAll, setdisableAll] = useState(true);
+  // const [disableAll, setdisableAll] = useState(true);
 
   const dispatch = useDispatch();
 
+  // disable confirm button logic
+  useEffect(() => {
+    if (fullName && email && phoneNo && walletAddress && ((payNow && secret) || payAtDoor)) {
+      setDisableConfirm(false)
+    }
+    else {
+      setDisableConfirm(true)
+    }
+
+  }, [fullName, email, phoneNo, walletAddress, payNow, secret, payAtDoor])
   const validation = (body) => {
     // only when validate, body will pass
     if (
@@ -58,8 +69,8 @@ const CustomerRegistration = (props) => {
 
   const registerCustomer = async (e) => {
     e.preventDefault();
-    setdisableAll(true);
-    const body = { fullName, email, phoneNo, secret, payNow, walletAddress  };
+    // setdisableAll(true);
+    const body = { fullName, email, phoneNo, secret, payNow, walletAddress };
 
     if (fullName.length === 0) {
       setFullNameInvalid(true);
@@ -88,10 +99,10 @@ const CustomerRegistration = (props) => {
     } else {
       setSecretInvalid(false);
     }
-    if(validation(body)) {
+    if (validation(body)) {
       await props.createReservation(body)
     }
-    setdisableAll(false);
+    // setdisableAll(false);
     return;
   };
 
@@ -162,12 +173,12 @@ const CustomerRegistration = (props) => {
             <FormGroup>
               <Label for="phoneNo">Wallet Address</Label>
               <Input
-                  id="walletAddress"
-                  name="walletAddress"
-                  type="text"
-                  value={walletAddress}
-                  onChange={(e) => setWalletAddress(e.target.value)}
-                  invalid={walletAddressInvalid}
+                id="walletAddress"
+                name="walletAddress"
+                type="text"
+                value={walletAddress}
+                onChange={(e) => setWalletAddress(e.target.value)}
+                invalid={walletAddressInvalid}
               />
               <FormFeedback invalid={walletAddressInvalid.toString()}>
                 Wallet address is required.
@@ -221,7 +232,7 @@ const CustomerRegistration = (props) => {
         ) : null}
 
         <div>
-          <Button className="secondaryButton smallMarginTopBottom" >
+          <Button className="secondaryButton smallMarginTopBottom" disabled={disableConfirm}>
             Confirm Booking
           </Button>
         </div>

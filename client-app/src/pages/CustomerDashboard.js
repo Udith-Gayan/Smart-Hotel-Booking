@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   Col,
   Container,
@@ -9,7 +9,7 @@ import {
   Label,
 } from "reactstrap";
 import "./../styles/customer_dashboard_styles.scss";
-import { RangeDatePicker } from "@y0c/react-datepicker";
+import {RangeDatePicker} from "@y0c/react-datepicker";
 import "@y0c/react-datepicker/assets/styles/calendar.scss";
 import OfferCard from "../components/OfferCard/OfferCard";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ import SearchCard from "../components/SearchCard";
 import SearchMenu from "../components/SearchMenu";
 import bestOffers from "../data/bestOffers";
 import toast from "react-hot-toast";
+import ToastInnerElement from "../components/ToastInnerElement/ToastInnerElement";
 // import 'moment/locale/ko';
 
 function CustomerDashboard() {
@@ -41,25 +42,46 @@ function CustomerDashboard() {
     setDateRange(args);
   };
 
-  function onSearchSubmit() {
-    if (!city || city.length < 3) {
-      toast.error("Requires a valid city.");
-      //setErrorMessge("Requires a valid city.");
-      return;
-    }
+    function onSearchSubmit() {
+        if (!city || city.length < 3) {
+            toast(
+                (element) => (
+                    <ToastInnerElement message={"Requires a valid city."} id={element.id}/>
+                ),
+                {
+                    duration: Infinity,
+                }
+            );
+            //setErrorMessge("Requires a valid city.");
+            return;
+        }
 
-    if (!dateRange || !dateRange[0] || !dateRange[1]) {
-      console.log("Invalid date range.");
-      toast.error("Invalid date range.");
-      //setErrorMessge("Invalid date range.");
-      return;
-    }
+        if (!dateRange || !dateRange[0] || !dateRange[1]) {
+            console.log("Invalid date range.")
+            toast(
+                (element) => (
+                    <ToastInnerElement message={"Invalid date range."} id={element.id}/>
+                ),
+                {
+                    duration: Infinity,
+                }
+            );
+            //setErrorMessge("Invalid date range.");
+            return;
+        }
 
-    if (peopleCount < 1) {
-      toast.error("Invalid people count.");
-      //setErrorMessge("Invalid people count.");
-      return;
-    }
+        if (peopleCount < 1) {
+            toast(
+                (element) => (
+                    <ToastInnerElement message={"Invalid people count."} id={element.id}/>
+                ),
+                {
+                    duration: Infinity,
+                }
+            );
+            //setErrorMessge("Invalid people count.");
+            return;
+        }
 
     navigate(
       `/search-hotel?city=${city}&fromDate=${dateRange[0]}&toDate=${dateRange[1]}&peopleCount=${peopleCount}`

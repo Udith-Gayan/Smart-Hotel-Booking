@@ -14,7 +14,7 @@
 }
 .content {
   position: absolute;
-  top: 200px;
+  top: 130px;
   left: 20%;
   right: 20%;
   z-index: 10;
@@ -24,18 +24,24 @@
   color: white;
 }
 
+.breaker{
+  height: 20px;
+}
 .heading {
   font-size: 80px;
+  line-height: 100px;
+
 }
 
 .description {
-  font-size: 20px;
+  line-height: 30px;
+  font-size: 18px;
 }
 
 .heroImage {
   background-image: url("/Assets/Images/hotel-owner-landing-page.webp"); /* The image used */
   background-color: #cccccc; /* Used if the image is unavailable */
-  height: 75vh; /* You must set a specified height */
+  height: 100vh; /* You must set a specified height */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
