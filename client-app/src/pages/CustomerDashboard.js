@@ -23,6 +23,8 @@ import searches from "../data/searches";
 import SearchCard from "../components/SearchCard";
 import SearchMenu from "../components/SearchMenu";
 import bestOffers from "../data/bestOffers";
+import toast from "react-hot-toast";
+// import 'moment/locale/ko';
 
 function CustomerDashboard() {
   const navigate = useNavigate();
@@ -41,18 +43,21 @@ function CustomerDashboard() {
 
   function onSearchSubmit() {
     if (!city || city.length < 3) {
-      setErrorMessge("Requires a valid city.");
+      toast.error("Requires a valid city.");
+      //setErrorMessge("Requires a valid city.");
       return;
     }
 
     if (!dateRange || !dateRange[0] || !dateRange[1]) {
       console.log("Invalid date range.");
-      setErrorMessge("Invalid date range.");
+      toast.error("Invalid date range.");
+      //setErrorMessge("Invalid date range.");
       return;
     }
 
     if (peopleCount < 1) {
-      setErrorMessge("Invalid people count.");
+      toast.error("Invalid people count.");
+      //setErrorMessge("Invalid people count.");
       return;
     }
 
@@ -77,7 +82,7 @@ function CustomerDashboard() {
           <div className="search-area">
             <Row className="search-wrapper-row">
               <Col style={{ flex: "1 0" }}>
-                <Label>Where to go?</Label>
+                <Label>Where ?</Label>
                 <InputGroup>
                   <Input
                     placeholder="City"
@@ -96,7 +101,7 @@ function CustomerDashboard() {
                 />
               </Col>
               <Col>
-                <Label>No. of people</Label>
+                <Label>No. of rooms</Label>
                 <InputGroup>
                   <Input
                     placeholder="0"

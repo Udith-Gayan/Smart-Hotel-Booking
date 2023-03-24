@@ -38,6 +38,9 @@ function Facilities(props) {
                     return <CheckBoxRow facilities={row} key={row[0].Id} onChange={onChangeFacility} />
                 })}
             </Card1>
+            <br />
+            {props.hotelFacilitiesInvaid ? <span style={{ color: "red" }}>At least one facility should be selected!</span> : null}
+
 
 
         </section>

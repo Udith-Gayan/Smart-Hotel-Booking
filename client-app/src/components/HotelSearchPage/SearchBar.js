@@ -1,5 +1,5 @@
 import hotelsData from "../../data/hotels";
-import {Dropdown, DropdownToggle} from "reactstrap";
+import {Dropdown, DropdownToggle, Input} from "reactstrap";
 import React, {useState} from "react";
 import DateFunctions, {convertDateMonthDate} from "../../helpers/DateFunctions";
 import {FaCalendarAlt, FaPlusCircle, FaPlus, FaWindowMinimize} from "react-icons/fa";
@@ -18,17 +18,16 @@ function SearchBar(props) {
         props.setSearchText(event.target.value);
     }
 
-    const onClearSearchText = () => {
-        props.setSearchText("");
-    }
+    
     return (
         <section>
-            <div className={"title_2"}>{hotelsData.length} Hotels in {props.city}</div>
+            <div className={"title_2"}>{props.hotelsData ? props.hotelsData.length : `No `} Hotels in {props.city}</div>
             <div className={"subtext"} style={{lineHeight: "15px"}}>Book your next stay at one of our properties</div>
 
             <div className={"row mt-4"}>
                 <div className={"mb-3"} style={{width: "auto"}}>
-                    <Dropdown group style={{border: "1px solid #908F8F", height: "40px"}}>
+                    <Input value={props.searchCity} onChange={e => props.onCitySearchChanged(e.target.value)}></Input>
+                    {/* <Dropdown group style={{border: "1px solid #908F8F", height: "40px"}}>
                         <span className={"title_4 city_text"}>{props.city}</span>
                         <DropdownToggle caret
                                         style={{
@@ -41,7 +40,7 @@ function SearchBar(props) {
                                         disabled>
 
                         </DropdownToggle>
-                    </Dropdown>
+                    </Dropdown> */}
                 </div>
 
                 <div className={"mb-3"} style={{width: "auto"}}>
@@ -57,7 +56,7 @@ function SearchBar(props) {
 
                 <div className={"mb-3"} style={{width: "auto"}}>
                     <Dropdown group style={{border: "1px solid #908F8F", height: "40px"}}>
-                        <span className={"title_4 people_text"}>{props.numOfPeople} People</span>
+                        <span className={"title_4 people_text"}>{props.numOfPeople} Rooms</span>
 
                         <DropdownToggle caret
                                         style={{
@@ -91,7 +90,7 @@ function SearchBar(props) {
                     </Dropdown>
                 </div>
 
-                <div className={"mb-3"} style={{width: "225px"}}>
+                {/* <div className={"mb-3"} style={{width: "225px"}}>
                     <Dropdown group style={{border: "1px solid #908F8F", height: "40px"}}>
                         <span className={"title_4 people_text"}>Bedroom</span>
 
@@ -110,7 +109,7 @@ function SearchBar(props) {
                         </button>
 
                     </Dropdown>
-                </div>
+                </div> */}
             </div>
 
             <div className={"row mt-1"}>
@@ -121,7 +120,7 @@ function SearchBar(props) {
                 </div>
 
                 <div className={"col-md-2 col-sm-3 mb-3"}  style={{width: "auto"}}>
-                    <button className={"clear_button"} style={{maxWidth: "200px"}} onClick={onClearSearchText}>
+                    <button className={"clear_button"} style={{maxWidth: "200px"}} onClick={props.onClearSearchText}>
                         <span className={"title_4"}>Clear</span>
                     </button>
                 </div>

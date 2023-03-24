@@ -42,6 +42,7 @@ export default class HotelService {
     const res = await this.contractService.submitReadRequest(resObj);
 
     if (res && res.Id && res.Id > 0) {
+      localStorage.setItem("seed", hotelWallet.seed);
       SharedStateService.instance.currentHotelId = res.Id;
       SharedStateService.instance.hotelWallet = hotelWallet;
       return res;
@@ -130,7 +131,7 @@ export default class HotelService {
       }
     }
     try {
-      const res = await this.contractService.submitReadRequest(submitObject);
+      const res = await this.contractService?.submitReadRequest(submitObject);
       if (res.hotelList && res.hotelList.length > 0) {
         return res.hotelList[0];
       } else {
@@ -141,6 +142,35 @@ export default class HotelService {
     catch (error) {
       console.log(error);
       throw (error);
+    }
+  }
+
+
+  /**
+   * 
+   * @param {Object} filterObj 
+   * @returns An array of objects || []
+   */
+  async getRoomHotelList (filterObj) {
+    const submitObject = {
+      type: constants.RequestTypes.HOTEL,
+      subType: constants.RequestSubTypes.SEARCH_HOTELS_WITH_ROOM,
+      filters: filterObj
+    }
+
+    try {
+      console.log(submitObject)
+      const res = await this.contractService.submitReadRequest(submitObject);
+      if(res && res.searchResult && res.searchResult.length > 0) {
+        console.log(res.searchResult)
+        return res.searchResult;
+      }
+      else {
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+      throw(error);
     }
   }
 
@@ -206,7 +236,8 @@ export default class HotelService {
     }
     
     // make the transaction and set the transaction id to the object before sending
-    const res = await this.#xrplService.makePayment(SharedStateService.instance.hotelWallet.seed, roomCreationCost, contractWalletAddress);
+    const hotelSeed = localStorage.getItem("seed");
+    const res = await this.#xrplService.makePayment(hotelSeed, roomCreationCost, contractWalletAddress);
 
     if (res.meta.TransactionResult === "tesSUCCESS") {
       submitObject.data.TransactionId = res.hash;
@@ -224,6 +255,41 @@ export default class HotelService {
     } else {
       
     }
+  }
+
+  async makeReservation(data) {
+    let response;
+
+    const submitData =  {
+      CustomerId: data.CustomerId,
+      FromDate: data.FromDate,
+      ToDate: data.ToDate,
+      CustomerDetails: data.CustomerDetails,
+      RoomSelections: data.roomSelections  //  [  {roomId: 1, roomCount: 3, costPerRoom: 25, roomName: "" }, {roomId: 2, roomCount: 3, costPerRoom: 25} ]
+    }
+    if(data.payNow){
+      const res = await this.#xrplService.makePayment(data.secret, data.totalFee.toString(), contractWalletAddress);
+      if(res.code == "tesSUCCESS") {
+        submitData.TransactionId = res.id;
+      }
+    }
+
+    const submitObj = {
+      type: constants.RequestTypes.RESERVATION,
+      subType: constants.RequestSubTypes.CREATE_RESERVATION,
+      data: submitData
+    }
+
+    let result;
+    try {
+      result = await this.contractService.submitInputToContract(submitObj);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+
+
+
   }
 
 

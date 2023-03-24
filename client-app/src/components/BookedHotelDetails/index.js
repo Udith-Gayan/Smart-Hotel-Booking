@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
 
-const BookedHotelDetails = () => {
+const BookedHotelDetails = (props) => {
   return (
     <Card className={styles.bookedHotelCard}>
       <Row>
@@ -12,8 +12,8 @@ const BookedHotelDetails = () => {
           <div className={styles.hotelImg}></div>
         </Col>
         <Col md={8}>
-          <h3 className="fontBold">Shrin1892</h3>
-          <p>Badulla Road No.156, 22200 Nuwara Eliya, Sri Lanka</p>
+          <h3 className="fontBold">{props.hotelName}</h3>
+          <p>{props.hotelAddress}</p>
           <Badge color="warning">4.5 Ratings</Badge>
           <FontAwesomeIcon icon={solid("star")} />
           <FontAwesomeIcon icon={solid("star")} />
