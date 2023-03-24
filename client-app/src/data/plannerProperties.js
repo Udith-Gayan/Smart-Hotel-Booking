@@ -1,23 +1,23 @@
 const plannerProperties = [
   [
     {
-      name: "Kandy",
-      image: "Assets/Images/dashboard/explore/kandy.webp",
+      name: "Hikkaduwa",
+      image: "Assets/Images/dashboard/planner/hikkaduwa.webp",
       number: 1365,
     },
     {
-      name: "Ella",
-      image: "/Assets/Images/dashboard/explore/Ella.webp",
+      name: "Bentota",
+      image: "/Assets/Images/dashboard/planner/bentota.webp",
       number: 784,
     },
     {
-      name: "Sigiriya",
-      image: "/Assets/Images/dashboard/explore/Sigiriya.webp",
+      name: "Jungle Beach",
+      image: "/Assets/Images/dashboard/planner/junglebeach.webp",
       number: 439,
     },
     {
-      name: "Sigiriya",
-      image: "/Assets/Images/dashboard/explore/Sigiriya.webp",
+      name: "Mirissa",
+      image: "/Assets/Images/dashboard/planner/mirissa.webp",
       number: 439,
     },
   ],
