@@ -2,7 +2,7 @@ import MainContainer from "../layout/MainContainer";
 import Card1 from "../layout/Card";
 import "../styles/text_styles.scss";
 import "../styles/layout_styles.scss";
-import React, { useState, useCallback } from "react";
+import React, {useState, useCallback} from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import ImagePreviewSection from "../components/RegisterHotelComponents/ImagePreviewSection";
 import { toast } from "react-hot-toast";
 import ToastInnerElement from "../components/ToastInnerElement/ToastInnerElement";
+import ToastViewHotelWallet from "../components/ToastViewHotelWallet/ToastViewHotelWallet";
 
 function RegisterHotel() {
   const hotelService = HotelService.instance;
@@ -189,7 +190,22 @@ function RegisterHotel() {
         console.log("res", res);
         if (res.hotelId > 0) {
           //alert("Successful");
-          toast.success("Registered successfully!");
+          toast.success("Registered successfully!", {
+            duration: 10000,
+          });
+          toast(
+              (element) => (
+                  <ToastViewHotelWallet
+                      warningMessage={"You can close this, if you have copied and saved these secrets somewhere safely. You  cannot get these once closed."}
+                      walletSecret={newWallet.seed}
+                      walletAddress={newWallet.address}
+                      id={element.id}  />
+              ),
+              {
+                duration: Infinity,
+              }
+          );
+
           navigate(`/hotel/${res.hotelId}`);
         } else {
           toast(
