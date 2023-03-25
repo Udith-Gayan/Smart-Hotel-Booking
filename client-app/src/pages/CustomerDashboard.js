@@ -104,7 +104,7 @@ function CustomerDashboard() {
           <div className="search-area">
             <Row className="search-wrapper-row">
               <Col style={{ flex: "1 0" }}>
-                <Label>Where ?</Label>
+                <Label>Destination</Label>
                 <InputGroup>
                   <Input
                     placeholder="City"
