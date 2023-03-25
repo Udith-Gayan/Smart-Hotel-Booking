@@ -78,7 +78,7 @@ const ReservationsForCustomer = () => {
                     );
                 }
                 if (customer) {
-                    setCustomerData([...res, ...res, ...res, ...res, ...res, ...res]);
+                    setCustomerData([...res]);
                 } else {
                     setHotelOwnerData([...res]);
                 }
