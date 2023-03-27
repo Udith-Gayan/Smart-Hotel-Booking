@@ -33,7 +33,7 @@ function AvailabilityRooms(props) {
                 <tr>
                     <th>Room type</th>
                     <th>Sleeps</th>
-                    <th>Price for 1 day</th>
+                    <th>Price for 1 day (per room)</th>
                     <th>Select rooms</th>
                 </tr>
                 </thead>

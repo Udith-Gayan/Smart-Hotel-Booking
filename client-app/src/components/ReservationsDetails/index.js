@@ -169,7 +169,6 @@ const ReservationsForCustomer = () => {
                         <thead>
                         <tr>
                             <th>Hotel Name</th>
-                            <th>Room Id</th>
                             <th>Room Name</th>
                             <th>Room Count</th>
                             <th>From Date</th>
@@ -182,7 +181,6 @@ const ReservationsForCustomer = () => {
                             return (
                                 <tr key={reservation.Id}>
                                     <th scope="row">{reservation.HotelName}</th>
-                                    <th>{reservation.RoomId}</th>
                                     <td>{reservation.RoomName}</td>
                                     <td>{reservation.RoomCount}</td>
                                     <td>{reservation.FromDate}</td>

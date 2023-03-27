@@ -18,7 +18,9 @@ const ConfirmBooking = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const hotelService = HotelService.instance;
-    const [isDataLoading, setIsDataLoading] = useState(false);
+
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [disableConfirm, setDisableConfirm] = useState(true);
 
     // queryParams
     let checkInDateStr = queryParams.get("fromDate");
@@ -43,7 +45,8 @@ const ConfirmBooking = () => {
     }, []);
 
     const createReservation = async (body) => {
-        setIsDataLoading(true);
+        setConfirmLoading(true);
+        setDisableConfirm(true);
         let walletAddress = body.walletAddress;
         if (body.payNow) {
             walletAddress = XrplService.xrplInstance.generateWalletFromSeed(body.secret).address;
@@ -66,11 +69,19 @@ const ConfirmBooking = () => {
         }
 
         try {
-            const res = await hotelService.makeReservation(data)
+            const res = await hotelService.makeReservation(data);
             console.log(res);
-            navigate(`/`)
+            console.log("done");
+            setDisableConfirm(false);
+            navigate(`/`);
+            toast.success(
+                "Booking Confirmed.",
+            );
         } catch (e) {
-            setIsDataLoading(false);
+            setConfirmLoading(false);
+            setDisableConfirm(false);
+            console.log("done error");
+
             console.log(e);
             toast(
                 (element) => (
@@ -109,7 +120,9 @@ const ConfirmBooking = () => {
 
                 <Col md={8}>
                     <BookedHotelDetails hotelName={hotelName} hotelAddress={hotelAddress}/>
-                    <CustomerRegistration createReservation={createReservation}/>
+                    <CustomerRegistration createReservation={createReservation} disableConfirm={disableConfirm}
+                                          setDisableConfirm={setDisableConfirm} confirmLoading={confirmLoading}
+                                          setConfirmLoading={setConfirmLoading}/>
                 </Col>
             </Row>
         </MainContainer>

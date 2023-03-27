@@ -7,7 +7,7 @@ const BookedHotelPrice = (props) => {
             <Row>
                 <Col>
                     <h4>Price: {props.totalPrice} $</h4>
-                    <small>Currency Rates: 1XRP = 20USD</small>
+                    <small>Currency Rates: 1XRP = 1USD</small>
                 </Col>
             </Row>
         </Card>

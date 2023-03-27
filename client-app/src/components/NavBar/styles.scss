@@ -55,3 +55,32 @@
 .setting-button {
   border-radius: 0.5rem;
 }
+
+.dropdown-menu.show{
+  width: 560px;
+}
+
+.wallet_address_title {
+  font-family: "Inter", serif;
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.wallet_address {
+  font-family: "Inter", serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.copy_button{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.copy_button:hover{
+  cursor: pointer;
+}
+
+.copy_button:active{
+  color: #908f8f;
+}
