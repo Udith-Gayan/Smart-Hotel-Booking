@@ -91,15 +91,15 @@ class SqliteDatabase {
             if (op === 'IN') {
                 for (const columnName of columnNames) {
 
-                    if(filter[columnName].length > 0){
+                    if (filter[columnName].length > 0) {
                         filterStr += `${columnName} ${op} ( `;
-    
+
                         const valArray = filter[columnName];
                         for (const v of valArray) {
                             filterStr += `?, `;
                             values.push(v);
                         }
-    
+
                         filterStr = filterStr.slice(0, -2);
                         filterStr += `) AND `;
                     }
@@ -142,6 +142,7 @@ class SqliteDatabase {
         return (await this.insertValues(tableName, [value]));
     }
 
+
     /**
      * 
      * @param {string} tableName 
@@ -175,6 +176,35 @@ class SqliteDatabase {
 
         const query = `UPDATE ${tableName} SET ${valueStr} WHERE ${filterStr};`;
         return (await this.runQuery(query, values));
+    }
+
+    /**
+     * 
+     * @param {*} tableName 
+     * @param {*} columnNames |Ex:  ["name", "age", "salary", "hire_date"]
+     * @param {An array of objects} values  
+     * @returns 
+     */
+    async insertMultipleValues(tableName, columnNames, values) {
+        const columnNamesString = columnNames.join(", ");
+        const valuesString = values.map((valueObj) => {
+            const values = Object.values(valueObj).map((value) => {
+                if (typeof value === "string") {
+                    return `'${value}'`;
+                }
+                if (value instanceof Date) {
+                    return `'${value}'`;
+                }
+                return value;
+            });
+            return `(${values.join(", ")})`;
+        }).join(", ");
+
+        const query = `INSERT INTO ${tableName} (${columnNamesString}) VALUES ${valuesString}`;
+        console.log(" Query: ", query)
+        const res = await this.runQuery(query);
+        console.log(res);
+        return res;
     }
 
     async insertValues(tableName, values) {
@@ -251,12 +281,12 @@ class SqliteDatabase {
     runNativeGetAllQuery(query, params = []) {
         return new Promise((resolve, reject) => {
             this.db.all(query, params, (err, rows) => {
-                if(err) {
+                if (err) {
                     reject(err);
                     return;
                 }
 
-                resolve(rows); 
+                resolve(rows);
             })
         });
     }
@@ -270,7 +300,7 @@ class SqliteDatabase {
     runNativeGetFirstQuery(query, params = []) {
         return new Promise((resolve, reject) => {
             this.db.get(query, params, (err, row) => {
-                if(err) {
+                if (err) {
                     reject(err);
                     return;
                 }

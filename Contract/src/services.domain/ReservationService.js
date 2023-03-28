@@ -2,7 +2,10 @@ const evernode = require('evernode-js-client')
 const settings = require('../settings.json').settings;
 const businessConfigurations = require('../settings.json').businessConfigurations;
 const constants = require("./constants")
-const {SqliteDatabase} = require("../services.base/sqlite-handler")
+const {SqliteDatabase} = require("../services.base/sqlite-handler");
+const { EvernodeContext } = require('../services.base/vote-collector/dist');
+
+const evp = require('../services.base/vote-collector/dist');
 
 class ReservationService {
 
@@ -10,9 +13,11 @@ class ReservationService {
     #contractAcc = null;
     #xrplApi = null;
     #db = null;
+    #hpContext = null;
     #dbPath = settings.dbPath;
 
-    constructor(message) {
+    constructor(message, hpContext = null) {
+        this.#hpContext = hpContext;
         this.#message = message;
         this.#xrplApi = new evernode.XrplApi('wss://hooks-testnet-v2.xrpl-labs.com');
         evernode.Defaults.set({
@@ -62,7 +67,6 @@ class ReservationService {
         const roomSelections = data.RoomSelections;
         let expectedCost = 0;
         let roomIdList = [];
-        console.log(1)
         roomSelections.forEach(rms => {
             const costOFRoom = rms.roomCount * rms.costPerRoom * noOfDays;
             console.log("Cost of room: ", costOFRoom);
@@ -71,14 +75,12 @@ class ReservationService {
             roomIdList.push({roomId: rms.roomId, roomCost: costOFRoom});
         });
 
-        console.log(2)
-
 
         //Get transaction amount and do payments to the hotel ( if present)
         if(data.TransactionId) {
             const txList = (await this.#xrplApi.getAccountTrx(settings.contractWalletAddress)).filter(t => t.tx.TransactionType == "Payment");
             const paidTx = txList.find(tx => tx.tx.hash == data.TransactionId);
-            console.log(3)
+
             if (!paidTx)
                 throw ("Invalid transaction hash.");
 
@@ -89,11 +91,19 @@ class ReservationService {
             // Pay the rest keeping the commision,  to the hotel address
             let query = `SELECT HotelWalletAddress FROM Hotels WHERE Id=(SELECT HotelId FROM Rooms WHERE Id= ${roomIdList[0].roomId})`;
             const {HotelWalletAddress} = await this.#db.runNativeGetFirstQuery(query);
-            console.log("HOtelWallet: ",HotelWalletAddress )
             if (HotelWalletAddress) {
                 const amountToSend = (Number(paidTx.tx.Amount) / 1000000 ) * (100 - businessConfigurations.ROOM_COMMISSION_PERCENTAGE) / 100;
-                const res = await this.#contractAcc.makePayment(HotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null);
-                console.log(res)
+
+                // Collect the same sequence number and max ledger before paying
+                const evernodeContext = new EvernodeContext(this.#hpContext);
+                this.#hpContext.unl.onMessage((node, msg) => {
+                    evernodeContext.feedUnlMessage(node, msg);
+                })
+                await evernodeContext.setMultiSigner(this.#contractAcc.address);
+                const txSubmitInfo = await evernodeContext.getTransactionSubmissionInfo(2000);
+                
+                const res = await this.#contractAcc.makePayment(HotelWalletAddress, (amountToSend * 1000000).toString(), "XRP", null, null, {Sequence: txSubmitInfo.sequence, LastLedgerSequence: txSubmitInfo.maxLedgerSequence});
+                await evernodeContext.removeMultiSigner();
                 if(res.code !== "tesSUCCESS"){
                     throw("Error in sending fee to the Hotel's wallet.")
                 }
@@ -121,31 +131,37 @@ class ReservationService {
             }
         }
 
+        let lastReservationId = 0;
+        
+        // old code
 
-        const reservationIdList = [];
-        for (const i in roomSelections) {
-            const reservationEntity = {
-                RoomId: roomSelections[i].roomId,
-                RoomCount: roomSelections[i].roomCount,
-                CustomerId: nCustomerId,
-                FromDate: data.FromDate.substr(0,10),
-                ToDate: data.ToDate.substr(0,10),
-                Cost: roomIdList[i].roomCost,
-                TransactionId: data.TransactionId ?? null
+            // END of old code
+
+            // new code
+            const keyNames = [ "RoomId", "RoomCount", "CustomerId", "FromDate", "ToDate", "Cost", "TransactionId"];
+            const valuess = [];
+            for (const i in roomSelections) {
+                const reservationEntity = {
+                    RoomId: Number(roomSelections[i].roomId),
+                    RoomCount: roomSelections[i].roomCount,
+                    CustomerId: nCustomerId,
+                    FromDate: data.FromDate.substr(0,10),
+                    ToDate: data.ToDate.substr(0,10),
+                    Cost: roomIdList[i].roomCost,
+                    TransactionId: data.TransactionId ?? null
+                }
+
+                valuess.push(reservationEntity);
+            }
+            console.log(valuess)
+
+            lastReservationId = (await this.#db.insertMultipleValues('Reservations', keyNames, valuess)).lastId;
+            if(!lastReservationId) {
+                throw "Error in saving reservations"
             }
 
-            let reservationId;
-            if (await this.#db.isTableExists('Reservations')) {
-                reservationId = (await this.#db.insertValue('Reservations', reservationEntity)).lastId;
-            } else {
-                throw("Reservation table not found.");
-            }
 
-            reservationIdList.push(reservationId);
-
-        }
-
-        response.success = {reservationIds: reservationIdList};
+        response.success = {lastReservationId: lastReservationId};
         return response;
 
     }
