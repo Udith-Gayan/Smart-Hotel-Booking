@@ -70,12 +70,22 @@ const ConfirmBooking = () => {
 
         try {
             const res = await hotelService.makeReservation(data);
-            console.log(res);
-            console.log("done");
+            if(!res) {
+                toast(
+                    (element) => (
+                        <ToastInnerElement message={'Error in booking.'} id={element.id}/>
+                    ),
+                    {
+                        duration: Infinity,
+                    }
+                );
+            }
             setDisableConfirm(false);
             navigate(`/`);
             toast.success(
-                "Booking Confirmed.",
+                "Booking Confirmed.", {
+                    duration: 5000
+                }
             );
         } catch (e) {
             setConfirmLoading(false);
@@ -85,7 +95,7 @@ const ConfirmBooking = () => {
             console.log(e);
             toast(
                 (element) => (
-                    <ToastInnerElement message={e} id={element.id}/>
+                    <ToastInnerElement message={"Error in making reservation."} id={element.id}/>
                 ),
                 {
                     duration: Infinity,

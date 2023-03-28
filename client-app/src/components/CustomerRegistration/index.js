@@ -58,7 +58,7 @@ const CustomerRegistration = (props) => {
         // only when validate, body will pass
         if (
             fullName.length !== 0 &&
-            email.length !== 0 && walletAddress.length !== 0 &&
+            email.length !== 0 && walletAddress.length !== 0 && (walletAddress.length < 0 && XrplService.xrplInstance.isValidAddress(walletAddress)) &&
             ((payNow && secret.length !== 0 && xrplService.isValidSecret(secret)) || payAtDoor)
         ) {
             console.log("body", body);
@@ -83,7 +83,7 @@ const CustomerRegistration = (props) => {
         } else {
             setEmailInvalid(false);
         }
-        if (walletAddress.length === 0)
+        if (walletAddress.length === 0 || (walletAddress.length > 0 && !XrplService.xrplInstance.isValidAddress(walletAddress)) )
             setWalletAddressInvalid(true);
         else
             setWalletAddressInvalid(false);
@@ -96,8 +96,10 @@ const CustomerRegistration = (props) => {
 
         if (validation(body)) {
             await props.createReservation(body)
+        } else {
+            props.setConfirmLoading(false);
+            props.setDisableConfirm(false);
         }
-        // setdisableAll(false);
         return;
     };
 
@@ -172,7 +174,7 @@ const CustomerRegistration = (props) => {
                                 invalid={walletAddressInvalid}
                             />
                             <FormFeedback invalid={walletAddressInvalid.toString()}>
-                                Wallet address is required.
+                                Wallet address is invalid.
                             </FormFeedback>
                         </FormGroup>
                     </Col>
