@@ -20,6 +20,9 @@ export default class XrplService {
         return xrpl.isValidSecret(secret);
     }
 
+    isValidAddress(address) {
+        return xrpl.isValidAddress(address);
+    }
 
     /**
      * 

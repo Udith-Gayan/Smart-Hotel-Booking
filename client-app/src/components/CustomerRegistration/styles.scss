@@ -1,0 +1,30 @@
+$purple-color: #2c2c76;
+$light-purple-color: #ececf2;
+
+.react-tel-input .form-control {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  height: 38px;
+}
+
+.confirm_booking_button {
+  background-color: $purple-color !important;
+  color: $light-purple-color !important;
+  border: none !important;
+}
+
+.confirm_booking_button:hover,
+.confirm_booking_button:active{
+  background-color: $light-purple-color !important;
+  color: $purple-color !important;
+  border: none !important;
+  box-shadow: none !important;
+}

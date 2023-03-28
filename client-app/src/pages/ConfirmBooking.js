@@ -18,7 +18,9 @@ const ConfirmBooking = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const hotelService = HotelService.instance;
-    const [isDataLoading, setIsDataLoading] = useState(false);
+
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [disableConfirm, setDisableConfirm] = useState(true);
 
     // queryParams
     let checkInDateStr = queryParams.get("fromDate");
@@ -43,7 +45,8 @@ const ConfirmBooking = () => {
     }, []);
 
     const createReservation = async (body) => {
-        setIsDataLoading(true);
+        setConfirmLoading(true);
+        setDisableConfirm(true);
         let walletAddress = body.walletAddress;
         if (body.payNow) {
             walletAddress = XrplService.xrplInstance.generateWalletFromSeed(body.secret).address;
@@ -66,15 +69,33 @@ const ConfirmBooking = () => {
         }
 
         try {
-            const res = await hotelService.makeReservation(data)
-            console.log(res);
-            navigate(`/`)
+            const res = await hotelService.makeReservation(data);
+            if(!res) {
+                toast(
+                    (element) => (
+                        <ToastInnerElement message={'Error in booking.'} id={element.id}/>
+                    ),
+                    {
+                        duration: Infinity,
+                    }
+                );
+            }
+            setDisableConfirm(false);
+            navigate(`/`);
+            toast.success(
+                "Booking Confirmed.", {
+                    duration: 5000
+                }
+            );
         } catch (e) {
-            setIsDataLoading(false);
+            setConfirmLoading(false);
+            setDisableConfirm(false);
+            console.log("done error");
+
             console.log(e);
             toast(
                 (element) => (
-                    <ToastInnerElement message={e} id={element.id}/>
+                    <ToastInnerElement message={"Error in making reservation."} id={element.id}/>
                 ),
                 {
                     duration: Infinity,
@@ -109,7 +130,9 @@ const ConfirmBooking = () => {
 
                 <Col md={8}>
                     <BookedHotelDetails hotelName={hotelName} hotelAddress={hotelAddress}/>
-                    <CustomerRegistration createReservation={createReservation}/>
+                    <CustomerRegistration createReservation={createReservation} disableConfirm={disableConfirm}
+                                          setDisableConfirm={setDisableConfirm} confirmLoading={confirmLoading}
+                                          setConfirmLoading={setConfirmLoading}/>
                 </Col>
             </Row>
         </MainContainer>

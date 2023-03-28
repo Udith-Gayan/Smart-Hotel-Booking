@@ -180,6 +180,14 @@ function HotelHomePage() {
         setDeleteRoomDetails(delete_room_details);
     }
 
+    const getFullAddress = () => {
+        let address = address1 ?? '';
+        address += address2 ? `, ${address2}` : '';
+        address += city ? `, ${city}` : '';
+
+        return address
+    }
+
     return (
 
         <>
@@ -228,12 +236,12 @@ function HotelHomePage() {
                                 </div>
                             </div>
 
-                            <div className={"row left_div"}>
+                            <div className={"row left_div"} style={{marginTop: "-0.7rem"}}>
                                 <div style={{width: "20px"}}>
                                     <FaMapMarkerAlt/>
                                 </div>
                                 <div className={"subtext pt-2 col"}>
-                                    {address1 ?? ''}{address2 ? `, ${address2}` : ``}{city ? `, ${city}` : ``}
+                                    {getFullAddress()}
                                 </div>
                             </div>
 
