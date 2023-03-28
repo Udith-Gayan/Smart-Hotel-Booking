@@ -16,7 +16,7 @@ export class ApiService {
         this.db = new SqliteDatabase(this.dbPath);
     }
 
-    async handleRequest(user, message, isReadOnly) {
+    async handleRequest(user, message, isReadOnly, hpContext = null) {
         // TODO: Request Authentication and Authorization must be handled here before proceeding
         
     
@@ -34,10 +34,11 @@ export class ApiService {
             result = await new CustomerService(message).handleRequest();
         }
         else if (message.type === constants.RequestTypes.RESERVATION) {                                        //-------------------- Reservation related Api-------------------------
-            result = await new ReservationService(message).handleRequest();
+            result = await new ReservationService(message, hpContext).handleRequest();
         }
 
 
+        console.log("Final: ", result);
         if(isReadOnly){
             await this.sendOutput(user, result);
         } else {

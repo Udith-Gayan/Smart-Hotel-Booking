@@ -1,7 +1,6 @@
 import ContractService from "../services-common/contract-service";
 import XrplService from "../services-common/xrpl-service";
 import SharedStateService from "./sharedState-service";
-import {nativeTouchData} from "react-dom/test-utils";
 
 
 const constants = require('./../constants');
@@ -298,15 +297,17 @@ export default class HotelService {
       data: submitData
     }
 
-    console.log(submitObj)
 
         let result;
         try {
+            // {lastReservationId: 34}
             result = await this.contractService.submitInputToContract(submitObj);
         } catch (e) {
             console.log(e);
             throw e;
         }
+
+        return result
     }
 
     /**

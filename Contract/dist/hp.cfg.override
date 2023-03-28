@@ -4,7 +4,7 @@
         "bin_args": "index.js",
         "consensus": {
             "mode": "public",
-            "roundtime": 2000,
+            "roundtime": 5000,
             "stage_slice": 25,
             "threshold": 80
         }
