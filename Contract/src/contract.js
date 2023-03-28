@@ -21,7 +21,7 @@ const booking_contract = async (ctx) => {
             // Let's assume all data buffers for this contract are JSON.
             const message = JSON.parse(buf);
             // Pass the JSON message to our application logic component.
-            await apiService.handleRequest(user, message, isReadOnly);
+            await apiService.handleRequest(user, message, isReadOnly, ctx);
 
         }
 
