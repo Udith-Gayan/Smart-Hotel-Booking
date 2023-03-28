@@ -8,7 +8,7 @@ import roomFacilitiesData from "../data/room_facilities";
 import { bed_types } from "../constants/constants";
 import HotelList from "../components/HotelSearchPage/HotelList";
 import HotelService from "../services-domain/hotel-service copy";
-import { Alert } from 'reactstrap'
+import {Alert, Spinner} from 'reactstrap'
 
 
 //http://localhost:3000/search-hotel?city=Galle&fromDate=2023-03-17&toDate=2023-03-20&people=2
@@ -78,6 +78,9 @@ function HotelSearchPage(props) {
                 setHotelResultListCopy(newHotellist);
 
                 setIsDataLoading(false)
+            } else {
+                setIsDataLoading(false);
+                setHotelResultListCopy([])
             }
         } catch (error) {
             setIsDataLoading(false)
@@ -226,9 +229,22 @@ function HotelSearchPage(props) {
                 searchText={searchText} setSearchText={setSearchText} onClearSearchText={onClearSearchText}
                 onClickSearch={onClickSearch} />
 
-            {isDataLoading ? (<Alert color="warning" style={{ marginBottom: "40vh" }}>
+            {isDataLoading ?
+                <div className="spinnerWrapper">
+                    <Spinner
+                        color="primary"
+                        style={{
+                            height: "3rem",
+                            width: "3rem",
+                        }}
+                        type="grow"
+                    >
+                        Loading...
+                    </Spinner>
+                </div>
+                :  hotelResultListCopy?.length < 1 ? (<Alert color="warning" style={{ marginBottom: "40vh" }}>
                 No Hotels Found!
-            </Alert>) :
+            </Alert>) : 
 
                 <div className={"row_fit"} style={{ width: "100%" }}>
                     <div style={{ paddingRight: "30px", paddingBottom: "20px" }}>

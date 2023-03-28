@@ -1,15 +1,20 @@
-import { Col, Container, Row, List, InputGroup, Button, Input } from "reactstrap";
+import {Col, Container, Row, List, InputGroup, Button, Input} from "reactstrap";
 import "./styles.scss";
+import {useNavigate} from "react-router-dom";
 
 function Footer(props) {
+    const navigate = useNavigate();
     return (
         <footer className="footer">
             <Container>
                 <Row>
                     <Col>
                         <h4>About Us</h4>
-                        <div className="image-container">
-                            <img src="/Assets/Images/logo.png" alt="voyageLanka" className="logo" />
+                        <div className="image-container" onClick={() => {
+                            navigate("/");
+                            navigate(0);
+                        }}>
+                            <img src="/Assets/Images/logo.png" alt="voyageLanka" className="logo"/>
                         </div>
                     </Col>
                     <Col>
@@ -43,7 +48,7 @@ function Footer(props) {
                         <h4>Newsletter</h4>
                         <p>Save time, save money!</p>
                         <InputGroup>
-                            <Input type="text" name="newsletter" placeholder="Your email address" />
+                            <Input type="text" name="newsletter" placeholder="Your email address"/>
                             <Button className="primaryButton">Subscribe</Button>
                         </InputGroup>
                         <h4 className="customer_support">Customer Support</h4>
@@ -51,11 +56,11 @@ function Footer(props) {
                     </Col>
                 </Row>
                 <Row>
-                    <hr />
+                    <hr/>
                 </Row>
                 <Row>
                     <Col className="text-center">
-                        Copyright 2023.  All rights reserved.
+                        Copyright 2023. All rights reserved.
                     </Col>
                 </Row>
             </Container>

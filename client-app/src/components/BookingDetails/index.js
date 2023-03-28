@@ -13,12 +13,12 @@ const BookHotelRoom = (props) => {
             <p>Check-in</p>
 
             <p className="fontBold">{props.checkindate}</p>
-            <small className={styles.checkinoutTime}>3.00 PM - 8.00 PM</small>
+            <small className={styles.checkinoutTime}>Before noon</small>
           </Col>
           <Col md={6}>
             <p>Check-out</p>
             <p className="fontBold">{props.checkoutdate}</p>
-            <small className={styles.checkinoutTime}>11.00 PM - 1.30 PM</small>
+            <small className={styles.checkinoutTime}>After noon</small>
             <br />
           </Col>
           <p style={{ marginTop:'20px'}}>Total length of stay:</p>
