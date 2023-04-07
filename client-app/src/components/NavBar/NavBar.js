@@ -1,15 +1,15 @@
-import {useState} from "react";
+import { useState } from "react";
 import {
     Button, Navbar, NavbarBrand, NavbarText, Dropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem
 } from "reactstrap";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./styles.scss";
-import {RiFileSettingsFill} from 'react-icons/ri'
-import {FaCopy} from 'react-icons/fa'
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { RiFileSettingsFill } from 'react-icons/ri'
+import { FaCopy } from 'react-icons/fa'
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 function NavBar(props) {
     const navigate = useNavigate();
@@ -22,69 +22,77 @@ function NavBar(props) {
     const [isCopiedAddress, setIsCopiedAddress] = useState(false);
     return (
         <>
-            <Navbar className="cus_navbar" dark>
-                <NavbarBrand href="/" style={{marginLeft: "40px"}}>
-                    <img
-                        alt="logo"
-                        src="/Assets/Images/logo.png"
-                        style={{
-                            height: 70,
-                            width: 260,
-                        }}
-                    />
-                </NavbarBrand>
+            <div>
+                <div style={{
+                    marginBottom: "20px",
+                    minHeight: "35px", backgroundColor: "yellow", position: "fixed", width: "100vw",
+                    paddingLeft: "10%", paddingTop: '5px', top: '-1px', zIndex: '99999', fontSize: "18px", color: 'red', fontWeight: '500'
+                }} classsName="under-construction-div">
+                    Important Notice: &nbsp; This Site is Currently Under Rapid Construction and Some Key Features May Not Be Operational Until April 9th.
+                </div>
+                <Navbar className="cus_navbar" dark>
+                    <NavbarBrand href="/" style={{ marginLeft: "40px" }}>
+                        <img
+                            alt="logo"
+                            src="/Assets/Images/logo.png"
+                            style={{
+                                height: 70,
+                                width: 260,
+                            }}
+                        />
+                    </NavbarBrand>
+                    {isCustomer === "true" ? (
+                        <>
+                            <NavbarText className="explore_txt white-text">Explore</NavbarText>
+                            <NavbarText className="vacation_txt white-text">
+                                Vacation Rental
+                            </NavbarText>
+                            <NavbarText className="community_txt white-text">
+                                Community
+                            </NavbarText>{" "}
+                        </>
+                    ) : (
+                        <>
+                            <NavbarText className="help_button">Help</NavbarText>
+                            <NavbarText className="faq-text">Faq</NavbarText>
+                        </>
+                    )}
 
-                {isCustomer === "true" ? (
-                    <>
-                        <NavbarText className="explore_txt white-text">Explore</NavbarText>
-                        <NavbarText className="vacation_txt white-text">
-                            Vacation Rental
-                        </NavbarText>
-                        <NavbarText className="community_txt white-text">
-                            Community
-                        </NavbarText>{" "}
-                    </>
-                ) : (
-                    <>
-                        <NavbarText className="help_button">Help</NavbarText>
-                        <NavbarText className="faq-text">Faq</NavbarText>
-                    </>
-                )}
+                    <Button
+                        outline
+                        className="primaryButton smallMarginLeftRight"
+                        onClick={() => navigate("/list-property")}
+                    >
+                        List Your Property
+                    </Button>
+                    <Button
+                        outline
+                        className="primaryButton smallMarginLeftRight"
+                        onClick={() => navigate("/reservations")}
+                    >
+                        My Reservations
+                    </Button>
+                    <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={'down'}
+                        className="primaryButton setting-button">
+                        <DropdownToggle className="primaryButton setting-button" style={{ height: '100%' }}>
+                            <RiFileSettingsFill style={{ fontSize: "1.5rem" }} /> </DropdownToggle>
+                        <DropdownMenu style={{ marginTop: " 15px" }}>
+                            <DropdownItem text>
+                                <span className="wallet_address_title">Wallet Address: </span>
+                                <span className={"wallet_address"}>{walletAddress}</span>
+                                <span className={"copy_button"}>
+                                    <CopyToClipboard text={walletAddress} onCopy={() => setIsCopiedAddress(true)}>
+                                        <FaCopy size={"20px"} />
+                                    </CopyToClipboard>
+                                </span>
 
-                <Button
-                    outline
-                    className="primaryButton smallMarginLeftRight"
-                    onClick={() => navigate("/list-property")}
-                >
-                    List Your Property
-                </Button>
-                <Button
-                    outline
-                    className="primaryButton smallMarginLeftRight"
-                    onClick={() => navigate("/reservations")}
-                >
-                    My Reservations
-                </Button>
-                <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={'down'}
-                          className="primaryButton setting-button">
-                    <DropdownToggle className="primaryButton setting-button" style={{height: '100%'}}>
-                        <RiFileSettingsFill style={{fontSize: "1.5rem"}}/> </DropdownToggle>
-                    <DropdownMenu style={{marginTop: " 15px"}}>
-                        <DropdownItem text>
-                            <span className="wallet_address_title">Wallet Address: </span>
-                            <span className={"wallet_address"}>{walletAddress}</span>
-                            <span className={"copy_button"}>
-                                <CopyToClipboard text={walletAddress} onCopy={() => setIsCopiedAddress(true)}>
-                                <FaCopy size={"20px"}/>
-                            </CopyToClipboard>
-                            </span>
+                                {isCopiedAddress ? <span className={"subtext"}>Copied</span> : null}
 
-                            {isCopiedAddress ? <span className={"subtext"}>Copied</span> : null}
-
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </Navbar>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </Navbar>
+            </div>
         </>
     );
 }
