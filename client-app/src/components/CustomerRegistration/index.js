@@ -54,11 +54,12 @@ const CustomerRegistration = (props) => {
         }
 
     }, [fullName, email, phoneNo, walletAddress, payNow, secret, payAtDoor])
+    
     const validation = (body) => {
         // only when validate, body will pass
         if (
             fullName.length !== 0 &&
-            email.length !== 0 && walletAddress.length !== 0 && (walletAddress.length < 0 && XrplService.xrplInstance.isValidAddress(walletAddress)) &&
+            email.length !== 0 && walletAddress.length !== 0 && (walletAddress.length > 0 && XrplService.xrplInstance.isValidAddress(walletAddress)) &&
             ((payNow && secret.length !== 0 && xrplService.isValidSecret(secret)) || payAtDoor)
         ) {
             console.log("body", body);
@@ -93,7 +94,6 @@ const CustomerRegistration = (props) => {
         } else {
             setSecretInvalid(false);
         }
-
         if (validation(body)) {
             await props.createReservation(body)
         } else {

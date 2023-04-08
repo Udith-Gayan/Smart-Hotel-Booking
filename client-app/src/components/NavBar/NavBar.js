@@ -11,6 +11,9 @@ import { RiFileSettingsFill } from 'react-icons/ri'
 import { FaCopy } from 'react-icons/fa'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+const isUnderConstruction = process.env.REACT_APP_IS_UNDER_CONSTRUCTION ? process.env.REACT_APP_IS_UNDER_CONSTRUCTION == 1 ? true : false : false;
+const underConstructionMsg = process.env.REACT_APP_UNDER_CONSTRUCTION_MESSAGE ?? '';
+
 function NavBar(props) {
     const navigate = useNavigate();
     const walletAddress = process.env.REACT_APP_CONTRACT_WALLET_ADDRESS;
@@ -23,14 +26,14 @@ function NavBar(props) {
     return (
         <>
             <div>
-                <div style={{
-                    marginBottom: "20px",
-                    minHeight: "35px", backgroundColor: "yellow", position: "fixed", width: "100vw",
+                <Navbar className="cus_navbar" dark>
+                { isUnderConstruction ? (<div style={{
+                    marginBottom: "20px", marginLeft: "10%",
+                    minHeight: "35px", backgroundColor: "yellow", position: "fixed", width: "auto", paddingRight: "10%",
                     paddingLeft: "10%", paddingTop: '5px', top: '-1px', zIndex: '99999', fontSize: "18px", color: 'red', fontWeight: '500'
                 }} classsName="under-construction-div">
-                    Important Notice: &nbsp; This Site is Currently Under Rapid Construction and Some Key Features May Not Be Operational Until April 9th.
-                </div>
-                <Navbar className="cus_navbar" dark>
+                   {underConstructionMsg}
+                </div>) : (<></>)}
                     <NavbarBrand href="/" style={{ marginLeft: "40px" }}>
                         <img
                             alt="logo"
