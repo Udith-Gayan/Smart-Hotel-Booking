@@ -2,9 +2,23 @@
   "name": "contract",
   "version": "1.0.0",
   "scripts": {
-    "build": "npx ncc build src/contract.js -o dist",
-    "start": "npm run build && hpdevkit deploy dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "removeDist": "if exist dist rmdir /s /q dist",
+    "removeDistLinux": "[ -d dist ] && rm -r dist &>>/dev/null",
+    "dockerBuild": "docker build -f Dockerfile.Build -t voyage-old-image:latest .",
+    "dockerRun": "docker run -d --name voyage-build-container voyage-old-image",
+    "fetchDist": "docker cp voyage-build-container:/voyage/dist/ ./dist/",
+    "copyStaticFiles": "copy hp.cfg.override dist",
+    "copyStaticFilesLinux": "cp hp.cfg.override dist",
+    "stopContainer": "docker rm -f voyage-build-container && docker image prune -f && docker container prune -f",
+    "buildLinux": "npx ncc build ./src/contract.js -o dist",
+    "buildLinux:prod": "npx ncc build ./src/contract.js --minify -o dist",
+    "start": "npm run build && set HP_INSTANCE_IMAGE=evernodedev/sashimono:hp.0.6.4-ubt.20.04-njs.20 && hpdevkit deploy dist",
+    "start1": "npm run build1 && export HP_INSTANCE_IMAGE=evernodedev/sashimono:hp.0.6.4-ubt.20.04-njs.20 && hpdevkit deploy dist",
+    "build1": "npm run removeDistLinux && npx ncc build ./startup.js -o dist && npm run copyStaticFilesLinux",
+    "build": "npm run removeDist && npm run dockerBuild && npm run dockerRun && npm run fetchDist && npm run copyStaticFiles && npm run stopContainer",
+    "postinstall": "npm i sqlite3 --target_platform=linux --target_arch=x64 --target_libc=glibc --no-save"
+  
   },
   "dependencies": {
     "@vercel/ncc": "0.34.0",

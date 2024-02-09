@@ -19,7 +19,7 @@ class ReservationService {
     constructor(message, hpContext = null) {
         this.#hpContext = hpContext;
         this.#message = message;
-        this.#xrplApi = new evernode.XrplApi('wss://hooks-testnet-v2.xrpl-labs.com');
+        this.#xrplApi = new evernode.XrplApi('wss://hooks-testnet-v3.xrpl-labs.com');
         evernode.Defaults.set({
             xrplApi: this.#xrplApi,
         });

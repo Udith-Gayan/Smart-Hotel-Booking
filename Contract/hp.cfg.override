@@ -1,0 +1,15 @@
+{
+    "contract": {
+        "bin_path": "/usr/bin/node",
+        "bin_args": "index.js",
+        "consensus": {
+           "roundtime": 2000,
+           "threshold": 60,
+           "stage_slice": 15
+        }
+    },
+    "log": {
+            "log_level": "inf"
+        }
+
+}

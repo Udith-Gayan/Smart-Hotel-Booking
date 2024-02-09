@@ -1,0 +1,23 @@
+# Stage 2: Create a clean Ubuntu-based image for copying built files
+FROM ubuntu:latest
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y nodejs npm
+
+# Copy your project files into the container
+WORKDIR /voyage
+
+# Clear the contents of the working directory
+RUN rm -rf ./*
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+COPY jsconfig.json ./
+
+# Install dependencies
+RUN npm install
+
+COPY src /voyage/src/
+
+# Build your project
+RUN npm run buildLinux  

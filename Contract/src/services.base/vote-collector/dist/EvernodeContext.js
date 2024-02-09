@@ -16,7 +16,7 @@ const evernode = require("evernode-js-client");
 class EvernodeContext extends Context_1.default {
     constructor(hpContext, options = {}) {
         super(hpContext, options);
-        this.xrplApi = new evernode.XrplApi('wss://hooks-testnet-v2.xrpl-labs.com');
+        this.xrplApi = new evernode.XrplApi('wss://hooks-testnet-v3.xrpl-labs.com');
     }
     getSequenceNumber(address, timeout = 1000) {
         return __awaiter(this, void 0, void 0, function* () {
